@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="LightControl"/>
+<meta name="theme-color" content="#0a0e1a"/>
+<title>LightControl</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.svg"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#0a0e1a;--surface:#111827;--surface2:#1c2333;--surface3:#242f45;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --text:#f0f4ff;--muted:#8892a4;--accent:#3b82f6;--success:#22c55e;
+  --danger:#ef4444;--warning:#f59e0b;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;overflow:hidden;}
+body{font-family:system-ui,-apple-system,sans-serif;background:#000;display:flex;justify-content:center;align-items:center;}
+.app{background:var(--bg);color:var(--text);font-size:14px;width:100%;max-width:430px;height:100vh;height:100dvh;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.scroll-view{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 18px 120px;padding-top:calc(18px + var(--safe-top));}
+.scroll-view::-webkit-scrollbar{display:none;}
+
+/* SCREENS */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-top:4px;}
+.back-btn{background:var(--surface);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:7px 13px;cursor:pointer;font-size:13px;flex-shrink:0;-webkit-appearance:none;}
+.screen-title{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+
+/* CARDS */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.btn{border-radius:8px;padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;border:0.5px solid var(--border2);-webkit-appearance:none;}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:white;}
+.btn-sm{padding:5px 11px;font-size:11px;}
+.btn-ghost{background:transparent;color:var(--muted);}
+.btn-row{display:flex;gap:8px;margin-top:12px;}
+.field-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.field-input{width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;margin-bottom:12px;-webkit-appearance:none;}
+.field-input:focus{border-color:var(--accent);}
+.field-input::placeholder{color:var(--muted);}
+textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
+.mini-toggle{width:44px;height:24px;border-radius:12px;background:var(--surface3);border:0.5px solid var(--border2);position:relative;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.mini-toggle.on{background:var(--accent);border-color:var(--accent);}
+.mini-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:2px;left:3px;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+.mini-toggle.on::after{left:23px;}
+.section-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+
+/* ── HOME ── */
+.home-header{text-align:center;padding:20px 0 24px;}
+.logo-ring{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px;}
+.home-title{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px;}
+.home-sub{font-size:12px;color:var(--muted);}
+
+/* NOW PLAYING */
+.now-playing{background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px;position:relative;overflow:hidden;}
+.np-bg{position:absolute;inset:0;opacity:0.09;transition:background 0.5s;pointer-events:none;}
+.np-inner{position:relative;display:flex;align-items:center;gap:12px;}
+.np-dots{display:flex;gap:3px;flex-shrink:0;}
+.np-dot{width:10px;height:10px;border-radius:50%;}
+.np-info{flex:1;min-width:0;}
+.np-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;}
+.np-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.np-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.np-pulse{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
+.np-off-dot{width:8px;height:8px;border-radius:50%;background:var(--surface3);border:1px solid var(--muted);flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.power-btn{background:var(--surface2);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;-webkit-appearance:none;}
+.power-btn.on{color:var(--success);border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);}
+
+/* MODE TOGGLE */
+.mode-seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:3px;border:0.5px solid var(--border);margin-bottom:14px;}
+.seg-tab{flex:1;border-radius:8px;padding:10px 8px;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:500;transition:all 0.2s;}
+.seg-tab .st-icon{font-size:18px;display:block;margin-bottom:3px;}
+.seg-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+
+/* CREATE YOUR OWN */
+.create-own-btn{background:var(--surface);border:1.5px dashed rgba(255,255,255,0.18);border-radius:14px;padding:16px 18px;width:100%;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.18s;margin-bottom:12px;text-align:left;-webkit-appearance:none;}
+.create-own-btn:hover{background:var(--surface2);border-color:var(--accent);}
+.co-icon-wrap{width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.co-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.co-sub{font-size:11px;color:var(--muted);}
+
+/* PRESETS BTN */
+.presets-btn{background:linear-gradient(135deg,#3b82f6,#6366f1);border:none;border-radius:14px;padding:16px 20px;width:100%;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:12px;text-align:left;-webkit-appearance:none;}
+.pb-icon{font-size:28px;flex-shrink:0;}
+.pb-label{font-size:15px;font-weight:700;color:white;margin-bottom:3px;}
+.pb-sub{font-size:11px;color:rgba(255,255,255,0.65);}
+
+/* QUICK GRID */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.quick-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.qc-icon{font-size:20px;flex-shrink:0;}
+.qc-label{font-size:12px;font-weight:500;}
+.qc-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* WIDE CARD */
+.wide-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.wide-icon{font-size:24px;flex-shrink:0;}
+.wl{font-size:13px;font-weight:600;}
+.ws{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* STATUS */
+.status-bar{background:var(--surface2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0;}
+
+/* HOLIDAY GRID */
+.holiday-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.holiday-card{border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.15s;}
+.h-icon{font-size:24px;margin-bottom:6px;display:block;}
+.h-name{font-size:10px;font-weight:500;color:white;line-height:1.3;}
+
+/* SEASONS */
+.season-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.season-card{border-radius:13px;padding:20px 16px;cursor:pointer;position:relative;overflow:hidden;min-height:100px;}
+.season-name{font-size:15px;font-weight:700;color:white;margin-bottom:4px;}
+.season-sub{font-size:11px;color:rgba(255,255,255,0.65);}
+.season-icon{font-size:36px;position:absolute;bottom:12px;right:14px;opacity:0.7;}
+
+/* PATTERNS */
+.preview-bar{height:8px;border-radius:4px;margin-bottom:14px;}
+.fav-hint{font-size:11px;color:var(--muted);margin-bottom:12px;padding:9px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent);}
+.pattern-list{display:flex;flex-direction:column;gap:7px;}
+.pattern-row{background:var(--surface);border:0.5px solid var(--border);border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.pattern-row.favorited{border-color:rgba(59,130,246,0.4);}
+.color-dots{display:flex;gap:3px;flex-shrink:0;}
+.cdot{width:9px;height:9px;border-radius:50%;}
+.fav-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;-webkit-appearance:none;}
+.fav-btn.active{background:rgba(59,130,246,0.15);border-color:var(--accent);color:var(--accent);}
+
+/* PRESETS LIBRARY */
+.preset-menu-grid{display:flex;flex-direction:column;gap:8px;}
+.preset-menu-card{background:var(--surface2);border:1.5px solid transparent;border-radius:13px;padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.15s;}
+.pmc-icon{font-size:28px;flex-shrink:0;}
+.pmc-label{font-size:14px;font-weight:600;margin-bottom:3px;}
+.pmc-sub{font-size:11px;color:var(--muted);line-height:1.4;}
+.pmc-count{font-size:10px;background:var(--surface3);border-radius:20px;padding:3px 10px;color:var(--muted);white-space:nowrap;}
+.filter-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.ftab{background:var(--surface2);border:0.5px solid var(--border);border-radius:20px;padding:5px 11px;font-size:11px;cursor:pointer;color:var(--muted);}
+.ftab.active{color:white;}
+.preset-card{background:var(--surface2);border:1.5px solid transparent;border-radius:13px;padding:12px 14px;margin-bottom:8px;}
+.preset-thumb{display:flex;gap:2px;height:26px;border-radius:6px;overflow:hidden;margin-bottom:8px;}
+.thumb-seg{flex:1;}
+
+/* SPORTS */
+.league-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.league-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:18px 12px;cursor:pointer;text-align:center;}
+.team-list-scroll{max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;}
+.team-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1.5px solid transparent;}
+.tc{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:9px;padding:8px 12px;margin-bottom:10px;}
+.search-bar input{background:transparent;border:none;color:var(--text);font-size:13px;outline:none;flex:1;}
+.search-bar input::placeholder{color:var(--muted);}
+
+/* ZONES */
+.strand-preview{background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+.strand-strip{display:flex;gap:2px;flex-wrap:wrap;}
+.strand-dot{height:10px;border-radius:2px;flex-shrink:0;transition:background 0.3s;}
+.group-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border-radius:11px;margin-bottom:7px;cursor:pointer;border:1.5px solid transparent;}
+.group-row:hover{border-color:var(--border2);}
+.group-color-dot{width:32px;height:32px;border-radius:9px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.15);}
+
+/* SLIDERS */
+.hue-track{width:100%;height:24px;border-radius:8px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);cursor:pointer;position:relative;border:0.5px solid var(--border2);margin-bottom:12px;}
+.sat-track,.bri-track{width:100%;height:24px;border-radius:8px;cursor:pointer;position:relative;border:0.5px solid var(--border2);margin-bottom:12px;}
+.slider-thumb{position:absolute;top:-3px;width:14px;height:30px;border-radius:5px;border:2.5px solid white;background:transparent;pointer-events:none;transform:translateX(-50%);box-shadow:0 2px 6px rgba(0,0,0,0.5);}
+.slider-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:5px;}
+.swatch-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.sw{width:30px;height:30px;border-radius:8px;cursor:pointer;border:2px solid transparent;}
+.sw.sel{border-color:white;}
+.hex-row{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.hex-inp{background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;width:95px;outline:none;}
+
+/* EFFECT PICKER */
+.effect-search{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:9px;padding:8px 12px;margin-bottom:10px;}
+.effect-search input{background:transparent;border:none;color:var(--text);font-size:13px;outline:none;flex:1;}
+.effect-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto;}
+.effect-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1.5px solid transparent;}
+.effect-row.sel{border-color:var(--accent);background:rgba(59,130,246,0.07);}
+.effect-cat{font-size:9px;background:var(--surface3);border-radius:20px;padding:2px 8px;color:var(--muted);white-space:nowrap;}
+.effect-name{font-size:12px;font-weight:500;flex:1;}
+.effect-desc{font-size:10px;color:var(--muted);}
+.param-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.param-label{font-size:11px;color:var(--muted);width:70px;flex-shrink:0;}
+.param-slider{flex:1;accent-color:var(--accent);}
+.param-val{font-size:11px;font-weight:500;min-width:30px;text-align:right;}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-arrow{background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;-webkit-appearance:none;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-dow{text-align:center;font-size:9px;color:var(--muted);padding:3px 0 6px;}
+.cal-day{aspect-ratio:1;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:11px;}
+.cal-day.today{background:var(--surface2);font-weight:700;}
+.cal-day.today .dn{color:var(--accent);}
+.dn{font-size:11px;}
+.day-dot-cal{width:4px;height:4px;border-radius:50%;margin-top:2px;}
+.ev-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:10px;margin-bottom:7px;}
+
+/* AUTOPILOT */
+.ap-opt{background:var(--surface2);border:1.5px solid transparent;border-radius:11px;padding:13px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:7px;}
+.ap-opt.sel{border-color:var(--accent);background:rgba(59,130,246,0.06);}
+.ap-radio{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;}
+.ap-opt.sel .ap-radio{border-color:var(--accent);background:var(--accent);}
+.ap-opt.sel .ap-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:white;}
+
+/* DOWN LIGHTS */
+.dl-strand{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0;}
+.dl-dot{border-radius:50%;background:var(--surface3);border:1px solid var(--border);transition:background 0.4s,box-shadow 0.4s;}
+.dl-preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.dl-preset-row{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid transparent;border-radius:10px;padding:10px;cursor:pointer;}
+
+/* TEAM DETAIL */
+.td-hero{border-radius:13px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;}
+.td-hero-bg{position:absolute;inset:0;opacity:0.2;}
+.td-hero-inner{position:relative;display:flex;align-items:center;gap:12px;}
+.td-badge{width:50px;height:50px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;}
+.td-name{font-size:17px;font-weight:700;}
+.td-league{font-size:11px;color:rgba(255,255,255,0.55);margin-top:3px;}
+
+/* SAVE FLOW */
+.save-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.save-cat-card{background:var(--surface2);border:1.5px solid transparent;border-radius:12px;padding:16px 12px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.save-cat-card.sel{border-color:var(--accent);background:rgba(59,130,246,0.08);}
+.scc-icon{font-size:26px;display:block;margin-bottom:6px;}
+.scc-label{font-size:13px;font-weight:600;}
+.scc-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+.sub-cat-list,.sub-sub-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;}
+.sub-cat-row,.sub-sub-row{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surface2);border-radius:10px;cursor:pointer;border:1.5px solid transparent;}
+.sub-cat-row.sel,.sub-sub-row.sel{border-color:var(--accent);background:rgba(59,130,246,0.07);}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap;}
+.bc-item{cursor:pointer;color:var(--accent);}
+.color-pip{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* MODAL */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:40;display:none;align-items:flex-end;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:16px 16px 0 0;padding:22px;padding-bottom:calc(22px + var(--safe-bot));width:100%;max-height:88vh;overflow-y:auto;}
+.modal-title{font-size:14px;font-weight:600;margin-bottom:16px;}
+.tag-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.tag-opt{background:var(--surface2);border:1.5px solid transparent;border-radius:9px;padding:8px 4px;text-align:center;cursor:pointer;}
+.tag-opt.sel{border-color:var(--accent);background:rgba(59,130,246,0.1);}
+.tag-icon{font-size:16px;display:block;margin-bottom:3px;}
+.tag-name{font-size:9px;color:var(--muted);}
+
+/* TOAST */
+.toast{position:absolute;bottom:calc(24px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--success);color:white;border-radius:20px;padding:8px 20px;font-size:12px;font-weight:500;opacity:0;transition:opacity 0.3s;white-space:nowrap;pointer-events:none;z-index:100;}
+.toast.show{opacity:1;}
+
+/* ZONE PICKER HERO */
+.zp-hero{border-radius:13px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
+.zp-hero-bg{position:absolute;inset:0;opacity:0.2;}
+.zp-swatch{position:relative;width:48px;height:48px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0;}
+.zp-name-txt{position:relative;font-size:16px;font-weight:700;}
+.zp-hex-txt{position:relative;font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+
+/* APPLY BTN */
+.apply-btn{background:var(--accent);border:none;color:white;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:500;cursor:pointer;margin-left:auto;-webkit-appearance:none;}
+
+/* ── LOCK SCREEN ── */
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  padding-top: calc(32px + env(safe-area-inset-top, 0px));
+}
+.lock-logo {
+  width: 80px; height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg,#3b82f6,#8b5cf6,#ec4899);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(59,130,246,0.35);
+}
+.lock-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+.lock-sub { font-size: 13px; color: var(--muted); margin-bottom: 40px; text-align: center; line-height: 1.5; }
+.lock-input-wrap { width: 100%; max-width: 300px; margin-bottom: 14px; position: relative; }
+.lock-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: 12px;
+  padding: 14px 48px 14px 18px;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  letter-spacing: 0.1em;
+  -webkit-appearance: none;
+}
+.lock-input:focus { border-color: var(--accent); }
+.lock-input.shake { animation: shake 0.4s ease; }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
+.lock-eye {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 18px; padding: 4px;
+}
+.lock-btn {
+  width: 100%; max-width: 300px;
+  background: linear-gradient(135deg,#3b82f6,#6366f1);
+  border: none; color: white; border-radius: 12px;
+  padding: 15px; font-size: 15px; font-weight: 700;
+  cursor: pointer; -webkit-appearance: none;
+  box-shadow: 0 4px 16px rgba(59,130,246,0.4);
+}
+.lock-error {
+  font-size: 12px; color: var(--danger);
+  margin-top: 12px; min-height: 18px;
+  text-align: center;
+}
+.lock-hint {
+  font-size: 11px; color: var(--surface3);
+  margin-top: 40px; text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+.lock-hint:active { color: var(--muted); }
+
+
+/* ── GPIO CONFIG ── */
+.gpio-card { background:var(--surface2); border:1.5px solid var(--border); border-radius:13px; padding:14px 16px; margin-bottom:10px; }
+.gpio-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.gpio-num { width:36px; height:36px; border-radius:9px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--accent); flex-shrink:0; }
+.gpio-name-inp { background:transparent; border:none; color:var(--text); font-size:13px; font-weight:600; outline:none; flex:1; }
+.gpio-name-inp::placeholder { color:var(--muted); }
+.gpio-fields { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.gpio-field { display:flex; flex-direction:column; gap:4px; }
+.gpio-field-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+.gpio-field-input { background:var(--surface); border:0.5px solid var(--border2); border-radius:8px; padding:7px 10px; color:var(--text); font-size:12px; outline:none; -webkit-appearance:none; }
+.gpio-field-input:focus { border-color:var(--accent); }
+.gpio-field-select { background:var(--surface); border:0.5px solid var(--border2); border-radius:8px; padding:7px 10px; color:var(--text); font-size:12px; outline:none; -webkit-appearance:none; }
+.gpio-status { display:flex; align-items:center; gap:6px; margin-top:10px; font-size:11px; color:var(--muted); }
+.gpio-status-dot { width:6px; height:6px; border-radius:50%; background:var(--surface3); flex-shrink:0; }
+.gpio-status-dot.ok { background:var(--success); }
+.gpio-status-dot.err { background:var(--danger); }
+.gpio-del-btn { background:rgba(239,68,68,0.08); border:0.5px solid rgba(239,68,68,0.2); color:var(--danger); border-radius:7px; padding:4px 10px; font-size:11px; cursor:pointer; -webkit-appearance:none; }
+.gpio-summary-bar { background:var(--surface2); border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; gap:16px; }
+.gpio-stat { text-align:center; flex:1; }
+.gpio-stat-val { font-size:20px; font-weight:700; }
+.gpio-stat-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+.coverage-track { height:6px; background:var(--surface3); border-radius:3px; overflow:hidden; margin-top:8px; }
+.coverage-fill { height:100%; border-radius:3px; background:linear-gradient(to right,var(--accent),#6366f1); transition:width 0.4s; }
+
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════ LOCK SCREEN ══════════ -->
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-logo">✨</div>
+  <div class="lock-title">LightControl</div>
+  <div class="lock-sub">Enter your access password<br>to control your lights</div>
+  <div class="lock-input-wrap">
+    <input
+      class="lock-input"
+      type="password"
+      id="lock-input"
+      placeholder="Password"
+      onkeydown="if(event.key==='Enter')attemptUnlock()"
+      autocomplete="current-password"
+    />
+    <button class="lock-eye" onclick="toggleLockPW()" id="lock-eye-btn">👁</button>
+  </div>
+  <button class="lock-btn" onclick="attemptUnlock()">Unlock</button>
+  <div class="lock-error" id="lock-error"></div>
+  <!-- Hidden tap target: tap 5x quickly to open admin password reset -->
+  <div class="lock-hint" id="lock-hint" onclick="lockHintTap()">LightControl Pro</div>
+</div>
+
+<div class="scroll-view" id="scroll-view">
+
+<!-- ══════════ HOME ══════════ -->
+<div class="screen active" id="s-home">
+  <div class="home-header">
+    <div class="logo-ring">✨</div>
+    <div class="home-title">LightControl</div>
+    <div class="home-sub">Your home, lit up</div>
+  </div>
+
+  <!-- NOW PLAYING -->
+  <div class="now-playing">
+    <div class="np-bg" id="np-bg"></div>
+    <div class="np-inner">
+      <div class="np-dots" id="np-colors"></div>
+      <div class="np-info">
+        <div class="np-label">Now Playing</div>
+        <div class="np-name" id="np-name">Off</div>
+        <div class="np-sub" id="np-sub">Tap Presets or Create Your Own</div>
+      </div>
+      <div id="np-indicator" class="np-off-dot"></div>
+      <button class="power-btn" id="power-btn" onclick="togglePower()">⏻</button>
+    </div>
+  </div>
+
+  <!-- LIGHT MODE -->
+  <div class="mode-seg">
+    <button class="seg-tab active" id="tab-all" onclick="setLightMode('all')">
+      <span class="st-icon">🏠</span>All Lights
+    </button>
+    <button class="seg-tab" id="tab-down" onclick="setLightMode('down')">
+      <span class="st-icon">💡</span>Down Lights
+    </button>
+  </div>
+
+  <!-- CREATE YOUR OWN -->
+  <button class="create-own-btn" onclick="go('s-create')">
+    <div class="co-icon-wrap">✏️</div>
+    <div style="flex:1">
+      <div class="co-label">Create Your Own</div>
+      <div class="co-sub">Mix zone colors and effects, then save</div>
+    </div>
+    <span style="color:var(--muted);font-size:16px">›</span>
+  </button>
+
+  <!-- PRESETS -->
+  <button class="presets-btn" onclick="go('s-preset-menu')">
+    <span class="pb-icon">🎨</span>
+    <div style="flex:1">
+      <div class="pb-label">Presets</div>
+      <div class="pb-sub">Holidays · Sports · Seasons · My Presets</div>
+    </div>
+    <span style="color:rgba(255,255,255,0.5);font-size:16px">›</span>
+  </button>
+
+  <!-- QUICK -->
+  <div class="quick-grid">
+    <div class="quick-card" onclick="go('s-autopilot')">
+      <span class="qc-icon">✨</span>
+      <div style="flex:1"><div class="qc-label">Autopilot</div><div class="qc-sub" id="ap-home-sub">Off</div></div>
+      <div class="mini-toggle" id="ap-home-toggle" onclick="event.stopPropagation();toggleAP()"></div>
+    </div>
+    <div class="quick-card" onclick="go('s-calendar')">
+      <span class="qc-icon">📅</span>
+      <div><div class="qc-label">Schedule</div><div class="qc-sub">Auto-switch by date</div></div>
+    </div>
+  </div>
+
+  <div class="wide-card" onclick="go('s-downlights')">
+    <span class="wide-icon">💡</span>
+    <div style="flex:1"><div class="wl">Down Lights</div><div class="ws">Color and brightness control</div></div>
+    <div class="mini-toggle on" onclick="event.stopPropagation()"></div>
+  </div>
+
+  <div class="wide-card" onclick="go('s-my-presets')">
+    <span class="wide-icon">💾</span>
+    <div style="flex:1"><div class="wl">My Presets</div><div class="ws" id="home-preset-count">4 saved presets</div></div>
+    <span style="color:var(--muted);font-size:14px">›</span>
+  </div>
+
+  <div class="status-bar" style="margin-top:2px">
+    <div class="status-dot"></div>
+    <span>Connected · 100 LEDs · Ready</span>
+  </div>
+</div>
+
+<!-- ══════════ CREATE YOUR OWN ══════════ -->
+<div class="screen" id="s-create">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-home')">← Home</button>
+    <span class="screen-title">Create Your Own</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="openSaveFlow()">💾 Save</button>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="strand-preview">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+      <span>LIVE PREVIEW</span>
+      <span id="create-mode-badge" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">All Lights</span>
+    </div>
+    <div class="strand-strip" id="create-strand"></div>
+    <div style="margin-top:9px;font-size:11px;color:var(--muted)">
+      <span id="cr-color-dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#3b82f6;margin-right:5px;vertical-align:middle"></span>
+      <span id="cr-color-name">#3B82F6</span>
+      &nbsp;·&nbsp;<span id="cr-effect-name">Solid</span>
+      &nbsp;·&nbsp;Speed <span id="cr-speed-val">128</span>
+    </div>
+  </div>
+
+  <!-- MODE -->
+  <div class="mode-seg">
+    <button class="seg-tab active" id="cr-mode-all" onclick="setCreateMode('all')">
+      <span class="st-icon">🏠</span>All Lights
+    </button>
+    <button class="seg-tab" id="cr-mode-group" onclick="setCreateMode('group')">
+      <span class="st-icon">🗂️</span>Group Mode
+    </button>
+  </div>
+
+  <!-- ALL LIGHTS PANEL -->
+  <div id="cr-panel-all">
+    <div class="card">
+      <div class="section-label">Color</div>
+      <div class="swatch-row" id="al-swatches"></div>
+      <div class="slider-row"><span>Hue</span><span id="al-hue-val">217°</span></div>
+      <div class="hue-track" id="al-hue"><div class="slider-thumb" id="al-hue-thumb" style="left:60%"></div></div>
+      <div class="slider-row"><span>Saturation</span><span id="al-sat-val">100%</span></div>
+      <div class="sat-track" id="al-sat"><div class="slider-thumb" id="al-sat-thumb" style="left:100%"></div></div>
+      <div class="slider-row"><span>Brightness</span><span id="al-bri-val">100%</span></div>
+      <div class="bri-track" id="al-bri"><div class="slider-thumb" id="al-bri-thumb" style="left:100%"></div></div>
+      <div class="hex-row">
+        <span style="font-size:11px;color:var(--muted)">Hex</span>
+        <input class="hex-inp" id="al-hex" value="#3b82f6" maxlength="7" oninput="alHexTyped()"/>
+        <button class="apply-btn" onclick="alApplyCustom()">Apply</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:10px">Effect — all 117 WLED effects</div>
+      <div class="effect-search">
+        <span style="color:var(--muted)">🔍</span>
+        <input type="text" id="effect-search" placeholder="Search effects..." oninput="filterEffects()"/>
+      </div>
+      <div class="effect-list" id="effect-list"></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Effect Parameters</div>
+      <div class="param-row">
+        <span class="param-label">Speed</span>
+        <input type="range" class="param-slider" min="0" max="255" value="128" id="param-speed" oninput="updateParams()">
+        <span class="param-val" id="speed-val">128</span>
+      </div>
+      <div class="param-row">
+        <span class="param-label">Intensity</span>
+        <input type="range" class="param-slider" min="0" max="255" value="128" id="param-intensity" oninput="updateParams()">
+        <span class="param-val" id="intensity-val">128</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUP PANEL -->
+  <div id="cr-panel-group" style="display:none">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;padding:10px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent)">
+      Tap any group to set its color. Each group runs the same effect at its chosen color.
+    </div>
+    <div id="group-zone-rows"></div>
+  </div>
+</div>
+
+<!-- ══════════ ZONE COLOR PICKER ══════════ -->
+<div class="screen" id="s-zone-picker">
+  <div class="top-bar">
+    <button class="back-btn" id="zp-back-btn">← Groups</button>
+    <span class="screen-title" id="zp-title">Zone Color</span>
+  </div>
+  <div class="zp-hero" id="zp-hero">
+    <div class="zp-hero-bg" id="zp-bg"></div>
+    <div class="zp-swatch" id="zp-swatch"></div>
+    <div>
+      <div class="zp-name-txt" id="zp-name-label"></div>
+      <div class="zp-hex-txt" id="zp-hex-label"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:8px">Quick Colors</div>
+    <div class="swatch-row" id="zp-swatches"></div>
+    <div style="border-top:0.5px solid var(--border);padding-top:12px">
+      <div class="field-label" style="margin-bottom:8px">Holiday Colors</div>
+      <div class="swatch-row" id="zp-holiday-swatches"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:10px">Custom Color</div>
+    <div class="slider-row"><span>Hue</span><span id="zp-hue-val">0°</span></div>
+    <div class="hue-track" id="zp-hue"><div class="slider-thumb" id="zp-hue-thumb" style="left:0%"></div></div>
+    <div class="slider-row"><span>Saturation</span><span id="zp-sat-val">100%</span></div>
+    <div class="sat-track" id="zp-sat"><div class="slider-thumb" id="zp-sat-thumb" style="left:100%"></div></div>
+    <div class="slider-row"><span>Brightness</span><span id="zp-bri-val">100%</span></div>
+    <div class="bri-track" id="zp-bri"><div class="slider-thumb" id="zp-bri-thumb" style="left:100%"></div></div>
+    <div class="hex-row">
+      <span style="font-size:11px;color:var(--muted)">Hex</span>
+      <input class="hex-inp" id="zp-hex-inp" value="#ffffff" maxlength="7" oninput="zpHexTyped()"/>
+      <button class="apply-btn" onclick="zpApplyCustom()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SAVE FLOW ══════════ -->
+<div class="screen" id="s-save">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-create')">← Create</button>
+    <span class="screen-title">Save Preset</span>
+  </div>
+  <div class="card">
+    <div class="field-label">Preset Name</div>
+    <input class="field-input" id="save-name" placeholder="e.g. My Christmas Look, Game Day Blue"/>
+    <div class="field-label">Notes (optional)</div>
+    <textarea class="field-input" id="save-notes" rows="2" placeholder="Describe this preset…"></textarea>
+  </div>
+  <div class="section-label" style="margin-bottom:10px">Choose a Category</div>
+  <div class="save-cat-grid">
+    <div class="save-cat-card" id="cat-holidays" onclick="selectSaveCat('holidays')"><span class="scc-icon">🎄</span><div class="scc-label">Holidays</div><div class="scc-sub">Christmas, Halloween…</div></div>
+    <div class="save-cat-card" id="cat-sports" onclick="selectSaveCat('sports')"><span class="scc-icon">🏆</span><div class="scc-label">Sports</div><div class="scc-sub">NFL, NBA, College…</div></div>
+    <div class="save-cat-card" id="cat-seasons" onclick="selectSaveCat('seasons')"><span class="scc-icon">🍂</span><div class="scc-label">Seasons</div><div class="scc-sub">Spring, Summer…</div></div>
+    <div class="save-cat-card" id="cat-mypresets" onclick="selectSaveCat('mypresets')"><span class="scc-icon">💾</span><div class="scc-label">My Presets</div><div class="scc-sub">No category needed</div></div>
+  </div>
+  <div id="save-step3" style="display:none;margin-top:4px">
+    <div class="breadcrumb" id="save-bc"></div>
+    <div class="section-label" style="margin-bottom:10px" id="save-step3-label">Choose Holiday</div>
+    <div class="sub-cat-list" id="sub-cat-list"></div>
+  </div>
+  <div id="save-step4" style="display:none;margin-top:12px">
+    <div class="breadcrumb" id="save-bc2"></div>
+    <div class="section-label" style="margin-bottom:8px" id="save-step4-label">Choose Team</div>
+    <div class="effect-search" style="margin-bottom:8px">
+      <span style="color:var(--muted)">🔍</span>
+      <input type="text" id="team-save-search" placeholder="Search teams…" oninput="filterSaveTeams()"/>
+    </div>
+    <div class="sub-sub-list" id="sub-sub-list"></div>
+  </div>
+  <div id="save-cta" style="display:none;margin-top:16px">
+    <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px" id="save-summary"></div>
+    <button class="btn btn-primary" style="width:100%;padding:13px;font-size:14px;font-weight:600" onclick="doSave()">Save to <span id="save-cta-label">My Presets</span></button>
+  </div>
+</div>
+
+<!-- ══════════ PRESET MENU ══════════ -->
+<div class="screen" id="s-preset-menu">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Presets</span></div>
+  <div class="preset-menu-grid">
+    <div class="preset-menu-card" onclick="go('s-holidays')"><span class="pmc-icon">🎄</span><div style="flex:1"><div class="pmc-label">Holidays</div><div class="pmc-sub">Christmas, Halloween, 4th of July and more</div></div><span class="pmc-count">9</span></div>
+    <div class="preset-menu-card" onclick="go('s-sports-leagues')"><span class="pmc-icon">🏆</span><div style="flex:1"><div class="pmc-label">Sports Teams</div><div class="pmc-sub">NFL, NBA, MLB, NHL and 201 college programs</div></div><span class="pmc-count">5 leagues</span></div>
+    <div class="preset-menu-card" onclick="go('s-seasons')"><span class="pmc-icon">🍂</span><div style="flex:1"><div class="pmc-label">Seasons</div><div class="pmc-sub">Spring, Summer, Fall and Winter themes</div></div><span class="pmc-count">4 seasons</span></div>
+    <div class="preset-menu-card" onclick="go('s-my-presets')"><span class="pmc-icon">💾</span><div style="flex:1"><div class="pmc-label">My Presets</div><div class="pmc-sub">Your saved zone color combinations</div></div><span class="pmc-count" id="my-preset-count">4 saved</span></div>
+  </div>
+</div>
+
+<!-- ══════════ HOLIDAYS ══════════ -->
+<div class="screen" id="s-holidays">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-preset-menu')">← Presets</button><span class="screen-title">Holidays</span></div>
+  <div class="holiday-grid" id="holiday-grid"></div>
+</div>
+<div class="screen" id="s-patterns">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-holidays')">← Holidays</button><span class="screen-title" id="patterns-title">Patterns</span></div>
+  <div id="patterns-badge" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
+  <div class="preview-bar" id="patterns-preview-bar"></div>
+  <div class="fav-hint">⭐ Star patterns to add them to your nightly playlist</div>
+  <div class="pattern-list" id="pattern-list"></div>
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+    <div><div style="font-size:12px;font-weight:500" id="fav-count-label">0 in playlist</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Rotates randomly each night</div></div>
+    <button class="btn btn-primary btn-sm" onclick="showToast('Playlist saved!')">Save</button>
+  </div>
+</div>
+
+<!-- ══════════ SEASONS ══════════ -->
+<div class="screen" id="s-seasons">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-preset-menu')">← Presets</button><span class="screen-title">Seasons</span></div>
+  <div class="season-grid" id="season-grid"></div>
+</div>
+<div class="screen" id="s-season-patterns">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-seasons')">← Seasons</button><span class="screen-title" id="sp-title">Patterns</span></div>
+  <div id="sp-badge" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
+  <div class="preview-bar" id="sp-preview-bar"></div>
+  <div class="fav-hint">⭐ Star patterns to add them to your nightly playlist</div>
+  <div class="pattern-list" id="sp-pattern-list"></div>
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+    <div><div style="font-size:12px;font-weight:500" id="sp-fav-count">0 in playlist</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Rotates randomly each night</div></div>
+    <button class="btn btn-primary btn-sm" onclick="showToast('Playlist saved!')">Save</button>
+  </div>
+</div>
+
+<!-- ══════════ MY PRESETS ══════════ -->
+<div class="screen" id="s-my-presets">
+  <div class="top-bar"><button class="back-btn" id="my-presets-back" onclick="go('s-home')">← Home</button><span class="screen-title">My Presets</span><button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="go('s-create')">+ Create</button></div>
+  <div class="filter-bar" id="preset-filter-bar"></div>
+  <div id="preset-list"></div>
+</div>
+
+<!-- ══════════ SPORTS ══════════ -->
+<div class="screen" id="s-sports-leagues">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-preset-menu')">← Presets</button><span class="screen-title">Sports Teams</span></div>
+  <div class="league-grid">
+    <div class="league-card" onclick="openLeague('NFL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏈</span><div style="font-size:13px;font-weight:600">NFL</div><div style="font-size:10px;color:var(--muted)">32 teams</div></div>
+    <div class="league-card" onclick="openLeague('NBA')"><span style="font-size:28px;display:block;margin-bottom:7px">🏀</span><div style="font-size:13px;font-weight:600">NBA</div><div style="font-size:10px;color:var(--muted)">30 teams</div></div>
+    <div class="league-card" onclick="openLeague('MLB')"><span style="font-size:28px;display:block;margin-bottom:7px">⚾</span><div style="font-size:13px;font-weight:600">MLB</div><div style="font-size:10px;color:var(--muted)">30 teams</div></div>
+    <div class="league-card" onclick="openLeague('NHL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏒</span><div style="font-size:13px;font-weight:600">NHL</div><div style="font-size:10px;color:var(--muted)">32 teams</div></div>
+  </div>
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-top:10px" onclick="openLeague('College')">
+    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:13px;font-weight:600">College</div><div style="font-size:10px;color:var(--muted)">201 programs · SLU Billikens included</div></div><span style="color:var(--muted)">›</span>
+  </div>
+</div>
+<div class="screen" id="s-sports-teams">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-sports-leagues')">← Leagues</button><span class="screen-title" id="teams-screen-title">Teams</span></div>
+  <div class="search-bar"><span style="color:var(--muted)">🔍</span><input type="text" id="team-search" placeholder="Search teams…" oninput="filterTeams()"/></div>
+  <div class="team-list-scroll" id="team-list"></div>
+</div>
+<div class="screen" id="s-team-detail">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-sports-teams')">← Teams</button><span class="screen-title">Team Colors</span></div>
+  <div class="td-hero" id="td-hero">
+    <div class="td-hero-bg" id="td-bg"></div>
+    <div class="td-hero-inner">
+      <div class="td-badge" id="td-badge"></div>
+      <div><div class="td-name" id="td-name"></div><div class="td-league" id="td-league-label"></div><div style="display:flex;gap:5px;margin-top:7px" id="td-dots"></div></div>
+    </div>
+  </div>
+  <div style="height:7px;border-radius:4px;margin-bottom:12px" id="td-bar"></div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:10px">Game-Day Patterns</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px" id="td-patterns"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:10px 12px">
+      <div><div style="font-size:12px;font-weight:500">Set as my team</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Autopilot uses these colors</div></div>
+      <div class="mini-toggle" id="td-fav-toggle" onclick="toggleFavTeam()"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" style="flex:1" onclick="activateTeam()">Activate on Lights</button></div>
+  </div>
+</div>
+
+<!-- ══════════ DOWN LIGHTS ══════════ -->
+<div class="screen" id="s-downlights">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Down Lights</span></div>
+  <div class="card">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:8px">LIVE PREVIEW</div>
+    <div class="dl-strand" id="dl-strand"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+      <div style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(255,255,255,0.2)" id="dl-swatch"></div>
+      <div><div style="font-size:13px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:10px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:var(--muted)" id="dl-onoff-label">On</span><div class="mini-toggle on" id="dl-toggle" onclick="toggleDL()"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:10px">Color Presets</div>
+    <div class="dl-preset-grid" id="dl-presets"></div>
+  </div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:10px">Custom Color</div>
+    <div class="slider-row"><span>Hue</span><span id="dl-hue-val">36°</span></div>
+    <div class="hue-track" id="dl-hue"><div class="slider-thumb" id="dl-hue-thumb" style="left:10%"></div></div>
+    <div class="slider-row"><span>Saturation</span><span id="dl-sat-val">90%</span></div>
+    <div class="sat-track" id="dl-sat"><div class="slider-thumb" id="dl-sat-thumb" style="left:90%"></div></div>
+    <div class="slider-row"><span>Brightness</span><span id="dl-bri-val">90%</span></div>
+    <div class="bri-track" id="dl-bri"><div class="slider-thumb" id="dl-bri-thumb" style="left:90%"></div></div>
+    <div class="hex-row" style="margin-top:8px">
+      <span style="font-size:11px;color:var(--muted)">Hex</span>
+      <input class="hex-inp" id="dl-hex-inp" value="#fff5e0" maxlength="7" oninput="dlHexTyped()"/>
+      <button class="apply-btn" onclick="dlApplyCustom()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ AUTOPILOT ══════════ -->
+<div class="screen" id="s-autopilot">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Autopilot</span></div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:10px">How should we pick patterns?</div>
+    <div class="ap-opt sel" id="ap-season" onclick="selAP('season')"><span style="font-size:20px">🍂</span><div><div style="font-size:12px;font-weight:500">Season-based</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Warm whites in winter, pastels in spring</div></div><div class="ap-radio"></div></div>
+    <div class="ap-opt" id="ap-team" onclick="selAP('team')"><span style="font-size:20px">🏆</span><div><div style="font-size:12px;font-weight:500">Favorite team colors</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Uses your saved team palette</div></div><div class="ap-radio"></div></div>
+    <div class="ap-opt" id="ap-random" onclick="selAP('random')"><span style="font-size:20px">🎲</span><div><div style="font-size:12px;font-weight:500">Fully random</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Surprise us — anything goes</div></div><div class="ap-radio"></div></div>
+    <div class="ap-opt" id="ap-fav" onclick="selAP('fav')"><span style="font-size:20px">⭐</span><div><div style="font-size:12px;font-weight:500">My favorites only</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Only patterns you've starred</div></div><div class="ap-radio"></div></div>
+  </div>
+  <div class="card">
+    <div class="field-label" style="margin-bottom:10px">Change pattern every</div>
+    <div class="ap-opt sel" id="ap-night" onclick="selFreq('night')"><span style="font-size:20px">🌙</span><div><div style="font-size:12px;font-weight:500">Each night</div><div style="font-size:10px;color:var(--muted);margin-top:2px">New pick at dusk every day</div></div><div class="ap-radio"></div></div>
+    <div class="ap-opt" id="ap-week" onclick="selFreq('week')"><span style="font-size:20px">📆</span><div><div style="font-size:12px;font-weight:500">Each week</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Consistent look all week</div></div><div class="ap-radio"></div></div>
+  </div>
+  <button style="width:100%;background:linear-gradient(135deg,#3b82f6,#6366f1);border:none;color:white;border-radius:12px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;" onclick="activateAP()">Activate Autopilot</button>
+</div>
+
+<!-- ══════════ CALENDAR ══════════ -->
+<div class="screen" id="s-calendar">
+  <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Schedule</span><button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="showToast('Custom date — coming soon!')">+ Add</button></div>
+  <div class="card" style="padding:14px">
+    <div class="cal-nav">
+      <button class="cal-arrow" onclick="calShift(-1)">←</button>
+      <div style="font-size:15px;font-weight:600" id="cal-label"></div>
+      <button class="cal-arrow" onclick="calShift(1)">→</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+  <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:12px">Upcoming</div><div id="upcoming-list"></div></div>
+</div>
+
+
+<!-- ══════════ ADMIN GPIO CONFIG ══════════ -->
+<div class="screen" id="s-admin-gpio">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-home')">← Home</button>
+    <span class="screen-title">GPIO Configuration</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="saveGPIOConfig()">💾 Save & Push</button>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="gpio-summary-bar" id="gpio-summary-bar">
+    <div class="gpio-stat"><div class="gpio-stat-val" id="gpio-stat-outputs">0</div><div class="gpio-stat-label">Outputs</div></div>
+    <div class="gpio-stat"><div class="gpio-stat-val" id="gpio-stat-leds">0</div><div class="gpio-stat-label">Total LEDs</div></div>
+    <div class="gpio-stat"><div class="gpio-stat-val" id="gpio-stat-ma">0</div><div class="gpio-stat-label">Est. mA</div></div>
+  </div>
+  <div style="margin-bottom:14px">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between"><span>LED Coverage</span><span id="gpio-coverage-pct">0%</span></div>
+    <div class="coverage-track"><div class="coverage-fill" id="gpio-coverage-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- OUTPUT LIST -->
+  <div id="gpio-output-list"></div>
+
+  <!-- ADD OUTPUT -->
+  <button style="width:100%;background:var(--surface);border:1.5px dashed rgba(255,255,255,0.15);border-radius:13px;padding:14px;color:var(--muted);font-size:13px;cursor:pointer;-webkit-appearance:none;margin-bottom:14px" onclick="addGPIOOutput()">+ Add Output</button>
+
+  <!-- WLED PUSH STATUS -->
+  <div class="card" id="gpio-push-status" style="display:none">
+    <div style="font-size:12px;font-weight:500;margin-bottom:8px" id="gpio-push-title">Pushing to WLED…</div>
+    <div class="coverage-track"><div class="coverage-fill" id="gpio-push-bar" style="width:0%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px" id="gpio-push-msg"></div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="card">
+    <div style="font-size:12px;font-weight:500;margin-bottom:6px">⚠️ Important Notes</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.6">
+      • ESP32 recommended GPIO pins: 2, 4, 5, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27<br>
+      • Avoid GPIO 0, 1, 3, 6-11, 34-39 (input only or boot sensitive)<br>
+      • Max ~300 LEDs per output at 5V without external power injection<br>
+      • WS2812B: 60mA max per LED · SK6812: 60mA · WS2811: 60mA<br>
+      • Changes require WLED to restart — lights will briefly go off
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADMIN PANEL ══════════ -->
+<div class="screen" id="s-admin">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-home')">← Home</button>
+    <span class="screen-title">Admin Panel</span>
+  </div>
+
+  <div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(99,102,241,0.15));border:0.5px solid rgba(99,102,241,0.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:28px">⚡</span>
+    <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">LightControl Admin</div><div style="font-size:11px;color:var(--muted)">Install configuration tools</div></div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-admin-gpio')">
+      <span style="font-size:24px">🔌</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">GPIO Configuration</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Set LED count and type per output</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-wled')">
+      <span style="font-size:24px">📡</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Controller Setup</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Discover and connect WLED devices</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="showAdminPasswordChange()">
+      <span style="font-size:24px">🔑</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">App Password</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Change the customer unlock password</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="adminLockApp()">
+      <span style="font-size:24px">🔒</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Lock App</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Re-lock and require password to re-enter</div></div>
+    </div>
+  </div>
+
+  <!-- PASSWORD CHANGE CARD -->
+  <div class="card" id="admin-pw-card" style="display:none;margin-top:14px">
+    <div style="font-size:12px;font-weight:500;margin-bottom:12px">🔑 Change App Password</div>
+    <div class="field-label">Current Password</div>
+    <div style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--muted);margin-bottom:12px;font-family:monospace" id="admin-current-pw-display">••••••••</div>
+    <div class="field-label">New Password</div>
+    <input class="field-input" id="admin-new-pw" placeholder="Min 4 characters" type="password"/>
+    <div class="field-label">Confirm New Password</div>
+    <input class="field-input" id="admin-confirm-pw" placeholder="Repeat new password" type="password"/>
+    <div style="font-size:11px;color:var(--danger);min-height:16px;margin-bottom:10px" id="admin-pw-error"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="doAdminPasswordChange()">Update Password</button>
+      <button class="btn btn-ghost" onclick="hideAdminPasswordChange()">Cancel</button>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--surface3)">LightControl Admin · v1.0</div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div><!-- end scroll-view -->
+</div><!-- end app -->
+
+<script>
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+let lightsOn=false,lightMode='all',apOn=false,apMode='season',apFreq='night';
+let favTeam=null,currentLeague='NFL',currentTeam=null,selectedTDPattern=0;
+let nowPlayingName='Off',nowPlayingColors=[];
+let currentHoliday=null,currentSeason=null;
+let favPatterns={},seasonFavPatterns={};
+let calYear=2026,calMonth=3;
+let presetFilter='all',presetNextId=10;
+let selectedSaveCat=null,selectedSaveSubCat=null,selectedSaveSubSubCat=null;
+let filteredSaveTeams=[];
+
+// Create Your Own state
+let createMode='all';
+let alColor='#3b82f6',alH=217,alS=100,alB=100;
+let selectedEffect=0,effectSpeed=128,effectIntensity=128;
+let editingZoneIdx=null,zpH=0,zpS=100,zpB=100;
+
+const defaultZones=[
+  {name:'Garage',leds:25,color:'#3b82f6',on:true},
+  {name:'Front Roofline',leds:45,color:'#22c55e',on:true},
+  {name:'Peak',leds:15,color:'#ffffff',on:true},
+  {name:'Soffit',leds:15,color:'#f59e0b',on:true},
+];
+let zones=defaultZones.map(z=>({...z}));
+
+// ═══════════════════════════════
+// DATA
+// ═══════════════════════════════
+const holidays=[
+  {id:'christmas',name:'Christmas',icon:'🎄',bg:'linear-gradient(135deg,#1a3a1a,#2d5a2d)',colors:['#ef4444','#22c55e','#ffffff'],patterns:['Candy Cane Chase','Christmas Twinkle','Snow Drift','Holly Glow','Winter Pulse','Fireplace Flicker']},
+  {id:'halloween',name:'Halloween',icon:'🎃',bg:'linear-gradient(135deg,#2a1a00,#4a2c00)',colors:['#f97316','#9333ea','#000000'],patterns:['Haunted Flicker','Spider Web','Lightning Storm','Pumpkin Pulse','Ghost Drift','Blood Moon']},
+  {id:'july4',name:'4th of July',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
+  {id:'valentines',name:"Valentine's",icon:'💖',bg:'linear-gradient(135deg,#3a0a1a,#6a1a2a)',colors:['#ec4899','#ef4444','#fbbf24'],patterns:['Pink Blush','Rose Glow','Heart Pulse','Love Twinkle']},
+  {id:'stpats',name:"St. Patrick's",icon:'🍀',bg:'linear-gradient(135deg,#0a2a0a,#1a4a1a)',colors:['#22c55e','#16a34a','#fbbf24'],patterns:['Shamrock Shimmer','Luck Chase','Irish Glow']},
+  {id:'easter',name:'Easter',icon:'🐰',bg:'linear-gradient(135deg,#1a1a3a,#2d1a4a)',colors:['#a855f7','#f9a8d4','#86efac'],patterns:['Pastel Drift','Spring Sparkle','Bunny Hop','Easter Glow']},
+  {id:'thanksgiving',name:'Thanksgiving',icon:'🦃',bg:'linear-gradient(135deg,#2a1500,#4a2800)',colors:['#f97316','#d97706','#dc2626'],patterns:['Harvest Glow','Amber Pulse','Thankful Twinkle']},
+  {id:'newyear',name:"New Year's",icon:'🥂',bg:'linear-gradient(135deg,#1a1a1a,#2a2a2a)',colors:['#fbbf24','#ffffff','#a855f7'],patterns:['Golden Burst','Countdown Flash','Champagne Sparkle']},
+  {id:'hanukkah',name:'Hanukkah',icon:'🕎',bg:'linear-gradient(135deg,#001a3a,#002a5a)',colors:['#3b82f6','#ffffff','#60a5fa'],patterns:['Menorah Glow','Blue Shimmer','Festival Pulse']},
+];
+
+const seasons=[
+  {id:'spring',name:'Spring',icon:'🌸',bg:'linear-gradient(135deg,#0a2a1a,#1a4a2a)',colors:['#86efac','#f9a8d4','#fde68a','#bfdbfe'],patterns:['Petal Drift','Garden Bloom','Morning Dew','Soft Breeze','Pastel Chase','Rainbow Shimmer']},
+  {id:'summer',name:'Summer',icon:'☀️',bg:'linear-gradient(135deg,#2a1a00,#3a2a00)',colors:['#fbbf24','#f97316','#06b6d4','#22c55e'],patterns:['Sunshine Burst','Ocean Wave','Tropical Fade','Heat Wave','Beach Glow','Summer Nights']},
+  {id:'fall',name:'Fall',icon:'🍂',bg:'linear-gradient(135deg,#2a0f00,#4a1f00)',colors:['#f97316','#dc2626','#fbbf24','#92400e'],patterns:['Harvest Drift','Maple Fade','Ember Glow','Autumn Chase','Pumpkin Spice','Cozy Flicker']},
+  {id:'winter',name:'Winter',icon:'❄️',bg:'linear-gradient(135deg,#0a0a2a,#0a1a3a)',colors:['#bfdbfe','#ffffff','#93c5fd','#e0f2fe'],patterns:['Snow Drift','Frost Shimmer','Icy Pulse','Blizzard Chase','Polar Glow','Winter Solstice']},
+];
+
+const sportsTeams={
+  NFL:[{name:'Bears',city:'Chicago',c:['#0B162A','#C83803'],i:'🐻'},{name:'Packers',city:'Green Bay',c:['#203731','#FFB612'],i:'🧀'},{name:'Vikings',city:'Minnesota',c:['#4F2683','#FFC62F'],i:'⚔️'},{name:'Chiefs',city:'Kansas City',c:['#E31837','#FFB81C'],i:'👑'},{name:'Cowboys',city:'Dallas',c:['#003594','#869397'],i:'⭐'},{name:'Eagles',city:'Philadelphia',c:['#004C54','#A5ACAF'],i:'🦅'},{name:'Patriots',city:'New England',c:['#002244','#C60C30'],i:'🗽'},{name:'49ers',city:'San Francisco',c:['#AA0000','#B3995D'],i:'🥇'},{name:'Steelers',city:'Pittsburgh',c:['#FFB612','#101820'],i:'⚙️'},{name:'Ravens',city:'Baltimore',c:['#241773','#000000'],i:'🐦'},{name:'Bills',city:'Buffalo',c:['#00338D','#C60C30'],i:'🦬'},{name:'Dolphins',city:'Miami',c:['#008E97','#FC4C02'],i:'🐬'},{name:'Bengals',city:'Cincinnati',c:['#FB4F14','#000000'],i:'🐯'},{name:'Broncos',city:'Denver',c:['#FB4F14','#002244'],i:'🐴'},{name:'Seahawks',city:'Seattle',c:['#002244','#69BE28'],i:'🦅'}],
+  NBA:[{name:'Bulls',city:'Chicago',c:['#CE1141','#000000'],i:'🐂'},{name:'Lakers',city:'Los Angeles',c:['#552583','#FDB927'],i:'🟣'},{name:'Celtics',city:'Boston',c:['#007A33','#BA9653'],i:'🍀'},{name:'Warriors',city:'Golden State',c:['#1D428A','#FFC72C'],i:'🌉'},{name:'Heat',city:'Miami',c:['#98002E','#F9A01B'],i:'🔥'},{name:'Knicks',city:'New York',c:['#006BB6','#F58426'],i:'🗽'},{name:'Bucks',city:'Milwaukee',c:['#00471B','#EEE1C6'],i:'🦌'},{name:'Nuggets',city:'Denver',c:['#0E2240','#FEC524'],i:'⛏️'},{name:'Suns',city:'Phoenix',c:['#1D1160','#E56020'],i:'☀️'},{name:'Mavericks',city:'Dallas',c:['#00538C','#002B5E'],i:'🐴'}],
+  MLB:[{name:'Cubs',city:'Chicago',c:['#0E3386','#CC3433'],i:'🐻'},{name:'Cardinals',city:'St. Louis',c:['#C41E3A','#FEDB00'],i:'🐦'},{name:'Yankees',city:'New York',c:['#132448','#C4CED4'],i:'🎩'},{name:'Red Sox',city:'Boston',c:['#BD3039','#0C2340'],i:'🧦'},{name:'Dodgers',city:'Los Angeles',c:['#005A9C','#EF3E42'],i:'🔵'},{name:'Astros',city:'Houston',c:['#002D62','#EB6E1F'],i:'🚀'},{name:'Braves',city:'Atlanta',c:['#CE1141','#13274F'],i:'🪓'},{name:'Phillies',city:'Philadelphia',c:['#E81828','#002D72'],i:'🔔'}],
+  NHL:[{name:'Blackhawks',city:'Chicago',c:['#CF0A2C','#000000'],i:'🦅'},{name:'Blues',city:'St. Louis',c:['#002F87','#FCB514'],i:'🎵'},{name:'Bruins',city:'Boston',c:['#FFB81C','#000000'],i:'🐻'},{name:'Penguins',city:'Pittsburgh',c:['#000000','#FCB514'],i:'🐧'},{name:'Rangers',city:'New York',c:['#0038A8','#CE1126'],i:'🗽'},{name:'Red Wings',city:'Detroit',c:['#CE1126','#ffffff'],i:'🔴'},{name:'Lightning',city:'Tampa Bay',c:['#002868','#ffffff'],i:'⚡'},{name:'Avalanche',city:'Colorado',c:['#6F263D','#236192'],i:'🏔️'},{name:'Oilers',city:'Edmonton',c:['#041E42','#FF4C00'],i:'🛢️'},{name:'Maple Leafs',city:'Toronto',c:['#00205B','#ffffff'],i:'🍁'}],
+  College:[{name:'Alabama',city:'Crimson Tide',c:['#9E1B32','#828A8F'],i:'🐘'},{name:'Ohio State',city:'Buckeyes',c:['#BB0000','#666666'],i:'🌰'},{name:'Michigan',city:'Wolverines',c:['#00274C','#FFCB05'],i:'🦡'},{name:'Georgia',city:'Bulldogs',c:['#BA0C2F','#101820'],i:'🐶'},{name:'Notre Dame',city:'Fighting Irish',c:['#0C2340','#C99700'],i:'☘️'},{name:'LSU',city:'Tigers',c:['#461D7C','#FDD023'],i:'🐯'},{name:'Clemson',city:'Tigers',c:['#F66733','#522D80'],i:'🐯'},{name:'Texas',city:'Longhorns',c:['#BF5700','#ffffff'],i:'🤘'},{name:'St. Louis University',city:'Billikens',c:['#003DA5','#C8C9C7'],i:'🌟'},{name:'Illinois',city:'Illini',c:['#E84A27','#13294B'],i:'🧡'},{name:'Iowa',city:'Hawkeyes',c:['#000000','#FFCD00'],i:'🦅'},{name:'Penn State',city:'Nittany Lions',c:['#041E42','#ffffff'],i:'🦁'}],
+};
+
+const calHolidays=[
+  {month:3,day:7,name:'Easter',icon:'🐰',color:'#a855f7'},
+  {month:4,day:10,name:"Mother's Day",icon:'🌸',color:'#ec4899'},
+  {month:6,day:4,name:'4th of July',icon:'🎆',color:'#ef4444'},
+  {month:9,day:31,name:'Halloween',icon:'🎃',color:'#f97316'},
+  {month:10,day:27,name:'Thanksgiving',icon:'🦃',color:'#f59e0b'},
+  {month:11,day:25,name:'Christmas',icon:'🎄',color:'#22c55e'},
+];
+
+const pHolidays=[
+  {id:'christmas',name:'Christmas',icon:'🎄',bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',text:'#22c55e'},
+  {id:'halloween',name:'Halloween',icon:'🎃',bg:'rgba(249,115,22,0.12)',border:'rgba(249,115,22,0.3)',text:'#f97316'},
+  {id:'july4',name:'4th of July',icon:'🎆',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
+  {id:'sports',name:'Sports',icon:'🏆',bg:'rgba(245,158,11,0.12)',border:'rgba(245,158,11,0.3)',text:'#f59e0b'},
+  {id:'seasons',name:'Seasons',icon:'🍂',bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',text:'#22c55e'},
+  {id:'birthday',name:'Birthday',icon:'🎂',bg:'rgba(236,72,153,0.12)',border:'rgba(236,72,153,0.3)',text:'#ec4899'},
+  {id:'other',name:'Other',icon:'⭐',bg:'rgba(99,102,241,0.12)',border:'rgba(99,102,241,0.3)',text:'#818cf8'},
+];
+
+let presets=[
+  {id:1,name:'Christmas Classic',tag:'christmas',groups:[{name:'Garage',color:'#dc2626'},{name:'Front Roofline',color:'#16a34a'},{name:'Peak',color:'#ffffff'},{name:'Soffit',color:'#dc2626'}],notes:'Classic red and green',date:'Dec 1, 2025'},
+  {id:2,name:'Halloween Night',tag:'halloween',groups:[{name:'Garage',color:'#f97316'},{name:'Front Roofline',color:'#7c3aed'},{name:'Peak',color:'#000000'},{name:'Soffit',color:'#f97316'}],notes:'Orange and purple',date:'Oct 15, 2025'},
+  {id:3,name:'Game Day Blues',tag:'sports',groups:[{name:'Garage',color:'#1d4ed8'},{name:'Front Roofline',color:'#1d4ed8'},{name:'Peak',color:'#ffffff'},{name:'Soffit',color:'#1d4ed8'}],notes:'Full blue for game day',date:'Jan 10, 2026'},
+  {id:4,name:'Warm White',tag:'other',groups:[{name:'Garage',color:'#fff5e0'},{name:'Front Roofline',color:'#fff5e0'},{name:'Peak',color:'#fff5e0'},{name:'Soffit',color:'#fff5e0'}],notes:'Simple warm white',date:'Jan 20, 2026'},
+];
+
+const wledEffects=[
+  {id:0,name:'Solid',cat:'Static',desc:'Steady solid color'},
+  {id:1,name:'Blink',cat:'Dynamic',desc:'Blink on and off'},
+  {id:2,name:'Breathe',cat:'Dynamic',desc:'Fade in and out'},
+  {id:3,name:'Wipe',cat:'Moving',desc:'Color wipe across strand'},
+  {id:4,name:'Wipe Random',cat:'Moving',desc:'Random color wipe'},
+  {id:5,name:'Random Color',cat:'Dynamic',desc:'Random color changes'},
+  {id:6,name:'Sweep',cat:'Moving',desc:'Sweep back and forth'},
+  {id:7,name:'Dynamic',cat:'Dynamic',desc:'Random pixel colors'},
+  {id:8,name:'Colorloop',cat:'Dynamic',desc:'Loop through color wheel'},
+  {id:9,name:'Rainbow',cat:'Dynamic',desc:'Cycle rainbow colors'},
+  {id:10,name:'Scan',cat:'Moving',desc:'Single pixel scan'},
+  {id:11,name:'Dual Scan',cat:'Moving',desc:'Two pixel scan from ends'},
+  {id:12,name:'Fade',cat:'Dynamic',desc:'Slow brightness fade'},
+  {id:13,name:'Theater',cat:'Moving',desc:'Theatre chase lights'},
+  {id:14,name:'Theater Rainbow',cat:'Moving',desc:'Rainbow theater chase'},
+  {id:15,name:'Running',cat:'Moving',desc:'Running lights'},
+  {id:16,name:'Saw',cat:'Moving',desc:'Sawtooth wave pattern'},
+  {id:17,name:'Twinkle',cat:'Sparkle',desc:'Random twinkling pixels'},
+  {id:18,name:'Dissolve',cat:'Sparkle',desc:'Pixels dissolve in/out'},
+  {id:19,name:'Dissolve Rnd',cat:'Sparkle',desc:'Random dissolve'},
+  {id:20,name:'Sparkle',cat:'Sparkle',desc:'Random sparkles'},
+  {id:21,name:'Sparkle Dark',cat:'Sparkle',desc:'Dark sparkle'},
+  {id:22,name:'Sparkle+',cat:'Sparkle',desc:'Enhanced sparkle'},
+  {id:23,name:'Strobe',cat:'Dynamic',desc:'Strobe flash'},
+  {id:24,name:'Strobe Rainbow',cat:'Dynamic',desc:'Rainbow strobe'},
+  {id:25,name:'Multi Strobe',cat:'Dynamic',desc:'Multiple strobe speeds'},
+  {id:26,name:'Blink Rainbow',cat:'Dynamic',desc:'Rainbow blink'},
+  {id:27,name:'Android',cat:'Moving',desc:'Android-style scan'},
+  {id:28,name:'Chase',cat:'Moving',desc:'Color chase'},
+  {id:29,name:'Chase Random',cat:'Moving',desc:'Random color chase'},
+  {id:30,name:'Chase Rainbow',cat:'Moving',desc:'Rainbow chase'},
+  {id:31,name:'Chase Flash',cat:'Moving',desc:'Flash chase'},
+  {id:32,name:'Chase Flash Rnd',cat:'Moving',desc:'Random flash chase'},
+  {id:33,name:'Rainbow Runner',cat:'Moving',desc:'Rainbow running light'},
+  {id:34,name:'Colorful',cat:'Dynamic',desc:'Multi-color segments'},
+  {id:35,name:'Traffic Light',cat:'Dynamic',desc:'Traffic light sequence'},
+  {id:36,name:'Sweep Random',cat:'Moving',desc:'Random sweep'},
+  {id:37,name:'Running 2',cat:'Moving',desc:'Running lights variant'},
+  {id:38,name:'Red & Blue',cat:'Dynamic',desc:'Red and blue alternate'},
+  {id:39,name:'Stream',cat:'Moving',desc:'Streaming colors'},
+  {id:40,name:'Scanner',cat:'Moving',desc:'Scanner effect'},
+  {id:41,name:'Lighthouse',cat:'Moving',desc:'Lighthouse rotation'},
+  {id:42,name:'Fireworks',cat:'Sparkle',desc:'Fireworks burst'},
+  {id:43,name:'Rain',cat:'Moving',desc:'Falling rain drops'},
+  {id:44,name:'Merry Christmas',cat:'Holiday',desc:'Christmas twinkle'},
+  {id:45,name:'Fire Flicker',cat:'Nature',desc:'Fire flickering'},
+  {id:46,name:'Gradient',cat:'Static',desc:'Smooth gradient'},
+  {id:47,name:'Loading',cat:'Moving',desc:'Loading bar'},
+  {id:48,name:'Police',cat:'Dynamic',desc:'Police light flash'},
+  {id:49,name:'Police All',cat:'Dynamic',desc:'Police all lights'},
+  {id:50,name:'Two Dots',cat:'Moving',desc:'Two chasing dots'},
+  {id:51,name:'Two Areas',cat:'Static',desc:'Two color areas'},
+  {id:52,name:'Circus',cat:'Moving',desc:'Circus lights'},
+  {id:53,name:'Halloween',cat:'Holiday',desc:'Halloween spooky'},
+  {id:54,name:'Tri Chase',cat:'Moving',desc:'Three color chase'},
+  {id:55,name:'Tri Wipe',cat:'Moving',desc:'Three color wipe'},
+  {id:56,name:'Tri Fade',cat:'Dynamic',desc:'Three color fade'},
+  {id:57,name:'Lightning',cat:'Sparkle',desc:'Lightning flashes'},
+  {id:58,name:'ICU',cat:'Moving',desc:'Two scanning eyes'},
+  {id:59,name:'Multi Comet',cat:'Moving',desc:'Multiple comets'},
+  {id:60,name:'Scanner Dual',cat:'Moving',desc:'Dual color scanner'},
+  {id:61,name:'Stream 2',cat:'Moving',desc:'Stream variant'},
+  {id:62,name:'Oscillate',cat:'Moving',desc:'Oscillating pixels'},
+  {id:63,name:'Pride 2015',cat:'Dynamic',desc:'Pride rainbow'},
+  {id:64,name:'Juggle',cat:'Moving',desc:'Juggling pixels'},
+  {id:65,name:'Palette',cat:'Static',desc:'Palette colors'},
+  {id:66,name:'Fire 2012',cat:'Nature',desc:'Classic fire effect'},
+  {id:67,name:'Colorwaves',cat:'Dynamic',desc:'Color wave patterns'},
+  {id:68,name:'BPM',cat:'Dynamic',desc:'BPM beat pattern'},
+  {id:69,name:'Fill Noise',cat:'Nature',desc:'Fill with noise'},
+  {id:70,name:'Noise 1',cat:'Nature',desc:'Noise pattern 1'},
+  {id:71,name:'Noise 2',cat:'Nature',desc:'Noise pattern 2'},
+  {id:72,name:'Noise 3',cat:'Nature',desc:'Noise pattern 3'},
+  {id:73,name:'Noise 4',cat:'Nature',desc:'Noise pattern 4'},
+  {id:74,name:'Colortwinkles',cat:'Sparkle',desc:'Colorful twinkles'},
+  {id:75,name:'Lake',cat:'Nature',desc:'Lake ripple effect'},
+  {id:76,name:'Meteor',cat:'Moving',desc:'Meteor trail'},
+  {id:77,name:'Meteor Smooth',cat:'Moving',desc:'Smooth meteor trail'},
+  {id:78,name:'Railway',cat:'Moving',desc:'Railway signal'},
+  {id:79,name:'Ripple',cat:'Nature',desc:'Ripple effect'},
+  {id:80,name:'Twinklefox',cat:'Sparkle',desc:'Twinkle fox effect'},
+  {id:81,name:'Twinklecat',cat:'Sparkle',desc:'Twinkle cat effect'},
+  {id:82,name:'Halloween Eyes',cat:'Holiday',desc:'Blinking Halloween eyes'},
+  {id:83,name:'Solid Pattern',cat:'Static',desc:'Solid repeating pattern'},
+  {id:84,name:'Solid Pattern Tri',cat:'Static',desc:'Three-color pattern'},
+  {id:85,name:'Spots',cat:'Moving',desc:'Moving spots'},
+  {id:86,name:'Spots Fade',cat:'Moving',desc:'Fading spots'},
+  {id:87,name:'Glitter',cat:'Sparkle',desc:'Glitter sparkle'},
+  {id:88,name:'Candle',cat:'Nature',desc:'Candle flicker'},
+  {id:89,name:'Fireworks Starburst',cat:'Sparkle',desc:'Starburst fireworks'},
+  {id:90,name:'FX Ripple',cat:'Nature',desc:'Ripple with effects'},
+  {id:91,name:'Twinkleup',cat:'Sparkle',desc:'Twinkle upward'},
+  {id:92,name:'Noise Pal',cat:'Nature',desc:'Palette noise'},
+  {id:93,name:'Sine',cat:'Moving',desc:'Sine wave'},
+  {id:94,name:'Phased',cat:'Moving',desc:'Phased colors'},
+  {id:95,name:'Twinkle Ease',cat:'Sparkle',desc:'Eased twinkling'},
+  {id:96,name:'Gradient Pal',cat:'Static',desc:'Palette gradient'},
+  {id:97,name:'Loading Pal',cat:'Moving',desc:'Palette loading bar'},
+  {id:98,name:'Police 2',cat:'Dynamic',desc:'Police variant 2'},
+  {id:99,name:'Polic3',cat:'Dynamic',desc:'Police triple'},
+  {id:100,name:'Stop Light',cat:'Dynamic',desc:'Stop light sequence'},
+  {id:101,name:'Candy Corn',cat:'Holiday',desc:'Candy corn pattern'},
+  {id:102,name:'Zig Zag',cat:'Moving',desc:'Zig zag wipe'},
+  {id:103,name:'Dynamic Smooth',cat:'Dynamic',desc:'Smooth dynamic'},
+  {id:104,name:'Random 2',cat:'Dynamic',desc:'Random variant 2'},
+  {id:105,name:'Color Sweep Rnd',cat:'Moving',desc:'Random color sweep'},
+  {id:106,name:'Midnight',cat:'Static',desc:'Midnight dark effect'},
+  {id:107,name:'Running2',cat:'Moving',desc:'Running lights 2'},
+  {id:108,name:'Aurora',cat:'Nature',desc:'Aurora borealis'},
+  {id:109,name:'Flowing',cat:'Moving',desc:'Flowing colors'},
+  {id:110,name:'Distortion Waves',cat:'Nature',desc:'Distortion wave'},
+  {id:111,name:'Soap',cat:'Nature',desc:'Soap bubble colors'},
+  {id:112,name:'Octopus',cat:'Moving',desc:'Octopus wave'},
+  {id:113,name:'Waving Cell',cat:'Nature',desc:'Waving cellular'},
+  {id:114,name:'Plasma',cat:'Nature',desc:'Plasma wave'},
+  {id:115,name:'Pac-Man',cat:'Fun',desc:'Pac-Man chase'},
+  {id:116,name:'Blends',cat:'Dynamic',desc:'Color blending'},
+];
+
+const saveHolidays=[
+  {id:'christmas',name:'Christmas',icon:'🎄'},{id:'halloween',name:'Halloween',icon:'🎃'},
+  {id:'july4',name:'4th of July',icon:'🎆'},{id:'valentines',name:"Valentine's",icon:'💖'},
+  {id:'stpats',name:"St. Patrick's",icon:'🍀'},{id:'easter',name:'Easter',icon:'🐰'},
+  {id:'thanksgiving',name:'Thanksgiving',icon:'🦃'},{id:'newyear',name:"New Year's",icon:'🥂'},
+  {id:'hanukkah',name:'Hanukkah',icon:'🕎'},
+];
+const saveSeasons=[
+  {id:'spring',name:'Spring',icon:'🌸'},{id:'summer',name:'Summer',icon:'☀️'},
+  {id:'fall',name:'Fall',icon:'🍂'},{id:'winter',name:'Winter',icon:'❄️'},
+];
+const saveSportsLeagues=[
+  {id:'nfl',name:'NFL',icon:'🏈',teams:sportsTeams.NFL},
+  {id:'nba',name:'NBA',icon:'🏀',teams:sportsTeams.NBA},
+  {id:'mlb',name:'MLB',icon:'⚾',teams:sportsTeams.MLB},
+  {id:'nhl',name:'NHL',icon:'🏒',teams:sportsTeams.NHL},
+  {id:'college',name:'College',icon:'🎓',teams:sportsTeams.College},
+];
+
+const quickColors=['#ffffff','#fff5e0','#ef4444','#22c55e','#3b82f6','#a855f7','#ec4899','#f97316','#06b6d4','#fbbf24','#64748b','#000000'];
+const holidaySwatchColors=['#dc2626','#16a34a','#f97316','#7c3aed','#ef4444','#1d4ed8','#ec4899','#15803d','#a78bfa','#d97706','#fbbf24','#2563eb'];
+const dlPresetColors=[{name:'Warm White',c:'#fff5e0'},{name:'Cool White',c:'#e8f4ff'},{name:'Xmas Red',c:'#ef4444'},{name:'Holly Green',c:'#22c55e'},{name:'Royal Blue',c:'#3b82f6'},{name:'Golden',c:'#f59e0b'},{name:'Lavender',c:'#a78bfa'},{name:'Coral',c:'#f97316'}];
+const dlDownLEDs=new Set([6,12,17,28,35,52,75]);
+let dlColor='#fff5e0',dlOn=true,dlH=36,dlS=90,dlB=90;
+
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+// ═══════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('scroll-view').scrollTop=0;
+}
+
+// ═══════════════════════════════
+// NOW PLAYING
+// ═══════════════════════════════
+function updateNowPlaying(name,colors,playing){
+  lightsOn=playing;nowPlayingName=name;nowPlayingColors=colors;
+  document.getElementById('np-name').textContent=playing?name:'Off';
+  document.getElementById('np-sub').textContent=playing?'Tap ⏻ to turn off':'Tap Presets or Create Your Own';
+  document.getElementById('np-indicator').className=playing?'np-pulse':'np-off-dot';
+  document.getElementById('power-btn').className='power-btn'+(playing?' on':'');
+  document.getElementById('np-bg').style.background=playing&&colors.length?`linear-gradient(135deg,${colors.join(',')})`: 'transparent';
+  document.getElementById('np-colors').innerHTML=playing?colors.map(c=>`<div class="np-dot" style="background:${c}"></div>`).join(''):'';
+}
+
+function togglePower(){
+  if(lightsOn){updateNowPlaying('Off',[],false);showToast('Lights off');}
+  else if(nowPlayingName&&nowPlayingName!=='Off'){updateNowPlaying(nowPlayingName,nowPlayingColors,true);showToast('Lights on');}
+  else showToast('Choose a preset first');
+}
+
+function setLightMode(m){
+  lightMode=m;
+  document.getElementById('tab-all').classList.toggle('active',m==='all');
+  document.getElementById('tab-down').classList.toggle('active',m==='down');
+  showToast(m==='all'?'Controlling all lights':'Controlling down lights only');
+}
+
+function toggleAP(){
+  apOn=!apOn;
+  document.getElementById('ap-home-toggle').classList.toggle('on',apOn);
+  document.getElementById('ap-home-sub').textContent=apOn?'On':'Off';
+}
+
+// ═══════════════════════════════
+// CREATE YOUR OWN
+// ═══════════════════════════════
+function setCreateMode(m){
+  createMode=m;
+  document.getElementById('cr-mode-all').classList.toggle('active',m==='all');
+  document.getElementById('cr-mode-group').classList.toggle('active',m==='group');
+  document.getElementById('cr-panel-all').style.display=m==='all'?'block':'none';
+  document.getElementById('cr-panel-group').style.display=m==='group'?'block':'none';
+  document.getElementById('create-mode-badge').textContent=m==='all'?'All Lights':'Group Mode';
+  renderCreatePreview();
+}
+
+function renderCreatePreview(){
+  const total=100,dotW=Math.max(3,Math.floor(560/total));
+  let html='';
+  if(createMode==='all'){
+    for(let i=0;i<total;i++) html+=`<div class="strand-dot" style="background:${alColor};width:${dotW}px;box-shadow:0 0 4px ${alColor}55"></div>`;
+  } else {
+    zones.forEach(z=>{
+      for(let i=0;i<z.leds;i++){
+        const bg=z.on?z.color:'#1c2333';
+        html+=`<div class="strand-dot" style="background:${bg};width:${dotW}px;${z.on?`box-shadow:0 0 4px ${z.color}55`:''}"></div>`;
+      }
+    });
+  }
+  document.getElementById('create-strand').innerHTML=html;
+  document.getElementById('cr-color-dot').style.background=createMode==='all'?alColor:zones[0].color;
+  document.getElementById('cr-color-name').textContent=createMode==='all'?alColor.toUpperCase():'(per group)';
+  document.getElementById('cr-effect-name').textContent=wledEffects.find(e=>e.id===selectedEffect)?.name||'Solid';
+  document.getElementById('cr-speed-val').textContent=effectSpeed;
+}
+
+// ALL LIGHTS COLOR
+function alSetColor(hex){
+  alColor=hex;
+  document.getElementById('al-hex').value=hex;
+  try{[alH,alS,alB]=hexToHSV(hex);}catch(e){}
+  alUpdateTracks();buildAlSwatches();renderCreatePreview();
+}
+
+function buildAlSwatches(){
+  document.getElementById('al-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===alColor?'sel':''}" style="background:${c}" onclick="alSetColor('${c}')"></div>`).join('');
+}
+
+function alUpdateTracks(){
+  document.getElementById('al-hue-thumb').style.left=(alH/360*100)+'%';
+  document.getElementById('al-sat-thumb').style.left=alS+'%';
+  document.getElementById('al-bri-thumb').style.left=alB+'%';
+  document.getElementById('al-hue-val').textContent=Math.round(alH)+'°';
+  document.getElementById('al-sat-val').textContent=Math.round(alS)+'%';
+  document.getElementById('al-bri-val').textContent=Math.round(alB)+'%';
+  document.getElementById('al-sat').style.background=`linear-gradient(to right,white,${hsvToHex(alH,100,Math.max(alB,40))})`;
+  document.getElementById('al-bri').style.background=`linear-gradient(to right,#000,${hsvToHex(alH,alS,100)})`;
+}
+
+function alApplyCustom(){const c=hsvToHex(alH,alS,alB);alSetColor(c);showToast('Color applied!');}
+function alHexTyped(){const h=document.getElementById('al-hex').value;if(/^#[0-9a-fA-F]{6}$/.test(h))alSetColor(h);}
+
+setupSlider('al-hue',v=>{alH=Math.round(v*360);alUpdateTracks();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
+setupSlider('al-sat',v=>{alS=Math.round(v*100);alUpdateTracks();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
+setupSlider('al-bri',v=>{alB=Math.round(v*100);alUpdateTracks();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
+
+// EFFECTS
+function buildEffectList(list){
+  document.getElementById('effect-list').innerHTML=list.map(e=>`
+    <div class="effect-row ${selectedEffect===e.id?'sel':''}" onclick="selectEffect(${e.id})">
+      <div style="flex:1"><div class="effect-name">${e.name}</div><div class="effect-desc">${e.desc}</div></div>
+      <span class="effect-cat">${e.cat}</span>
+    </div>`).join('');
+}
+
+function filterEffects(){
+  const q=document.getElementById('effect-search').value.toLowerCase();
+  buildEffectList(q?wledEffects.filter(e=>e.name.toLowerCase().includes(q)||e.cat.toLowerCase().includes(q)):wledEffects);
+}
+
+function selectEffect(id){selectedEffect=id;filterEffects();renderCreatePreview();showToast(wledEffects.find(e=>e.id===id)?.name+' selected');}
+
+function updateParams(){
+  effectSpeed=parseInt(document.getElementById('param-speed').value);
+  effectIntensity=parseInt(document.getElementById('param-intensity').value);
+  document.getElementById('speed-val').textContent=effectSpeed;
+  document.getElementById('intensity-val').textContent=effectIntensity;
+  renderCreatePreview();
+}
+
+// GROUP MODE
+function renderGroupZones(){
+  document.getElementById('group-zone-rows').innerHTML=zones.map((z,i)=>`
+    <div class="group-row" onclick="openZonePicker(${i})">
+      <div class="group-color-dot" style="background:${z.on?z.color:'#1c2333'}"></div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${z.name}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${z.leds} LEDs · ${z.on?z.color.toUpperCase():'Off'}</div></div>
+      <div class="mini-toggle ${z.on?'on':''}" onclick="event.stopPropagation();zones[${i}].on=!zones[${i}].on;renderGroupZones();renderCreatePreview()"></div>
+      <span style="color:var(--muted);font-size:14px;margin-left:6px">›</span>
+    </div>`).join('');
+}
+
+function openZonePicker(i){
+  editingZoneIdx=i;
+  const z=zones[i];
+  document.getElementById('zp-title').textContent=z.name;
+  document.getElementById('zp-name-label').textContent=z.name;
+  document.getElementById('zp-back-btn').onclick=()=>go('s-create');
+  zpUpdateColor(z.color);buildZPSwatches();go('s-zone-picker');
+}
+
+function zpUpdateColor(hex){
+  document.getElementById('zp-swatch').style.background=hex;
+  document.getElementById('zp-bg').style.background=hex;
+  document.getElementById('zp-hex-label').textContent=hex.toUpperCase();
+  document.getElementById('zp-hex-inp').value=hex;
+  try{[zpH,zpS,zpB]=hexToHSV(hex);}catch(e){}
+  zpUpdateTracks();
+  if(editingZoneIdx!==null){zones[editingZoneIdx].color=hex;renderGroupZones();renderCreatePreview();}
+}
+
+function buildZPSwatches(){
+  const cur=editingZoneIdx!==null?zones[editingZoneIdx].color:'#fff';
+  document.getElementById('zp-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===cur?'sel':''}" style="background:${c}" onclick="zpPickSwatch('${c}')"></div>`).join('');
+  document.getElementById('zp-holiday-swatches').innerHTML=holidaySwatchColors.map(c=>`<div class="sw ${c===cur?'sel':''}" style="background:${c}" onclick="zpPickSwatch('${c}')"></div>`).join('');
+}
+
+function zpPickSwatch(c){zones[editingZoneIdx].color=c;zpUpdateColor(c);buildZPSwatches();}
+function zpApplyCustom(){const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();showToast('Color applied!');}
+function zpHexTyped(){const h=document.getElementById('zp-hex-inp').value;if(/^#[0-9a-fA-F]{6}$/.test(h)){zpUpdateColor(h);buildZPSwatches();}}
+
+function zpUpdateTracks(){
+  document.getElementById('zp-hue-thumb').style.left=(zpH/360*100)+'%';
+  document.getElementById('zp-sat-thumb').style.left=zpS+'%';
+  document.getElementById('zp-bri-thumb').style.left=zpB+'%';
+  document.getElementById('zp-hue-val').textContent=Math.round(zpH)+'°';
+  document.getElementById('zp-sat-val').textContent=Math.round(zpS)+'%';
+  document.getElementById('zp-bri-val').textContent=Math.round(zpB)+'%';
+  document.getElementById('zp-sat').style.background=`linear-gradient(to right,white,${hsvToHex(zpH,100,Math.max(zpB,40))})`;
+  document.getElementById('zp-bri').style.background=`linear-gradient(to right,#000,${hsvToHex(zpH,zpS,100)})`;
+}
+
+setupSlider('zp-hue',v=>{zpH=Math.round(v*360);zpUpdateTracks();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
+setupSlider('zp-sat',v=>{zpS=Math.round(v*100);zpUpdateTracks();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
+setupSlider('zp-bri',v=>{zpB=Math.round(v*100);zpUpdateTracks();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
+
+// ═══════════════════════════════
+// SAVE FLOW
+// ═══════════════════════════════
+function openSaveFlow(){
+  selectedSaveCat=null;selectedSaveSubCat=null;selectedSaveSubSubCat=null;
+  document.getElementById('save-name').value='';
+  document.getElementById('save-notes').value='';
+  ['holidays','sports','seasons','mypresets'].forEach(c=>document.getElementById('cat-'+c).classList.remove('sel'));
+  document.getElementById('save-step3').style.display='none';
+  document.getElementById('save-step4').style.display='none';
+  document.getElementById('save-cta').style.display='none';
+  go('s-save');
+}
+
+function selectSaveCat(cat){
+  selectedSaveCat=cat;selectedSaveSubCat=null;selectedSaveSubSubCat=null;
+  ['holidays','sports','seasons','mypresets'].forEach(c=>document.getElementById('cat-'+c).classList.toggle('sel',c===cat));
+  document.getElementById('save-step4').style.display='none';
+  document.getElementById('save-cta').style.display='none';
+
+  if(cat==='mypresets'){
+    document.getElementById('save-step3').style.display='none';
+    document.getElementById('save-cta').style.display='block';
+    document.getElementById('save-cta-label').textContent='My Presets';
+    document.getElementById('save-summary').innerHTML=buildSaveSummary();
+    return;
+  }
+
+  document.getElementById('save-step3').style.display='block';
+  let list='';
+  if(cat==='holidays'){
+    document.getElementById('save-step3-label').textContent='Choose a Holiday';
+    list=saveHolidays.map(h=>`<div class="sub-cat-row" id="sub-${h.id}" onclick="selectSaveSubCat('${h.id}','${h.name}','${h.icon}')"><span style="font-size:18px">${h.icon}</span><span style="font-size:12px;font-weight:500;flex:1">${h.name}</span></div>`).join('');
+  } else if(cat==='seasons'){
+    document.getElementById('save-step3-label').textContent='Choose a Season';
+    list=saveSeasons.map(s=>`<div class="sub-cat-row" id="sub-${s.id}" onclick="selectSaveSubCat('${s.id}','${s.name}','${s.icon}')"><span style="font-size:18px">${s.icon}</span><span style="font-size:12px;font-weight:500;flex:1">${s.name}</span></div>`).join('');
+  } else if(cat==='sports'){
+    document.getElementById('save-step3-label').textContent='Choose a League';
+    list=saveSportsLeagues.map(l=>`<div class="sub-cat-row" id="sub-${l.id}" onclick="selectSaveLeague('${l.id}','${l.name}','${l.icon}')"><span style="font-size:18px">${l.icon}</span><span style="font-size:12px;font-weight:500;flex:1">${l.name}</span></div>`).join('');
+  }
+  document.getElementById('sub-cat-list').innerHTML=list;
+}
+
+function selectSaveSubCat(id,name,icon){
+  selectedSaveSubCat={id,name,icon};selectedSaveSubSubCat=null;
+  document.querySelectorAll('.sub-cat-row').forEach(r=>r.classList.remove('sel'));
+  document.getElementById('sub-'+id)?.classList.add('sel');
+  document.getElementById('save-step4').style.display='none';
+  document.getElementById('save-cta').style.display='block';
+  document.getElementById('save-cta-label').textContent=name;
+  const catLabel=selectedSaveCat==='holidays'?'Holidays':'Seasons';
+  document.getElementById('save-bc').innerHTML=`<span class="bc-item" onclick="selectSaveCat('${selectedSaveCat}')">${catLabel}</span><span class="bc-sep">›</span><span style="color:var(--text)">${icon} ${name}</span>`;
+  document.getElementById('save-summary').innerHTML=buildSaveSummary();
+}
+
+function selectSaveLeague(id,name,icon){
+  selectedSaveSubCat={id,name,icon};selectedSaveSubSubCat=null;
+  document.querySelectorAll('.sub-cat-row').forEach(r=>r.classList.remove('sel'));
+  document.getElementById('sub-'+id)?.classList.add('sel');
+  const league=saveSportsLeagues.find(l=>l.id===id);
+  filteredSaveTeams=[...(league?.teams||[])];
+  document.getElementById('save-step4').style.display='block';
+  document.getElementById('save-cta').style.display='none';
+  document.getElementById('save-step4-label').textContent='Choose a Team — '+name;
+  document.getElementById('team-save-search').value='';
+  document.getElementById('save-bc2').innerHTML=`<span class="bc-item" onclick="selectSaveCat('sports')">Sports</span><span class="bc-sep">›</span><span class="bc-item" onclick="selectSaveLeague('${id}','${name}','${icon}')">${icon} ${name}</span><span class="bc-sep">›</span><span style="color:var(--muted)">Choose Team</span>`;
+  renderSaveTeams();
+}
+
+function renderSaveTeams(){
+  document.getElementById('sub-sub-list').innerHTML=filteredSaveTeams.map(t=>`
+    <div class="sub-sub-row ${selectedSaveSubSubCat?.name===t.name&&selectedSaveSubSubCat?.city===t.city?'sel':''}" onclick="selectSaveTeam('${t.name}','${t.city}',${JSON.stringify(t.c)})">
+      <div style="display:flex;gap:3px;flex-shrink:0">${t.c.map(c=>`<div class="color-pip" style="background:${c}"></div>`).join('')}</div>
+      <span style="font-size:12px;font-weight:500;flex:1">${t.city} ${t.name}</span>
+    </div>`).join('');
+}
+
+function filterSaveTeams(){
+  const q=document.getElementById('team-save-search').value.toLowerCase();
+  const league=saveSportsLeagues.find(l=>l.id===selectedSaveSubCat?.id);
+  filteredSaveTeams=q?(league?.teams||[]).filter(t=>t.name.toLowerCase().includes(q)||t.city.toLowerCase().includes(q)):league?.teams||[];
+  renderSaveTeams();
+}
+
+function selectSaveTeam(name,city,colors){
+  selectedSaveSubSubCat={name,city,colors};
+  renderSaveTeams();
+  const sc=selectedSaveSubCat;
+  document.getElementById('save-bc2').innerHTML=`<span class="bc-item" onclick="selectSaveCat('sports')">Sports</span><span class="bc-sep">›</span><span class="bc-item" onclick="selectSaveLeague('${sc.id}','${sc.name}','${sc.icon}')">${sc.icon} ${sc.name}</span><span class="bc-sep">›</span><span style="color:var(--text)">${city} ${name}</span>`;
+  document.getElementById('save-cta').style.display='block';
+  document.getElementById('save-cta-label').textContent=city+' '+name;
+  document.getElementById('save-summary').innerHTML=buildSaveSummary();
+}
+
+function buildSaveSummary(){
+  const effect=wledEffects.find(e=>e.id===selectedEffect);
+  const modeStr=createMode==='all'?`All Lights · ${alColor.toUpperCase()} · ${effect?.name||'Solid'}`:`Group Mode · ${zones.length} zones`;
+  let dest='My Presets';
+  if(selectedSaveCat==='holidays'&&selectedSaveSubCat)dest=`Holidays › ${selectedSaveSubCat.name}`;
+  else if(selectedSaveCat==='seasons'&&selectedSaveSubCat)dest=`Seasons › ${selectedSaveSubCat.name}`;
+  else if(selectedSaveCat==='sports'&&selectedSaveSubSubCat)dest=`Sports › ${selectedSaveSubCat.name} › ${selectedSaveSubSubCat.city} ${selectedSaveSubSubCat.name}`;
+  return`<div style="font-size:10px;color:var(--muted);margin-bottom:6px">SAVING TO</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">${dest}</div><div style="font-size:11px;color:var(--muted)">${modeStr}</div>`;
+}
+
+function doSave(){
+  const name=document.getElementById('save-name').value.trim();
+  if(!name){showToast('Enter a preset name first');return;}
+  let dest='My Presets',tag='other';
+  if(selectedSaveCat==='holidays'&&selectedSaveSubCat){dest=`Holidays › ${selectedSaveSubCat.name}`;tag=selectedSaveSubCat.id;}
+  else if(selectedSaveCat==='seasons'&&selectedSaveSubCat){dest=`Seasons › ${selectedSaveSubCat.name}`;tag='seasons';}
+  else if(selectedSaveCat==='sports'&&selectedSaveSubSubCat){dest=`Sports › ${selectedSaveSubCat.name} › ${selectedSaveSubSubCat.city} ${selectedSaveSubSubCat.name}`;tag='sports';}
+  const now=new Date();
+  presets.unshift({id:presetNextId++,name,tag,groups:zones.map(z=>({name:z.name,color:z.color})),notes:document.getElementById('save-notes').value.trim(),date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  updateNowPlaying(name,zones.map(z=>z.color),true);
+  document.getElementById('my-preset-count').textContent=presets.length+' saved';
+  document.getElementById('home-preset-count').textContent=presets.length+' saved presets';
+  renderPresetFilterBar();renderPresetList();
+  showToast('"'+name+'" saved to '+dest+'!');
+  setTimeout(()=>go('s-home'),1500);
+}
+
+// ═══════════════════════════════
+// HOLIDAYS
+// ═══════════════════════════════
+function initHolidays(){
+  document.getElementById('holiday-grid').innerHTML=holidays.map(h=>`<div class="holiday-card" style="background:${h.bg}" onclick="openHoliday('${h.id}')"><span class="h-icon">${h.icon}</span><div class="h-name">${h.name}</div></div>`).join('');
+}
+
+function openHoliday(id){
+  currentHoliday=holidays.find(h=>h.id===id);
+  if(!favPatterns[id])favPatterns[id]=new Set();
+  document.getElementById('patterns-title').textContent=currentHoliday.name;
+  document.getElementById('patterns-badge').innerHTML=`<span style="font-size:18px">${currentHoliday.icon}</span>${currentHoliday.name}`;
+  document.getElementById('patterns-preview-bar').style.background=`linear-gradient(to right,${currentHoliday.colors.join(',')})`;
+  renderPatterns();go('s-patterns');
+}
+
+function renderPatterns(){
+  const h=currentHoliday;
+  document.getElementById('pattern-list').innerHTML=h.patterns.map((p,i)=>{
+    const isFav=favPatterns[h.id]?.has(i);
+    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="activatePattern('${p}',${JSON.stringify(h.colors)})">
+      <div class="color-dots">${h.colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('')}</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
+      <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'holiday')">⭐</button>
+    </div>`;
+  }).join('');
+  document.getElementById('fav-count-label').textContent=(favPatterns[h.id]?.size||0)+' in playlist';
+}
+
+function toggleFavPat(i,type){
+  const id=type==='holiday'?currentHoliday.id:currentSeason.id;
+  const store=type==='holiday'?favPatterns:seasonFavPatterns;
+  if(!store[id])store[id]=new Set();
+  if(store[id].has(i))store[id].delete(i);else store[id].add(i);
+  if(type==='holiday')renderPatterns();else renderSeasonPatterns();
+}
+
+function activatePattern(name,colors){updateNowPlaying(name,colors,true);showToast(name+' activated!');}
+
+// ═══════════════════════════════
+// SEASONS
+// ═══════════════════════════════
+function initSeasons(){
+  document.getElementById('season-grid').innerHTML=seasons.map(s=>`<div class="season-card" style="background:${s.bg}" onclick="openSeason('${s.id}')"><div class="season-name">${s.name}</div><div class="season-sub">${s.patterns.length} patterns</div><span class="season-icon">${s.icon}</span></div>`).join('');
+}
+
+function openSeason(id){
+  currentSeason=seasons.find(s=>s.id===id);
+  if(!seasonFavPatterns[id])seasonFavPatterns[id]=new Set();
+  document.getElementById('sp-title').textContent=currentSeason.name;
+  document.getElementById('sp-badge').innerHTML=`<span style="font-size:18px">${currentSeason.icon}</span>${currentSeason.name}`;
+  document.getElementById('sp-preview-bar').style.background=`linear-gradient(to right,${currentSeason.colors.join(',')})`;
+  renderSeasonPatterns();go('s-season-patterns');
+}
+
+function renderSeasonPatterns(){
+  const s=currentSeason;
+  document.getElementById('sp-pattern-list').innerHTML=s.patterns.map((p,i)=>{
+    const isFav=seasonFavPatterns[s.id]?.has(i);
+    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="activatePattern('${p}',${JSON.stringify(s.colors)})">
+      <div class="color-dots">${s.colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('')}</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
+      <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'season')">⭐</button>
+    </div>`;
+  }).join('');
+  document.getElementById('sp-fav-count').textContent=(seasonFavPatterns[s.id]?.size||0)+' in playlist';
+}
+
+// ═══════════════════════════════
+// SPORTS
+// ═══════════════════════════════
+function openLeague(league){
+  currentLeague=league;
+  document.getElementById('teams-screen-title').textContent=league;
+  document.getElementById('team-search').value='';
+  renderTeamList(sportsTeams[league]||[]);
+  go('s-sports-teams');
+}
+
+function renderTeamList(list){
+  document.getElementById('team-list').innerHTML=list.map(t=>`<div class="team-row" onclick="openTeamDetail('${currentLeague}',${(sportsTeams[currentLeague]||[]).indexOf(t)})"><div style="display:flex;gap:3px">${t.c.map(c=>`<div class="tc" style="background:${c}"></div>`).join('')}</div><div style="flex:1;font-size:12px;font-weight:500">${t.city} ${t.name}</div><span style="color:var(--muted);font-size:13px">›</span></div>`).join('');
+}
+
+function filterTeams(){
+  const q=document.getElementById('team-search').value.toLowerCase();
+  renderTeamList((sportsTeams[currentLeague]||[]).filter(t=>t.name.toLowerCase().includes(q)||t.city.toLowerCase().includes(q)));
+}
+
+function openTeamDetail(league,idx){
+  if(idx<0)return;
+  currentTeam={...(sportsTeams[league]||[])[idx],league,idx};selectedTDPattern=0;const t=currentTeam;
+  document.getElementById('td-bg').style.background=`linear-gradient(135deg,${t.c[0]},${t.c[1]||t.c[0]})`;
+  document.getElementById('td-hero').style.background=t.c[0]+'22';
+  document.getElementById('td-badge').innerHTML=t.i;
+  document.getElementById('td-name').textContent=t.city+' '+t.name;
+  document.getElementById('td-league-label').textContent=league;
+  document.getElementById('td-bar').style.background=`linear-gradient(to right,${t.c.join(',')})`;
+  const pats=['Team Chase','Game Day Pulse','Victory Flash','Rally Twinkle'];
+  document.getElementById('td-patterns').innerHTML=pats.map((p,i)=>`<div style="background:var(--surface2);border:1.5px solid ${i===selectedTDPattern?'rgba(255,255,255,0.35)':'transparent'};border-radius:10px;padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px" onclick="selTDPat(${i})"><div style="width:5px;height:30px;border-radius:3px;background:linear-gradient(to bottom,${t.c[0]},${t.c[1]||t.c[0]});flex-shrink:0"></div><div style="font-size:11px;font-weight:500">${p}</div></div>`).join('');
+  document.getElementById('td-fav-toggle').classList.toggle('on',favTeam&&favTeam.league===league&&favTeam.idx===idx);
+  go('s-team-detail');
+}
+
+function selTDPat(i){selectedTDPattern=i;if(currentTeam)openTeamDetail(currentTeam.league,currentTeam.idx);}
+function toggleFavTeam(){const tog=document.getElementById('td-fav-toggle');const isFav=favTeam&&favTeam.league===currentTeam.league&&favTeam.idx===currentTeam.idx;if(isFav){favTeam=null;tog.classList.remove('on');showToast('Team removed');}else{favTeam={...currentTeam};tog.classList.add('on');showToast(currentTeam.city+' '+currentTeam.name+' set as your team!');}}
+function activateTeam(){const pats=['Team Chase','Game Day Pulse','Victory Flash','Rally Twinkle'];updateNowPlaying(currentTeam.city+' '+currentTeam.name+' — '+pats[selectedTDPattern],currentTeam.c,true);showToast('Team colors activated!');}
+
+// ═══════════════════════════════
+// DOWN LIGHTS
+// ═══════════════════════════════
+function renderDL(){
+  const strand=document.getElementById('dl-strand');
+  strand.innerHTML=Array.from({length:80},(_,i)=>{const n=i+1,isDL=dlDownLEDs.has(n);const bg=isDL?(dlOn?dlColor:'#1c2333'):'#22c55e33';const sz=isDL?'16px':'10px';return`<div class="dl-dot" style="background:${bg};width:${sz};height:${sz};${isDL&&dlOn?`box-shadow:0 0 5px ${dlColor}88`:''}"></div>`;}).join('');
+  document.getElementById('dl-swatch').style.background=dlOn?dlColor:'#1c2333';
+  document.getElementById('dl-hex-label').textContent=dlColor.toUpperCase();
+  document.getElementById('dl-onoff-label').textContent=dlOn?'On':'Off';
+  document.getElementById('dl-hex-inp').value=dlColor;
+}
+
+function toggleDL(){dlOn=!dlOn;document.getElementById('dl-toggle').classList.toggle('on',dlOn);renderDL();}
+
+function renderDLPresets(){
+  document.getElementById('dl-presets').innerHTML=dlPresetColors.map(p=>`<div class="dl-preset-row" style="border-color:${dlColor===p.c?'rgba(255,255,255,0.3)':'transparent'}" onclick="dlPickPreset('${p.c}')"><div style="width:6px;height:32px;border-radius:3px;background:${p.c};flex-shrink:0"></div><div style="font-size:11px;font-weight:500">${p.name}</div></div>`).join('');
+}
+
+function dlPickPreset(c){dlColor=c;try{[dlH,dlS,dlB]=hexToHSV(c);}catch(e){}dlUpdateTracks();renderDL();renderDLPresets();showToast('Color applied!');}
+function dlApplyCustom(){dlColor=hsvToHex(dlH,dlS,dlB);renderDL();renderDLPresets();showToast('Custom color applied!');}
+function dlHexTyped(){const h=document.getElementById('dl-hex-inp').value;if(/^#[0-9a-fA-F]{6}$/.test(h)){dlColor=h;try{[dlH,dlS,dlB]=hexToHSV(h);}catch(e){}dlUpdateTracks();renderDL();renderDLPresets();}}
+
+function dlUpdateTracks(){
+  document.getElementById('dl-hue-thumb').style.left=(dlH/360*100)+'%';
+  document.getElementById('dl-sat-thumb').style.left=dlS+'%';
+  document.getElementById('dl-bri-thumb').style.left=dlB+'%';
+  document.getElementById('dl-hue-val').textContent=Math.round(dlH)+'°';
+  document.getElementById('dl-sat-val').textContent=Math.round(dlS)+'%';
+  document.getElementById('dl-bri-val').textContent=Math.round(dlB)+'%';
+  document.getElementById('dl-sat').style.background=`linear-gradient(to right,white,${hsvToHex(dlH,100,Math.max(dlB,40))})`;
+  document.getElementById('dl-bri').style.background=`linear-gradient(to right,#000,${hsvToHex(dlH,dlS,100)})`;
+}
+
+setupSlider('dl-hue',v=>{dlH=Math.round(v*360);dlUpdateTracks();dlColor=hsvToHex(dlH,dlS,dlB);renderDL();renderDLPresets();});
+setupSlider('dl-sat',v=>{dlS=Math.round(v*100);dlUpdateTracks();dlColor=hsvToHex(dlH,dlS,dlB);renderDL();renderDLPresets();});
+setupSlider('dl-bri',v=>{dlB=Math.round(v*100);dlUpdateTracks();dlColor=hsvToHex(dlH,dlS,dlB);renderDL();renderDLPresets();});
+
+// ═══════════════════════════════
+// CALENDAR
+// ═══════════════════════════════
+function renderCalendar(){
+  document.getElementById('cal-label').textContent=MONTHS[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  grid.innerHTML=DAYS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const first=new Date(calYear,calMonth,1).getDay(),days=new Date(calYear,calMonth+1,0).getDate();
+  const evMap={};calHolidays.forEach(e=>{if(e.month===calMonth)evMap[e.day]=e;});
+  for(let i=0;i<first;i++)grid.innerHTML+=`<div class="cal-day"></div>`;
+  for(let d=1;d<=days;d++){const isToday=d===7&&calMonth===3&&calYear===2026;const ev=evMap[d];grid.innerHTML+=`<div class="cal-day ${isToday?'today':''}"><span class="dn">${d}</span>${ev?`<div class="day-dot-cal" style="background:${ev.color}"></div>`:''}</div>`;}
+  const now=new Date(2026,3,7);
+  const upcoming=calHolidays.map(e=>{let dt=new Date(calYear,e.month,e.day);if(dt<now)dt=new Date(calYear+1,e.month,e.day);return{...e,_date:dt};}).sort((a,b)=>a._date-b._date).slice(0,4);
+  document.getElementById('upcoming-list').innerHTML=upcoming.map(e=>{const isToday=e._date.toDateString()===now.toDateString();const fmt=isToday?'Today':e._date.toLocaleDateString('en-US',{month:'short',day:'numeric'});return`<div class="ev-item"><span style="font-size:20px">${e.icon}</span><span style="flex:1;font-size:12px;font-weight:500">${e.name}</span><span style="font-size:10px;color:var(--muted)">${fmt}</span><span style="font-size:9px;border-radius:20px;padding:2px 8px;font-weight:500;background:${isToday?'rgba(239,68,68,0.1)':'rgba(34,197,94,0.1)'};color:${isToday?'#ef4444':'#22c55e'};margin-left:6px">${isToday?'Today':'Auto'}</span></div>`;}).join('');
+}
+
+function calShift(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+
+// ═══════════════════════════════
+// AUTOPILOT
+// ═══════════════════════════════
+function selAP(m){apMode=m;['season','team','random','fav'].forEach(x=>document.getElementById('ap-'+x).classList.toggle('sel',x===m));}
+function selFreq(f){apFreq=f;['night','week'].forEach(x=>document.getElementById('ap-'+x).classList.toggle('sel',x===f));}
+function activateAP(){apOn=true;document.getElementById('ap-home-toggle').classList.add('on');document.getElementById('ap-home-sub').textContent='On';showToast('Autopilot activated!');setTimeout(()=>go('s-home'),1200);}
+
+// ═══════════════════════════════
+// MY PRESETS
+// ═══════════════════════════════
+function renderPresetFilterBar(){
+  const used=['all',...new Set(presets.map(p=>p.tag))];
+  document.getElementById('preset-filter-bar').innerHTML=used.map(id=>{
+    const h=id==='all'?{name:'All',icon:'📋',bg:'rgba(59,130,246,0.15)',border:'rgba(59,130,246,0.4)',text:'#60a5fa'}:(pHolidays.find(x=>x.id===id)||pHolidays[6]);
+    const active=presetFilter===id;
+    return`<div class="ftab ${active?'active':''}" style="${active?`background:${h.bg};border-color:${h.border};color:${h.text}`:''}" onclick="setPresetFilter('${id}')">${h.icon} ${h.name} <span style="opacity:0.6">${id==='all'?presets.length:presets.filter(p=>p.tag===id).length}</span></div>`;
+  }).join('');
+}
+
+function setPresetFilter(f){presetFilter=f;renderPresetFilterBar();renderPresetList();}
+
+function renderPresetList(){
+  const list=presetFilter==='all'?presets:presets.filter(p=>p.tag===presetFilter);
+  const el=document.getElementById('preset-list');
+  if(!list.length){el.innerHTML=`<div style="text-align:center;padding:32px;color:var(--muted)"><div style="font-size:32px;margin-bottom:10px">💾</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No presets here yet</div><div style="font-size:11px">Tap "Create Your Own" to get started</div></div>`;return;}
+  el.innerHTML=list.map(p=>{const tag=pHolidays.find(x=>x.id===p.tag)||pHolidays[6];return`<div class="preset-card"><div class="preset-thumb">${p.groups.map(g=>`<div class="thumb-seg" style="background:${g.color}"></div>`).join('')}</div><div style="font-size:12px;font-weight:600;margin-bottom:3px">${p.name}</div>${p.notes?`<div style="font-size:10px;color:var(--muted)">${p.notes}</div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><span style="font-size:9px;border-radius:20px;padding:3px 10px;font-weight:500;background:${tag.bg};border:0.5px solid ${tag.border};color:${tag.text}">${tag.icon} ${tag.name}</span><span style="font-size:10px;color:var(--muted)">${p.date}</span></div><div style="display:flex;gap:6px;margin-top:9px"><button style="flex:1;background:var(--accent);border:none;color:white;border-radius:8px;padding:8px;font-size:12px;font-weight:500;cursor:pointer;-webkit-appearance:none;" onclick="activatePreset(${p.id})">⚡ Activate</button><button style="background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;-webkit-appearance:none;" onclick="deletePreset(${p.id})">🗑</button></div></div>`;}).join('');
+}
+
+function activatePreset(id){const p=presets.find(x=>x.id===id);if(!p)return;p.groups.forEach((g,i)=>{if(zones[i]){zones[i].color=g.color;zones[i].on=true;}});renderGroupZones();renderCreatePreview();updateNowPlaying(p.name,p.groups.map(g=>g.color),true);showToast(p.name+' activated!');}
+function deletePreset(id){presets=presets.filter(x=>x.id!==id);renderPresetFilterBar();renderPresetList();document.getElementById('my-preset-count').textContent=presets.length+' saved';document.getElementById('home-preset-count').textContent=presets.length+' saved presets';showToast('Preset deleted');}
+
+// ═══════════════════════════════
+// UTILITIES
+// ═══════════════════════════════
+function hsvToHex(h,s,v){s/=100;v/=100;const f=n=>{const k=(n+h/60)%6;return v-v*s*Math.max(0,Math.min(k,4-k,1));};const r=Math.round(f(5)*255),g=Math.round(f(3)*255),b=Math.round(f(1)*255);return'#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');}
+function hexToHSV(hex){let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;let h=0,s=max===0?0:d/max,v=max;if(d){if(max===r)h=(g-b)/d%6;else if(max===g)h=(b-r)/d+2;else h=(r-g)/d+4;h=Math.round(h*60);if(h<0)h+=360;}return[h,Math.round(s*100),Math.round(v*100)];}
+
+function setupSlider(tid,fn){
+  const t=document.getElementById(tid);if(!t)return;
+  let d=false;
+  const gv=e=>{const r=t.getBoundingClientRect();return Math.max(0,Math.min(1,((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width));};
+  t.addEventListener('mousedown',e=>{d=true;fn(gv(e));});
+  t.addEventListener('touchstart',e=>{d=true;fn(gv(e));},{passive:true});
+  window.addEventListener('mousemove',e=>{if(d)fn(gv(e));});
+  window.addEventListener('touchmove',e=>{if(d)fn(gv(e));},{passive:true});
+  window.addEventListener('mouseup',()=>d=false);
+  window.addEventListener('touchend',()=>d=false);
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+initHolidays();
+initSeasons();
+buildAlSwatches();
+alUpdateTracks();
+buildEffectList(wledEffects);
+renderGroupZones();
+renderCreatePreview();
+renderDL();
+renderDLPresets();
+dlUpdateTracks();
+renderCalendar();
+renderPresetFilterBar();
+renderPresetList();
+updateNowPlaying('Off',[],false);
+</script>
+</body>
+</html>
+
+<!-- WLED CONNECTION UI - injected screens -->
+<div id="wled-screens-placeholder"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// WLED CONNECTION LAYER
+// ═══════════════════════════════════════════════════
+
+// ── Connection State ──
+const wled = {
+  controllers: JSON.parse(localStorage.getItem('wled_controllers') || '[]'),
+  active: null,       // {ip, name, ledCount, info}
+  scanning: false,
+  lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || 'null'),
+};
+
+function saveControllers() {
+  localStorage.setItem('wled_controllers', JSON.stringify(wled.controllers));
+}
+
+function setActiveController(ip) {
+  const c = wled.controllers.find(x => x.ip === ip);
+  if (c) {
+    wled.active = c;
+    localStorage.setItem('wled_last_ip', JSON.stringify(ip));
+    updateConnectionBadge();
+  }
+}
+
+// ── HTTP helpers ──
+async function wledGet(ip, path, timeout = 2000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), timeout);
+  try {
+    const r = await fetch(`http://${ip}${path}`, { signal: ctrl.signal });
+    clearTimeout(tid);
+    return r.ok ? r.json() : null;
+  } catch { clearTimeout(tid); return null; }
+}
+
+async function wledPost(ip, data, timeout = 2000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), timeout);
+  try {
+    const r = await fetch(`http://${ip}/json/state`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      signal: ctrl.signal,
+    });
+    clearTimeout(tid);
+    return r.ok;
+  } catch { clearTimeout(tid); return false; }
+}
+
+// ── Send to active controller ──
+async function wledSend(data) {
+  if (!wled.active) { showToast('No controller connected'); return false; }
+  const ok = await wledPost(wled.active.ip, data);
+  if (!ok) { showToast('⚠️ Controller not responding'); updateConnectionBadge(false); }
+  return ok;
+}
+
+// ── Discovery ──
+async function probeIP(ip) {
+  const info = await wledGet(ip, '/json/info', 1500);
+  if (info && info.ver) {
+    return { ip, name: info.name || `WLED @ ${ip}`, ledCount: info.leds?.count || 0, info };
+  }
+  return null;
+}
+
+async function discoverWLED(onFound, onDone) {
+  if (wled.scanning) return;
+  wled.scanning = true;
+
+  // 1. Try last known IP first
+  if (wled.lastSeen) {
+    const found = await probeIP(wled.lastSeen);
+    if (found) { onFound(found); wled.scanning = false; onDone(); return; }
+  }
+
+  // 2. Try mDNS common names
+  const mdnsNames = ['wled.local','wled-1.local','wled-2.local','wled-3.local'];
+  for (const h of mdnsNames) {
+    const found = await probeIP(h);
+    if (found) { onFound(found); }
+  }
+
+  // 3. Scan common subnets — try likely IPs first
+  const commonOctets = [42,100,101,102,103,104,105,110,120,150,200,201,202,210,220,230,240,250,2,3,4,5,10,11,20,21,30,31,50,51,60,61,70,71,80,81,90,91];
+  const subnets = ['192.168.1','192.168.0','192.168.2','10.0.0','10.0.1'];
+
+  // Build IP list: common octets on each subnet first
+  const ipList = [];
+  for (const sub of subnets) {
+    for (const oct of commonOctets) ipList.push(`${sub}.${oct}`);
+  }
+
+  // Scan in batches of 20 concurrent
+  const batchSize = 20;
+  for (let i = 0; i < ipList.length; i += batchSize) {
+    const batch = ipList.slice(i, i + batchSize);
+    const results = await Promise.all(batch.map(ip => probeIP(ip)));
+    results.forEach(r => { if (r) onFound(r); });
+    // Update scan progress UI
+    const pct = Math.min(100, Math.round((i / ipList.length) * 100));
+    const bar = document.getElementById('scan-progress-bar');
+    if (bar) bar.style.width = pct + '%';
+  }
+
+  wled.scanning = false;
+  onDone();
+}
+
+// ── Connection Badge on Home Screen ──
+function updateConnectionBadge(online) {
+  const badge = document.getElementById('wled-badge');
+  if (!badge) return;
+  if (!wled.active) {
+    badge.innerHTML = `<span style="color:var(--danger)">●</span> No controller — <span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="go('s-wled')">Connect</span>`;
+  } else {
+    const dot = online === false ? `<span style="color:var(--warning)">●</span>` : `<span style="color:var(--success)">●</span>`;
+    badge.innerHTML = `${dot} ${wled.active.name} · ${wled.active.ledCount} LEDs · <span style="cursor:pointer;color:var(--accent)" onclick="go('s-wled')">Manage</span>`;
+  }
+}
+
+// ── Inject Connection Screen into DOM ──
+function injectWledScreens() {
+  const placeholder = document.getElementById('wled-screens-placeholder');
+  placeholder.outerHTML = `
+<!-- WLED CONNECT SCREEN -->
+<div class="screen" id="s-wled">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-home')">← Home</button>
+    <span class="screen-title">Controllers</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="startScan()">🔍 Scan</button>
+  </div>
+
+  <!-- SCAN STATUS -->
+  <div id="scan-status" style="display:none;margin-bottom:14px">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px" id="scan-status-label">Scanning your network…</div>
+    <div style="background:var(--surface3);border-radius:4px;height:6px;overflow:hidden">
+      <div id="scan-progress-bar" style="height:100%;background:var(--accent);border-radius:4px;width:0%;transition:width 0.3s"></div>
+    </div>
+  </div>
+
+  <!-- FOUND CONTROLLERS -->
+  <div id="found-controllers-list">
+    <div style="text-align:center;padding:32px 16px;color:var(--muted)">
+      <div style="font-size:36px;margin-bottom:12px">📡</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No controllers found yet</div>
+      <div style="font-size:11px;line-height:1.5">Make sure your phone is on the same WiFi as your WLED device, then tap Scan.</div>
+    </div>
+  </div>
+
+  <!-- MANUAL ENTRY -->
+  <div class="card" style="margin-top:8px">
+    <div style="font-size:12px;font-weight:500;margin-bottom:10px">Add Manually</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">If auto-scan doesn't find your device, enter its IP address directly. Find it in your router's device list or in the WLED app under Info.</div>
+    <div style="display:flex;gap:8px">
+      <input class="field-input" id="manual-ip" placeholder="192.168.1.42" style="flex:1;margin-bottom:0" />
+      <button class="btn btn-primary btn-sm" onclick="addManualIP()">Add</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:4px">
+    <div style="font-size:12px;font-weight:500;margin-bottom:8px">💡 Tips</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.6">
+      • Phone must be on the same WiFi as the lights<br>
+      • WLED device must be powered on<br>
+      • Try the WLED app first to confirm device is working<br>
+      • Check your router for the device IP if scan fails
+    </div>
+  </div>
+</div>
+  `;
+}
+
+// ── Scan UI ──
+function startScan() {
+  document.getElementById('scan-status').style.display = 'block';
+  document.getElementById('scan-status-label').textContent = 'Scanning your network…';
+  document.getElementById('scan-progress-bar').style.width = '0%';
+  document.getElementById('found-controllers-list').innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Scanning… this takes about 15 seconds</div>`;
+
+  const found = new Map();
+
+  discoverWLED(
+    (controller) => {
+      found.set(controller.ip, controller);
+      // Auto-add to saved list if new
+      if (!wled.controllers.find(c => c.ip === controller.ip)) {
+        wled.controllers.push(controller);
+        saveControllers();
+      } else {
+        // Update info
+        const idx = wled.controllers.findIndex(c => c.ip === controller.ip);
+        if (idx >= 0) wled.controllers[idx] = controller;
+        saveControllers();
+      }
+      renderFoundList(found);
+      // Auto-connect to first found if none active
+      if (!wled.active) { setActiveController(controller.ip); showToast('Connected to ' + controller.name + '!'); }
+    },
+    () => {
+      document.getElementById('scan-status-label').textContent = found.size > 0 ? `Found ${found.size} controller${found.size > 1 ? 's' : ''}` : 'Scan complete — no devices found';
+      document.getElementById('scan-progress-bar').style.width = '100%';
+      if (found.size === 0) {
+        document.getElementById('found-controllers-list').innerHTML = `
+          <div style="text-align:center;padding:24px;color:var(--muted)">
+            <div style="font-size:32px;margin-bottom:10px">🔌</div>
+            <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No WLED devices found</div>
+            <div style="font-size:11px;line-height:1.5">Make sure your lights are powered on and your phone is on the same WiFi. Try adding the IP manually below.</div>
+          </div>`;
+      }
+    }
+  );
+}
+
+function renderFoundList(found) {
+  const el = document.getElementById('found-controllers-list');
+  el.innerHTML = [...found.values()].map(c => {
+    const isActive = wled.active?.ip === c.ip;
+    return `
+      <div style="background:var(--surface2);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:10px;background:${isActive ? 'rgba(34,197,94,0.15)' : 'var(--surface3)'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💡</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${c.name}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">${c.ip} · ${c.ledCount} LEDs</div>
+        </div>
+        ${isActive
+          ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:3px 10px">Active</span>`
+          : `<button class="btn btn-primary btn-sm" onclick="setActiveController('${c.ip}');renderFoundList(window._foundMap);showToast('Switched to ${c.name}')">Connect</button>`
+        }
+      </div>`;
+  }).join('');
+  window._foundMap = found;
+}
+
+async function addManualIP() {
+  const ip = document.getElementById('manual-ip').value.trim();
+  if (!ip) return;
+  showToast('Checking ' + ip + '…');
+  const controller = await probeIP(ip);
+  if (controller) {
+    if (!wled.controllers.find(c => c.ip === ip)) {
+      wled.controllers.push(controller);
+      saveControllers();
+    }
+    if (!wled.active) setActiveController(ip);
+    const found = new Map([[ip, controller]]);
+    document.getElementById('found-controllers-list').innerHTML = '';
+    renderFoundList(found);
+    showToast('Found: ' + controller.name);
+  } else {
+    showToast('⚠️ No WLED device at ' + ip);
+  }
+  document.getElementById('manual-ip').value = '';
+}
+
+// ═══════════════════════════════════════════════════
+// PATCH EXISTING APP FUNCTIONS TO CALL WLED API
+// ═══════════════════════════════════════════════════
+
+// Override togglePower
+const _origTogglePower = togglePower;
+window.togglePower = function() {
+  _origTogglePower();
+  if (wled.active) wledSend({ on: !lightsOn });
+};
+
+// Override activatePattern — sends color + solid effect
+const _origActivatePattern = activatePattern;
+window.activatePattern = function(name, colors) {
+  _origActivatePattern(name, colors);
+  if (wled.active && colors.length) {
+    // Convert hex to rgb
+    const rgb = colors.map(h => hexToRgb(h)).filter(Boolean);
+    wledSend({ on: true, seg: [{ col: rgb, fx: 0 }] });
+  }
+};
+
+// Override activateTeam — sends team colors
+const _origActivateTeam = activateTeam;
+window.activateTeam = function() {
+  _origActivateTeam();
+  if (wled.active && currentTeam) {
+    const rgb = currentTeam.c.map(h => hexToRgb(h)).filter(Boolean);
+    const fxMap = { 0: 28, 1: 2, 2: 1, 3: 17 }; // chase, breathe, blink, twinkle
+    wledSend({ on: true, seg: [{ col: rgb, fx: fxMap[selectedTDPattern] || 28, sx: 150 }] });
+  }
+};
+
+// Override activatePreset — pushes zone colors as segments
+const _origActivatePreset = activatePreset;
+window.activatePreset = function(id) {
+  _origActivatePreset(id);
+  if (wled.active) {
+    const p = presets.find(x => x.id === id);
+    if (p) pushZonesToWLED(p.groups.map(g => g.color));
+  }
+};
+
+// Override alApplyCustom + alSetColor — live color preview
+const _origAlSetColor = alSetColor;
+window.alSetColor = function(hex) {
+  _origAlSetColor(hex);
+  if (wled.active && createMode === 'all') {
+    const rgb = hexToRgb(hex);
+    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: selectedEffect, sx: effectSpeed, ix: effectIntensity }] });
+  }
+};
+
+// Override selectEffect — live effect preview
+const _origSelectEffect = selectEffect;
+window.selectEffect = function(id) {
+  _origSelectEffect(id);
+  if (wled.active && createMode === 'all') {
+    const rgb = hexToRgb(alColor);
+    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: id, sx: effectSpeed, ix: effectIntensity }] });
+  }
+};
+
+// Override updateParams — live speed/intensity
+const _origUpdateParams = updateParams;
+window.updateParams = function() {
+  _origUpdateParams();
+  if (wled.active && createMode === 'all') {
+    const rgb = hexToRgb(alColor);
+    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: selectedEffect, sx: effectSpeed, ix: effectIntensity }] });
+  }
+};
+
+// Override zpPickSwatch + zpApplyCustom — live group zone preview
+const _origZpUpdateColor = zpUpdateColor;
+window.zpUpdateColor = function(hex) {
+  _origZpUpdateColor(hex);
+  if (wled.active && createMode === 'group') pushZonesToWLED();
+};
+
+// Override dl color changes
+const _origDlPickPreset = dlPickPreset;
+window.dlPickPreset = function(c) {
+  _origDlPickPreset(c);
+  if (wled.active) {
+    // Send color to down light LEDs as individual segment
+    const rgb = hexToRgb(c);
+    if (rgb) wledSend({ on: true, seg: [{ id: 1, col: [rgb], fx: 0 }] });
+  }
+};
+
+// Override toggleDL
+const _origToggleDL = toggleDL;
+window.toggleDL = function() {
+  _origToggleDL();
+  if (wled.active) wledSend({ seg: [{ id: 1, on: dlOn }] });
+};
+
+// Override doSave — also activates on WLED
+const _origDoSave = doSave;
+window.doSave = function() {
+  _origDoSave();
+  if (wled.active) pushZonesToWLED();
+};
+
+// ── Zone push helper ──
+function pushZonesToWLED(colorOverride) {
+  if (!wled.active) return;
+  const colors = colorOverride || zones.filter(z => z.on).map(z => z.color);
+  const segments = [];
+  let cursor = 0;
+  zones.forEach((z, i) => {
+    const rgb = hexToRgb(colorOverride ? colorOverride[i] : z.color);
+    if (rgb && z.on) {
+      segments.push({ id: i, start: cursor, stop: cursor + z.leds, col: [rgb], fx: selectedEffect, sx: effectSpeed });
+    }
+    cursor += z.leds;
+  });
+  if (segments.length) wledSend({ on: true, seg: segments });
+}
+
+// ── Helpers ──
+function hexToRgb(hex) {
+  if (!hex || !/^#[0-9a-fA-F]{6}$/.test(hex)) return null;
+  return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+}
+
+// ═══════════════════════════════════════════════════
+// PATCH HOME SCREEN — Add connection badge + nav
+// ═══════════════════════════════════════════════════
+function patchHomeScreen() {
+  const statusBar = document.querySelector('.status-bar');
+  if (statusBar) {
+    // Replace static status with live connection badge
+    statusBar.innerHTML = `
+      <div class="status-dot" id="status-dot-indicator"></div>
+      <span id="wled-badge">No controller — <span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="go('s-wled')">Connect</span></span>
+    `;
+  }
+
+  // Add controller nav to top of home
+  const homeHeader = document.querySelector('#s-home .home-header');
+  if (homeHeader) {
+    const navBar = document.createElement('div');
+    navBar.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:8px;';
+    navBar.innerHTML = `<button class="btn btn-ghost btn-sm" onclick="go('s-wled')" style="font-size:11px">📡 Controllers</button>`;
+    homeHeader.parentNode.insertBefore(navBar, homeHeader);
+  }
+}
+
+// ── Poll connection status every 10s ──
+async function pollConnection() {
+  if (!wled.active) return;
+  const state = await wledGet(wled.active.ip, '/json/state', 2000);
+  const online = !!state;
+  const dot = document.getElementById('status-dot-indicator');
+  if (dot) dot.style.background = online ? 'var(--success)' : 'var(--danger)';
+  updateConnectionBadge(online);
+}
+
+// ── Init connection layer ──
+function initWLED() {
+  injectWledScreens();
+  patchHomeScreen();
+
+  // Auto-connect to last known controller
+  if (wled.lastSeen) {
+    probeIP(wled.lastSeen).then(c => {
+      if (c) {
+        const idx = wled.controllers.findIndex(x => x.ip === wled.lastSeen);
+        if (idx >= 0) wled.controllers[idx] = c;
+        else wled.controllers.push(c);
+        saveControllers();
+        setActiveController(wled.lastSeen);
+        showToast('Reconnected to ' + c.name);
+      } else {
+        updateConnectionBadge(false);
+      }
+    });
+  }
+
+  // Render any previously saved controllers
+  if (wled.controllers.length > 0) {
+    const found = new Map(wled.controllers.map(c => [c.ip, c]));
+    setTimeout(() => renderFoundList(found), 100);
+  }
+
+  // Poll every 15 seconds
+  setInterval(pollConnection, 15000);
+  updateConnectionBadge();
+}
+
+// Run after DOM is ready
+initWLED();
+
+// ═══════════════════════════════════════════════════
+// LOCK SCREEN
+// ═══════════════════════════════════════════════════
+
+// The app password — change this in the admin panel
+// Stored obfuscated in localStorage so admin can update it
+const LOCK_KEY = 'lc_app_pw';
+const UNLOCK_KEY = 'lc_unlocked';
+const DEFAULT_PW = 'lights2024'; // <-- default password, admin can change
+
+function getAppPassword() {
+  return localStorage.getItem(LOCK_KEY) || DEFAULT_PW;
+}
+
+function isUnlocked() {
+  return localStorage.getItem(UNLOCK_KEY) === 'yes';
+}
+
+function showLockScreen() {
+  const ls = document.getElementById('lock-screen');
+  if (ls) ls.style.display = 'flex';
+}
+
+function hideLockScreen() {
+  const ls = document.getElementById('lock-screen');
+  if (ls) {
+    ls.style.opacity = '1';
+    ls.style.transition = 'opacity 0.4s';
+    ls.style.opacity = '0';
+    setTimeout(() => ls.style.display = 'none', 400);
+  }
+}
+
+function attemptUnlock() {
+  const input = document.getElementById('lock-input');
+  const error = document.getElementById('lock-error');
+  const val = input.value;
+
+  if (!val) { error.textContent = 'Please enter your password'; return; }
+
+  if (val === getAppPassword()) {
+    localStorage.setItem(UNLOCK_KEY, 'yes');
+    error.textContent = '';
+    input.value = '';
+    hideLockScreen();
+    showToast('Welcome! 👋');
+  } else {
+    error.textContent = 'Incorrect password. Contact your installer.';
+    input.classList.add('shake');
+    input.value = '';
+    setTimeout(() => input.classList.remove('shake'), 500);
+  }
+}
+
+function toggleLockPW() {
+  const inp = document.getElementById('lock-input');
+  const btn = document.getElementById('lock-eye-btn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+// Hidden admin tap — tap "LightControl Pro" 5x quickly to open admin PW change
+let lockHintTaps = 0, lockHintTimer = null;
+function lockHintTap() {
+  lockHintTaps++;
+  clearTimeout(lockHintTimer);
+  lockHintTimer = setTimeout(() => lockHintTaps = 0, 2000);
+  if (lockHintTaps >= 5) {
+    lockHintTaps = 0;
+    const newPW = prompt('Admin: Enter new app password (or cancel to keep current):');
+    if (newPW && newPW.length >= 4) {
+      localStorage.setItem(LOCK_KEY, newPW);
+      // Also unlock immediately since admin knows the password
+      localStorage.setItem(UNLOCK_KEY, 'yes');
+      hideLockScreen();
+      showToast('Password updated & unlocked!');
+    } else if (newPW !== null) {
+      alert('Password must be at least 4 characters.');
+    }
+  }
+}
+
+// ── Admin panel password management ──
+// Exposed function so admin screen can call it
+window.adminSetAppPassword = function(newPW) {
+  if (!newPW || newPW.length < 4) return false;
+  localStorage.setItem(LOCK_KEY, newPW);
+  return true;
+};
+
+window.adminLockApp = function() {
+  localStorage.removeItem(UNLOCK_KEY);
+  showLockScreen();
+  document.getElementById('lock-input').value = '';
+  document.getElementById('lock-error').textContent = '';
+};
+
+window.adminGetCurrentPassword = function() {
+  return getAppPassword();
+};
+
+// ── Init lock ──
+function initLockScreen() {
+  if (isUnlocked()) {
+    hideLockScreen();
+  } else {
+    showLockScreen();
+  }
+}
+
+// Run lock check immediately
+initLockScreen();
+
+
+// ═══════════════════════════════════════════════════
+// GPIO CONFIGURATION
+// ═══════════════════════════════════════════════════
+
+const LED_TYPES = [
+  'WS2812B', 'SK6812', 'WS2811', 'WS2813', 'WS2815',
+  'APA102', 'LPD8806', 'TM1814', 'TM1829', 'UCS1903',
+  'WS2801', 'P9813', 'TM1914', 'GS8208', 'SK9822',
+];
+
+const GPIO_PINS = [2,4,5,12,13,14,16,17,18,19,21,22,23,25,26,27,32,33];
+
+let gpioOutputs = JSON.parse(localStorage.getItem('lc_gpio') || '[]');
+
+// Default to 1 output if none saved
+if (gpioOutputs.length === 0) {
+  gpioOutputs = [{ id:1, name:'Roofline', pin:2, ledCount:100, ledType:'WS2812B', status:'unsaved' }];
+}
+
+let gpioNextId = Math.max(...gpioOutputs.map(o => o.id), 0) + 1;
+
+function saveGPIOLocal() {
+  localStorage.setItem('lc_gpio', JSON.stringify(gpioOutputs));
+}
+
+function addGPIOOutput() {
+  gpioOutputs.push({ id: gpioNextId++, name: 'Output ' + gpioNextId, pin: 4, ledCount: 100, ledType: 'WS2812B', status: 'unsaved' });
+  renderGPIOList();
+}
+
+function removeGPIOOutput(id) {
+  gpioOutputs = gpioOutputs.filter(o => o.id !== id);
+  renderGPIOList();
+}
+
+function updateGPIOField(id, field, value) {
+  const o = gpioOutputs.find(x => x.id === id);
+  if (!o) return;
+  if (field === 'ledCount' || field === 'pin') value = parseInt(value) || 0;
+  o[field] = value;
+  o.status = 'unsaved';
+  updateGPIOSummary();
+}
+
+function renderGPIOList() {
+  const list = document.getElementById('gpio-output-list');
+  if (!list) return;
+
+  list.innerHTML = gpioOutputs.map((o, idx) => `
+    <div class="gpio-card" id="gpio-card-${o.id}">
+      <div class="gpio-header">
+        <div class="gpio-num">${idx + 1}</div>
+        <input class="gpio-name-inp" value="${o.name}" placeholder="e.g. Roofline, Garage"
+          oninput="updateGPIOField(${o.id},'name',this.value)" />
+        <button class="gpio-del-btn" onclick="removeGPIOOutput(${o.id})">✕</button>
+      </div>
+      <div class="gpio-fields">
+        <div class="gpio-field">
+          <span class="gpio-field-label">GPIO Pin</span>
+          <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'pin',this.value)">
+            ${GPIO_PINS.map(p => `<option value="${p}" ${o.pin===p?'selected':''}>${p}</option>`).join('')}
+          </select>
+        </div>
+        <div class="gpio-field">
+          <span class="gpio-field-label">LED Count</span>
+          <input class="gpio-field-input" type="number" min="1" max="1500" value="${o.ledCount}"
+            oninput="updateGPIOField(${o.id},'ledCount',this.value)" />
+        </div>
+        <div class="gpio-field" style="grid-column:1/-1">
+          <span class="gpio-field-label">LED Type</span>
+          <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'ledType',this.value)">
+            ${LED_TYPES.map(t => `<option value="${t}" ${o.ledType===t?'selected':''}>${t}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="gpio-status">
+        <div class="gpio-status-dot ${o.status==='ok'?'ok':o.status==='err'?'err':''}"></div>
+        <span>${o.status==='ok'?'Pushed to WLED ✓':o.status==='err'?'Push failed — check connection':'Unsaved changes'}</span>
+        <span style="margin-left:auto;font-size:10px;color:var(--surface3)">~${Math.round(o.ledCount * 0.06 * 1000)}mA max</span>
+      </div>
+    </div>
+  `).join('');
+
+  updateGPIOSummary();
+}
+
+function updateGPIOSummary() {
+  const total = gpioOutputs.reduce((s, o) => s + (parseInt(o.ledCount) || 0), 0);
+  const mA = Math.round(total * 60);
+  document.getElementById('gpio-stat-outputs').textContent = gpioOutputs.length;
+  document.getElementById('gpio-stat-leds').textContent = total;
+  document.getElementById('gpio-stat-ma').textContent = mA >= 1000 ? (mA/1000).toFixed(1)+'A' : mA+'mA';
+  const pct = Math.min(100, Math.round(total / 1500 * 100));
+  document.getElementById('gpio-coverage-fill').style.width = pct + '%';
+  document.getElementById('gpio-coverage-pct').textContent = total + ' LEDs total';
+}
+
+async function saveGPIOConfig() {
+  saveGPIOLocal();
+
+  if (!wled.active) {
+    showToast('Saved locally — no controller connected to push to');
+    gpioOutputs.forEach(o => o.status = 'unsaved');
+    renderGPIOList();
+    return;
+  }
+
+  // Show push status
+  const statusCard = document.getElementById('gpio-push-status');
+  statusCard.style.display = 'block';
+  document.getElementById('gpio-push-title').textContent = 'Pushing GPIO config to WLED…';
+  document.getElementById('gpio-push-bar').style.width = '0%';
+  document.getElementById('gpio-push-msg').textContent = 'Sending LED configuration…';
+
+  // Build WLED LED config payload
+  // WLED /json/cfg endpoint sets hardware config
+  const leds = {
+    ins: gpioOutputs.map((o, i) => ({
+      pin: [o.pin],
+      type: getLEDTypeCode(o.ledType),
+      count: parseInt(o.ledCount) || 100,
+      rgbw: o.ledType.includes('SK6812'),
+      start: gpioOutputs.slice(0, i).reduce((s, x) => s + (parseInt(x.ledCount)||0), 0),
+    }))
+  };
+
+  document.getElementById('gpio-push-bar').style.width = '40%';
+
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 5000);
+    const res = await fetch(`http://${wled.active.ip}/json/cfg`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hw: { led: leds } }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(tid);
+
+    document.getElementById('gpio-push-bar').style.width = '80%';
+
+    if (res.ok) {
+      gpioOutputs.forEach(o => o.status = 'ok');
+      saveGPIOLocal();
+      renderGPIOList();
+      document.getElementById('gpio-push-bar').style.width = '100%';
+      document.getElementById('gpio-push-title').textContent = '✓ GPIO config pushed successfully';
+      document.getElementById('gpio-push-msg').textContent = 'WLED will restart briefly to apply changes.';
+      showToast('GPIO config saved & pushed to WLED!');
+
+      // Trigger WLED reboot to apply
+      setTimeout(async () => {
+        await fetch(`http://${wled.active.ip}/win&RB`, { method: 'GET' }).catch(() => {});
+      }, 1000);
+
+    } else {
+      throw new Error('HTTP ' + res.status);
+    }
+  } catch (err) {
+    gpioOutputs.forEach(o => o.status = 'err');
+    saveGPIOLocal();
+    renderGPIOList();
+    document.getElementById('gpio-push-bar').style.width = '100%';
+    document.getElementById('gpio-push-bar').style.background = 'var(--danger)';
+    document.getElementById('gpio-push-title').textContent = '⚠️ Push failed';
+    document.getElementById('gpio-push-msg').textContent = 'Config saved locally. Check controller connection and try again.';
+    showToast('⚠️ Push failed — saved locally only');
+  }
+
+  setTimeout(() => { statusCard.style.display = 'none'; }, 4000);
+}
+
+function getLEDTypeCode(type) {
+  // WLED LED type codes
+  const codes = {
+    'WS2812B': 22, 'SK6812': 30, 'WS2811': 6, 'WS2813': 22,
+    'WS2815': 22, 'APA102': 88, 'LPD8806': 82, 'TM1814': 46,
+    'TM1829': 44, 'UCS1903': 26, 'WS2801': 80, 'P9813': 84,
+    'TM1914': 48, 'GS8208': 22, 'SK9822': 92,
+  };
+  return codes[type] || 22;
+}
+
+// ── Admin Password Management ──
+function showAdminPasswordChange() {
+  const card = document.getElementById('admin-pw-card');
+  card.style.display = 'block';
+  // Show current password to admin
+  document.getElementById('admin-current-pw-display').textContent = adminGetCurrentPassword();
+  document.getElementById('admin-new-pw').value = '';
+  document.getElementById('admin-confirm-pw').value = '';
+  document.getElementById('admin-pw-error').textContent = '';
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideAdminPasswordChange() {
+  document.getElementById('admin-pw-card').style.display = 'none';
+}
+
+function doAdminPasswordChange() {
+  const newPW = document.getElementById('admin-new-pw').value;
+  const confirm = document.getElementById('admin-confirm-pw').value;
+  const errEl = document.getElementById('admin-pw-error');
+
+  if (!newPW) { errEl.textContent = 'Enter a new password'; return; }
+  if (newPW.length < 4) { errEl.textContent = 'Password must be at least 4 characters'; return; }
+  if (newPW !== confirm) { errEl.textContent = 'Passwords do not match'; return; }
+
+  const ok = adminSetAppPassword(newPW);
+  if (ok) {
+    errEl.style.color = 'var(--success)';
+    errEl.textContent = '✓ Password updated successfully';
+    document.getElementById('admin-current-pw-display').textContent = newPW;
+    document.getElementById('admin-new-pw').value = '';
+    document.getElementById('admin-confirm-pw').value = '';
+    showToast('Password updated!');
+    setTimeout(hideAdminPasswordChange, 2000);
+  }
+}
+
+// ── Add admin button to home screen ──
+function addAdminButton() {
+  const homeStatusBar = document.querySelector('#s-home .status-bar');
+  if (homeStatusBar) {
+    const adminBtn = document.createElement('button');
+    adminBtn.style.cssText = 'margin-left:auto;background:transparent;border:none;color:var(--surface3);font-size:11px;cursor:pointer;-webkit-appearance:none;padding:0;';
+    adminBtn.textContent = '⚙️';
+    adminBtn.title = 'Admin';
+    adminBtn.onclick = () => go('s-admin');
+    homeStatusBar.appendChild(adminBtn);
+  }
+}
+
+// ── Init GPIO ──
+function initGPIO() {
+  renderGPIOList();
+  addAdminButton();
+}
+
+initGPIO();
+
+</script>
