@@ -424,16 +424,6 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </button>
   </div>
 
-  <!-- CREATE YOUR OWN -->
-  <button class="create-own-btn" onclick="go('s-create')">
-    <div class="co-icon-wrap">✏️</div>
-    <div style="flex:1">
-      <div class="co-label">Create Your Own</div>
-      <div class="co-sub">Mix zone colors and effects, then save</div>
-    </div>
-    <span style="color:var(--muted);font-size:16px">›</span>
-  </button>
-
   <!-- PRESETS -->
   <button class="presets-btn" onclick="go('s-preset-menu')">
     <span class="pb-icon">🎨</span>
@@ -444,7 +434,25 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <span style="color:rgba(255,255,255,0.5);font-size:16px">›</span>
   </button>
 
-  <!-- QUICK -->
+  <!-- ROW: DOWN LIGHTS + CREATE YOUR OWN -->
+  <div class="quick-grid" style="margin-bottom:8px">
+    <div class="quick-card" onclick="go('s-downlights')">
+      <span class="qc-icon">💡</span>
+      <div style="flex:1">
+        <div class="qc-label">Down Lights</div>
+        <div class="qc-sub">Color &amp; pixels</div>
+      </div>
+    </div>
+    <div class="quick-card" onclick="go('s-create')">
+      <span class="qc-icon">✏️</span>
+      <div style="flex:1">
+        <div class="qc-label">Create Your Own</div>
+        <div class="qc-sub">Mix colors &amp; effects</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW: AUTOPILOT + SCHEDULE -->
   <div class="quick-grid">
     <div class="quick-card" onclick="go('s-autopilot')">
       <span class="qc-icon">✨</span>
@@ -457,19 +465,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
   </div>
 
-  <div class="wide-card" onclick="go('s-downlights')">
-    <span class="wide-icon">💡</span>
-    <div style="flex:1"><div class="wl">Down Lights</div><div class="ws">Color and brightness control</div></div>
-    <div class="mini-toggle on" onclick="event.stopPropagation()"></div>
-  </div>
-
-  <div class="wide-card" onclick="go('s-my-presets')">
-    <span class="wide-icon">💾</span>
-    <div style="flex:1"><div class="wl">My Presets</div><div class="ws" id="home-preset-count">4 saved presets</div></div>
-    <span style="color:var(--muted);font-size:14px">›</span>
-  </div>
-
-  <div class="status-bar" style="margin-top:2px">
+  <div class="status-bar" style="margin-top:10px">
     <div class="status-dot"></div>
     <span>Connected · 100 LEDs · Ready</span>
   </div>
@@ -734,13 +730,27 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
       <div style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(255,255,255,0.2)" id="dl-swatch"></div>
       <div><div style="font-size:13px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:10px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:var(--muted)" id="dl-onoff-label">On</span><div class="mini-toggle on" id="dl-toggle" onclick="toggleDL()"></div></div>
+      <div style="margin-left:auto"></div>
     </div>
   </div>
   <div class="card">
     <div class="field-label" style="margin-bottom:10px">Color Presets</div>
     <div class="dl-preset-grid" id="dl-presets"></div>
   </div>
+  <!-- PIXEL POSITIONS CONFIG -->
+  <div class="card" id="dl-pixel-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:500">Pixel Positions</div>
+      <span id="dl-pixel-count" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">0 pixels</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">Enter the LED positions that are downlights. Use ranges or individual numbers (1-indexed).<br><span style="color:var(--text)">e.g. 1-2,5,9-10,12,15</span></div>
+    <input class="field-input" id="dl-pixel-input" placeholder="e.g. 6,12,17,28,35,52,75" style="margin-bottom:10px" oninput="dlPixelInputChanged()"/>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px" id="dl-pixel-total-label">Preview</div>
+    <div id="dl-pixel-preview" style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:12px"></div>
+    <button class="btn btn-primary" style="width:100%" id="dl-push-btn" onclick="dlPushLedmap()">📡 Push Map to WLED</button>
+    <div id="dl-push-status" style="font-size:11px;color:var(--muted);margin-top:8px;min-height:16px;text-align:center"></div>
+  </div>
+
   <div class="card">
     <div class="field-label" style="margin-bottom:10px">Custom Color</div>
     <div class="slider-row"><span>Hue</span><span id="dl-hue-val">36°</span></div>
@@ -943,11 +953,209 @@ const seasons=[
 ];
 
 const sportsTeams={
-  NFL:[{name:'Bears',city:'Chicago',c:['#0B162A','#C83803'],i:'🐻'},{name:'Packers',city:'Green Bay',c:['#203731','#FFB612'],i:'🧀'},{name:'Vikings',city:'Minnesota',c:['#4F2683','#FFC62F'],i:'⚔️'},{name:'Chiefs',city:'Kansas City',c:['#E31837','#FFB81C'],i:'👑'},{name:'Cowboys',city:'Dallas',c:['#003594','#869397'],i:'⭐'},{name:'Eagles',city:'Philadelphia',c:['#004C54','#A5ACAF'],i:'🦅'},{name:'Patriots',city:'New England',c:['#002244','#C60C30'],i:'🗽'},{name:'49ers',city:'San Francisco',c:['#AA0000','#B3995D'],i:'🥇'},{name:'Steelers',city:'Pittsburgh',c:['#FFB612','#101820'],i:'⚙️'},{name:'Ravens',city:'Baltimore',c:['#241773','#000000'],i:'🐦'},{name:'Bills',city:'Buffalo',c:['#00338D','#C60C30'],i:'🦬'},{name:'Dolphins',city:'Miami',c:['#008E97','#FC4C02'],i:'🐬'},{name:'Bengals',city:'Cincinnati',c:['#FB4F14','#000000'],i:'🐯'},{name:'Broncos',city:'Denver',c:['#FB4F14','#002244'],i:'🐴'},{name:'Seahawks',city:'Seattle',c:['#002244','#69BE28'],i:'🦅'}],
-  NBA:[{name:'Bulls',city:'Chicago',c:['#CE1141','#000000'],i:'🐂'},{name:'Lakers',city:'Los Angeles',c:['#552583','#FDB927'],i:'🟣'},{name:'Celtics',city:'Boston',c:['#007A33','#BA9653'],i:'🍀'},{name:'Warriors',city:'Golden State',c:['#1D428A','#FFC72C'],i:'🌉'},{name:'Heat',city:'Miami',c:['#98002E','#F9A01B'],i:'🔥'},{name:'Knicks',city:'New York',c:['#006BB6','#F58426'],i:'🗽'},{name:'Bucks',city:'Milwaukee',c:['#00471B','#EEE1C6'],i:'🦌'},{name:'Nuggets',city:'Denver',c:['#0E2240','#FEC524'],i:'⛏️'},{name:'Suns',city:'Phoenix',c:['#1D1160','#E56020'],i:'☀️'},{name:'Mavericks',city:'Dallas',c:['#00538C','#002B5E'],i:'🐴'}],
-  MLB:[{name:'Cubs',city:'Chicago',c:['#0E3386','#CC3433'],i:'🐻'},{name:'Cardinals',city:'St. Louis',c:['#C41E3A','#FEDB00'],i:'🐦'},{name:'Yankees',city:'New York',c:['#132448','#C4CED4'],i:'🎩'},{name:'Red Sox',city:'Boston',c:['#BD3039','#0C2340'],i:'🧦'},{name:'Dodgers',city:'Los Angeles',c:['#005A9C','#EF3E42'],i:'🔵'},{name:'Astros',city:'Houston',c:['#002D62','#EB6E1F'],i:'🚀'},{name:'Braves',city:'Atlanta',c:['#CE1141','#13274F'],i:'🪓'},{name:'Phillies',city:'Philadelphia',c:['#E81828','#002D72'],i:'🔔'}],
-  NHL:[{name:'Blackhawks',city:'Chicago',c:['#CF0A2C','#000000'],i:'🦅'},{name:'Blues',city:'St. Louis',c:['#002F87','#FCB514'],i:'🎵'},{name:'Bruins',city:'Boston',c:['#FFB81C','#000000'],i:'🐻'},{name:'Penguins',city:'Pittsburgh',c:['#000000','#FCB514'],i:'🐧'},{name:'Rangers',city:'New York',c:['#0038A8','#CE1126'],i:'🗽'},{name:'Red Wings',city:'Detroit',c:['#CE1126','#ffffff'],i:'🔴'},{name:'Lightning',city:'Tampa Bay',c:['#002868','#ffffff'],i:'⚡'},{name:'Avalanche',city:'Colorado',c:['#6F263D','#236192'],i:'🏔️'},{name:'Oilers',city:'Edmonton',c:['#041E42','#FF4C00'],i:'🛢️'},{name:'Maple Leafs',city:'Toronto',c:['#00205B','#ffffff'],i:'🍁'}],
-  College:[{name:'Alabama',city:'Crimson Tide',c:['#9E1B32','#828A8F'],i:'🐘'},{name:'Ohio State',city:'Buckeyes',c:['#BB0000','#666666'],i:'🌰'},{name:'Michigan',city:'Wolverines',c:['#00274C','#FFCB05'],i:'🦡'},{name:'Georgia',city:'Bulldogs',c:['#BA0C2F','#101820'],i:'🐶'},{name:'Notre Dame',city:'Fighting Irish',c:['#0C2340','#C99700'],i:'☘️'},{name:'LSU',city:'Tigers',c:['#461D7C','#FDD023'],i:'🐯'},{name:'Clemson',city:'Tigers',c:['#F66733','#522D80'],i:'🐯'},{name:'Texas',city:'Longhorns',c:['#BF5700','#ffffff'],i:'🤘'},{name:'St. Louis University',city:'Billikens',c:['#003DA5','#C8C9C7'],i:'🌟'},{name:'Illinois',city:'Illini',c:['#E84A27','#13294B'],i:'🧡'},{name:'Iowa',city:'Hawkeyes',c:['#000000','#FFCD00'],i:'🦅'},{name:'Penn State',city:'Nittany Lions',c:['#041E42','#ffffff'],i:'🦁'}],
+  NFL:[
+    {name:'Bears',city:'Chicago',c:['#0B162A','#C83803'],i:'🐻'},
+    {name:'Packers',city:'Green Bay',c:['#203731','#FFB612'],i:'🧀'},
+    {name:'Vikings',city:'Minnesota',c:['#4F2683','#FFC62F'],i:'⚔️'},
+    {name:'Lions',city:'Detroit',c:['#0076B6','#B0B7BC'],i:'🦁'},
+    {name:'Chiefs',city:'Kansas City',c:['#E31837','#FFB81C'],i:'👑'},
+    {name:'Cowboys',city:'Dallas',c:['#003594','#869397'],i:'⭐'},
+    {name:'Eagles',city:'Philadelphia',c:['#004C54','#A5ACAF'],i:'🦅'},
+    {name:'Giants',city:'New York',c:['#0B2265','#A71930'],i:'🗽'},
+    {name:'Commanders',city:'Washington',c:['#5A1414','#FFB612'],i:'⚔️'},
+    {name:'Patriots',city:'New England',c:['#002244','#C60C30'],i:'🗽'},
+    {name:'49ers',city:'San Francisco',c:['#AA0000','#B3995D'],i:'🥇'},
+    {name:'Steelers',city:'Pittsburgh',c:['#FFB612','#101820'],i:'⚙️'},
+    {name:'Ravens',city:'Baltimore',c:['#241773','#000000'],i:'🐦'},
+    {name:'Bills',city:'Buffalo',c:['#00338D','#C60C30'],i:'🦬'},
+    {name:'Dolphins',city:'Miami',c:['#008E97','#FC4C02'],i:'🐬'},
+    {name:'Jets',city:'New York',c:['#125740','#000000'],i:'✈️'},
+    {name:'Bengals',city:'Cincinnati',c:['#FB4F14','#000000'],i:'🐯'},
+    {name:'Browns',city:'Cleveland',c:['#311D00','#FF3C00'],i:'🐶'},
+    {name:'Broncos',city:'Denver',c:['#FB4F14','#002244'],i:'🐴'},
+    {name:'Raiders',city:'Las Vegas',c:['#000000','#A5ACAF'],i:'☠️'},
+    {name:'Chargers',city:'Los Angeles',c:['#0080C6','#FFC20E'],i:'⚡'},
+    {name:'Seahawks',city:'Seattle',c:['#002244','#69BE28'],i:'🦅'},
+    {name:'Rams',city:'Los Angeles',c:['#003594','#FFA300'],i:'🐏'},
+    {name:'Cardinals',city:'Arizona',c:['#97233F','#000000'],i:'🐦'},
+    {name:'49ers',city:'San Francisco',c:['#AA0000','#B3995D'],i:'🥇'},
+    {name:'Falcons',city:'Atlanta',c:['#A71930','#000000'],i:'🦅'},
+    {name:'Panthers',city:'Carolina',c:['#0085CA','#101820'],i:'🐆'},
+    {name:'Saints',city:'New Orleans',c:['#D3BC8D','#101820'],i:'⚜️'},
+    {name:'Buccaneers',city:'Tampa Bay',c:['#D50A0A','#FF7900'],i:'🏴‍☠️'},
+    {name:'Texans',city:'Houston',c:['#03202F','#A71930'],i:'🤠'},
+    {name:'Colts',city:'Indianapolis',c:['#002C5F','#A2AAAD'],i:'🐴'},
+    {name:'Jaguars',city:'Jacksonville',c:['#101820','#D7A22A'],i:'🐆'},
+    {name:'Titans',city:'Tennessee',c:['#0C2340','#4B92DB'],i:'⚔️'},
+  ],
+  NBA:[
+    {name:'Bulls',city:'Chicago',c:['#CE1141','#000000'],i:'🐂'},
+    {name:'Cavaliers',city:'Cleveland',c:['#860038','#FDBB30'],i:'⚔️'},
+    {name:'Pistons',city:'Detroit',c:['#C8102E','#006BB6'],i:'⚙️'},
+    {name:'Pacers',city:'Indiana',c:['#002D62','#FDBB30'],i:'🏎️'},
+    {name:'Bucks',city:'Milwaukee',c:['#00471B','#EEE1C6'],i:'🦌'},
+    {name:'Hawks',city:'Atlanta',c:['#C1D32F','#E03A3E'],i:'🦅'},
+    {name:'Hornets',city:'Charlotte',c:['#1D1160','#00788C'],i:'🐝'},
+    {name:'Heat',city:'Miami',c:['#98002E','#F9A01B'],i:'🔥'},
+    {name:'Magic',city:'Orlando',c:['#0077C0','#C4CED4'],i:'✨'},
+    {name:'Wizards',city:'Washington',c:['#002B5C','#E31837'],i:'🧙'},
+    {name:'Celtics',city:'Boston',c:['#007A33','#BA9653'],i:'🍀'},
+    {name:'Nets',city:'Brooklyn',c:['#000000','#FFFFFF'],i:'🕸️'},
+    {name:'Knicks',city:'New York',c:['#006BB6','#F58426'],i:'🗽'},
+    {name:'76ers',city:'Philadelphia',c:['#006BB6','#ED174C'],i:'🔔'},
+    {name:'Raptors',city:'Toronto',c:['#CE1141','#000000'],i:'🦖'},
+    {name:'Nuggets',city:'Denver',c:['#0E2240','#FEC524'],i:'⛏️'},
+    {name:'Timberwolves',city:'Minnesota',c:['#0C2340','#236192'],i:'🐺'},
+    {name:'Thunder',city:'Oklahoma City',c:['#007AC1','#EF3B24'],i:'⛈️'},
+    {name:'Trail Blazers',city:'Portland',c:['#E03A3E','#000000'],i:'🌲'},
+    {name:'Jazz',city:'Utah',c:['#002B5C','#F9A01B'],i:'🎵'},
+    {name:'Warriors',city:'Golden State',c:['#1D428A','#FFC72C'],i:'🌉'},
+    {name:'Clippers',city:'Los Angeles',c:['#C8102E','#1D428A'],i:'✂️'},
+    {name:'Lakers',city:'Los Angeles',c:['#552583','#FDB927'],i:'🟣'},
+    {name:'Suns',city:'Phoenix',c:['#1D1160','#E56020'],i:'☀️'},
+    {name:'Kings',city:'Sacramento',c:['#5A2D81','#63727A'],i:'👑'},
+    {name:'Mavericks',city:'Dallas',c:['#00538C','#002B5E'],i:'🐴'},
+    {name:'Rockets',city:'Houston',c:['#CE1141','#000000'],i:'🚀'},
+    {name:'Grizzlies',city:'Memphis',c:['#5D76A9','#12173F'],i:'🐻'},
+    {name:'Pelicans',city:'New Orleans',c:['#0C2340','#C8102E'],i:'🦢'},
+    {name:'Spurs',city:'San Antonio',c:['#C4CED4','#000000'],i:'⚡'},
+  ],
+  MLB:[
+    {name:'Cubs',city:'Chicago',c:['#0E3386','#CC3433'],i:'🐻'},
+    {name:'White Sox',city:'Chicago',c:['#27251F','#C4CED4'],i:'⚾'},
+    {name:'Reds',city:'Cincinnati',c:['#C6011F','#000000'],i:'🔴'},
+    {name:'Guardians',city:'Cleveland',c:['#00385D','#E31937'],i:'🌉'},
+    {name:'Tigers',city:'Detroit',c:['#0C2340','#FA4616'],i:'🐯'},
+    {name:'Royals',city:'Kansas City',c:['#004687','#C09A5B'],i:'👑'},
+    {name:'Twins',city:'Minnesota',c:['#002B5C','#D31145'],i:'🔴'},
+    {name:'Cardinals',city:'St. Louis',c:['#C41E3A','#FEDB00'],i:'🐦'},
+    {name:'Brewers',city:'Milwaukee',c:['#FFC52F','#12284B'],i:'🍺'},
+    {name:'Pirates',city:'Pittsburgh',c:['#FDB827','#27251F'],i:'🏴‍☠️'},
+    {name:'Yankees',city:'New York',c:['#132448','#C4CED4'],i:'🎩'},
+    {name:'Red Sox',city:'Boston',c:['#BD3039','#0C2340'],i:'🧦'},
+    {name:'Orioles',city:'Baltimore',c:['#DF4601','#000000'],i:'🐦'},
+    {name:'Rays',city:'Tampa Bay',c:['#092C5C','#8FBCE6'],i:'☀️'},
+    {name:'Blue Jays',city:'Toronto',c:['#134A8E','#1D2D5C'],i:'🐦'},
+    {name:'Mets',city:'New York',c:['#002D72','#FF5910'],i:'🗽'},
+    {name:'Phillies',city:'Philadelphia',c:['#E81828','#002D72'],i:'🔔'},
+    {name:'Braves',city:'Atlanta',c:['#CE1141','#13274F'],i:'🪓'},
+    {name:'Marlins',city:'Miami',c:['#00A3E0','#EF3340'],i:'🐟'},
+    {name:'Nationals',city:'Washington',c:['#AB0003','#14225A'],i:'⭐'},
+    {name:'Dodgers',city:'Los Angeles',c:['#005A9C','#EF3E42'],i:'🔵'},
+    {name:'Giants',city:'San Francisco',c:['#FD5A1E','#27251F'],i:'🟠'},
+    {name:'Padres',city:'San Diego',c:['#2F241D','#FFC425'],i:'🏖️'},
+    {name:'Rockies',city:'Colorado',c:['#33006F','#C4CED4'],i:'🏔️'},
+    {name:'Diamondbacks',city:'Arizona',c:['#A71930','#E3D4AD'],i:'🐍'},
+    {name:'Astros',city:'Houston',c:['#002D62','#EB6E1F'],i:'🚀'},
+    {name:'Angels',city:'Los Angeles',c:['#BA0021','#003263'],i:'👼'},
+    {name:'Rangers',city:'Texas',c:['#003278','#C0111F'],i:'⭐'},
+    {name:'Athletics',city:'Oakland',c:['#003831','#EFB21E'],i:'🐘'},
+    {name:'Mariners',city:'Seattle',c:['#0C2C56','#005C5C'],i:'🧭'},
+  ],
+  NHL:[
+    {name:'Blackhawks',city:'Chicago',c:['#CF0A2C','#000000'],i:'🦅'},
+    {name:'Blues',city:'St. Louis',c:['#002F87','#FCB514'],i:'🎵'},
+    {name:'Predators',city:'Nashville',c:['#FFB81C','#041E42'],i:'🐆'},
+    {name:'Red Wings',city:'Detroit',c:['#CE1126','#FFFFFF'],i:'🔴'},
+    {name:'Avalanche',city:'Colorado',c:['#6F263D','#236192'],i:'🏔️'},
+    {name:'Wild',city:'Minnesota',c:['#154734','#A6192E'],i:'🌲'},
+    {name:'Jets',city:'Winnipeg',c:['#041E42','#004C97'],i:'✈️'},
+    {name:'Bruins',city:'Boston',c:['#FFB81C','#000000'],i:'🐻'},
+    {name:'Sabres',city:'Buffalo',c:['#002654','#FCB514'],i:'⚔️'},
+    {name:'Canadiens',city:'Montreal',c:['#AF1E2D','#192168'],i:'🍁'},
+    {name:'Senators',city:'Ottawa',c:['#C52032','#C2912C'],i:'🏛️'},
+    {name:'Maple Leafs',city:'Toronto',c:['#00205B','#FFFFFF'],i:'🍁'},
+    {name:'Hurricanes',city:'Carolina',c:['#CC0000','#000000'],i:'🌀'},
+    {name:'Blue Jackets',city:'Columbus',c:['#002654','#CE1126'],i:'🚀'},
+    {name:'Devils',city:'New Jersey',c:['#CE1126','#000000'],i:'😈'},
+    {name:'Islanders',city:'New York',c:['#00539B','#F47D30'],i:'🏝️'},
+    {name:'Rangers',city:'New York',c:['#0038A8','#CE1126'],i:'🗽'},
+    {name:'Flyers',city:'Philadelphia',c:['#F74902','#000000'],i:'🟠'},
+    {name:'Penguins',city:'Pittsburgh',c:['#000000','#FCB514'],i:'🐧'},
+    {name:'Capitals',city:'Washington',c:['#041E42','#C8102E'],i:'⭐'},
+    {name:'Coyotes',city:'Arizona',c:['#8C2633','#E2D6B5'],i:'🐺'},
+    {name:'Flames',city:'Calgary',c:['#C8102E','#F1BE48'],i:'🔥'},
+    {name:'Oilers',city:'Edmonton',c:['#041E42','#FF4C00'],i:'🛢️'},
+    {name:'Kings',city:'Los Angeles',c:['#111111','#A2AAAD'],i:'👑'},
+    {name:'Ducks',city:'Anaheim',c:['#F47A38','#B9975B'],i:'🦆'},
+    {name:'Sharks',city:'San Jose',c:['#006D75','#EA7200'],i:'🦈'},
+    {name:'Golden Knights',city:'Vegas',c:['#B4975A','#333F42'],i:'⚔️'},
+    {name:'Kraken',city:'Seattle',c:['#001628','#99D9D9'],i:'🦑'},
+    {name:'Panthers',city:'Florida',c:['#041E42','#C8102E'],i:'🐆'},
+    {name:'Lightning',city:'Tampa Bay',c:['#002868','#FFFFFF'],i:'⚡'},
+    {name:'Canucks',city:'Vancouver',c:['#00843D','#00205B'],i:'🍁'},
+    {name:'Hockey Club',city:'Utah',c:['#69B3E7','#010101'],i:'🏒'},
+  ],
+  College:[
+    {name:'Alabama',city:'Crimson Tide',c:['#9E1B32','#828A8F'],i:'🐘'},
+    {name:'Ohio State',city:'Buckeyes',c:['#BB0000','#666666'],i:'🌰'},
+    {name:'Michigan',city:'Wolverines',c:['#00274C','#FFCB05'],i:'🦡'},
+    {name:'Georgia',city:'Bulldogs',c:['#BA0C2F','#101820'],i:'🐶'},
+    {name:'Notre Dame',city:'Fighting Irish',c:['#0C2340','#C99700'],i:'☘️'},
+    {name:'LSU',city:'Tigers',c:['#461D7C','#FDD023'],i:'🐯'},
+    {name:'Clemson',city:'Tigers',c:['#F66733','#522D80'],i:'🐯'},
+    {name:'Texas',city:'Longhorns',c:['#BF5700','#FFFFFF'],i:'🤘'},
+    {name:'Oklahoma',city:'Sooners',c:['#841617','#FDF9D8'],i:'🌪️'},
+    {name:'Penn State',city:'Nittany Lions',c:['#041E42','#FFFFFF'],i:'🦁'},
+    {name:'Florida',city:'Gators',c:['#0021A5','#FA4616'],i:'🐊'},
+    {name:'Tennessee',city:'Volunteers',c:['#FF8200','#FFFFFF'],i:'🔶'},
+    {name:'Auburn',city:'Tigers',c:['#0C2340','#E87722'],i:'🐯'},
+    {name:'USC',city:'Trojans',c:['#990000','#FFC72C'],i:'⚔️'},
+    {name:'Oregon',city:'Ducks',c:['#154733','#FEE123'],i:'🦆'},
+    {name:'Michigan State',city:'Spartans',c:['#18453B','#FFFFFF'],i:'🟢'},
+    {name:'Wisconsin',city:'Badgers',c:['#C5050C','#FFFFFF'],i:'🦡'},
+    {name:'Nebraska',city:'Cornhuskers',c:['#E41C38','#FFFFFF'],i:'🌽'},
+    {name:'Iowa',city:'Hawkeyes',c:['#000000','#FFCD00'],i:'🦅'},
+    {name:'Arkansas',city:'Razorbacks',c:['#9D2235','#FFFFFF'],i:'🐗'},
+    {name:'Texas A&M',city:'Aggies',c:['#500000','#FFFFFF'],i:'🐾'},
+    {name:'Mississippi State',city:'Bulldogs',c:['#660000','#FFFFFF'],i:'🐶'},
+    {name:'Ole Miss',city:'Rebels',c:['#CE1126','#14213D'],i:'⭐'},
+    {name:'Florida State',city:'Seminoles',c:['#782F40','#CEB888'],i:'🪶'},
+    {name:'Miami',city:'Hurricanes',c:['#F47321','#005030'],i:'🌀'},
+    {name:'Washington',city:'Huskies',c:['#4B2E83','#B7A57A'],i:'🐾'},
+    {name:'Colorado',city:'Buffaloes',c:['#CFB87C','#000000'],i:'🦬'},
+    {name:'Utah',city:'Utes',c:['#CC0000','#FFFFFF'],i:'🔴'},
+    {name:'Arizona',city:'Wildcats',c:['#CC0033','#003366'],i:'🐱'},
+    {name:'Arizona State',city:'Sun Devils',c:['#8C1D40','#FFC627'],i:'😈'},
+    {name:'Oregon State',city:'Beavers',c:['#DC4405','#000000'],i:'🦫'},
+    {name:'Stanford',city:'Cardinal',c:['#8C1515','#FFFFFF'],i:'🌲'},
+    {name:'California',city:'Golden Bears',c:['#003262','#FDB515'],i:'🐻'},
+    {name:'Minnesota',city:'Gophers',c:['#7A0019','#FFB71B'],i:'🐿️'},
+    {name:'Illinois',city:'Illini',c:['#E84A27','#13294B'],i:'🧡'},
+    {name:'Purdue',city:'Boilermakers',c:['#CEB888','#000000'],i:'🚂'},
+    {name:'Indiana',city:'Hoosiers',c:['#990000','#FFFFFF'],i:'🔴'},
+    {name:'Northwestern',city:'Wildcats',c:['#4E2683','#FFFFFF'],i:'🐱'},
+    {name:'Maryland',city:'Terrapins',c:['#E03a3e','#FFD520'],i:'🐢'},
+    {name:'Rutgers',city:'Scarlet Knights',c:['#CC0033','#FFFFFF'],i:'⚔️'},
+    {name:'Virginia Tech',city:'Hokies',c:['#630031','#CF4420'],i:'🦃'},
+    {name:'Pittsburgh',city:'Panthers',c:['#003594','#FFB81C'],i:'🐆'},
+    {name:'Syracuse',city:'Orange',c:['#D44500','#FFFFFF'],i:'🍊'},
+    {name:'North Carolina',city:'Tar Heels',c:['#4B9CD3','#FFFFFF'],i:'💙'},
+    {name:'Duke',city:'Blue Devils',c:['#003088','#FFFFFF'],i:'😈'},
+    {name:'Kentucky',city:'Wildcats',c:['#0033A0','#FFFFFF'],i:'🐱'},
+    {name:'Kansas',city:'Jayhawks',c:['#0051A5','#E8000D'],i:'🐦'},
+    {name:'Kansas State',city:'Wildcats',c:['#512888','#FFFFFF'],i:'🐱'},
+    {name:'Baylor',city:'Bears',c:['#003015','#FFB81C'],i:'🐻'},
+    {name:'TCU',city:'Horned Frogs',c:['#4D1979','#FFFFFF'],i:'🐸'},
+    {name:'West Virginia',city:'Mountaineers',c:['#002855','#EAAA00'],i:'⛰️'},
+    {name:'Georgia Tech',city:'Yellow Jackets',c:['#B3A369','#003057'],i:'🐝'},
+    {name:'Louisville',city:'Cardinals',c:['#AD0000','#000000'],i:'🐦'},
+    {name:'Vanderbilt',city:'Commodores',c:['#866D4B','#000000'],i:'⭐'},
+    {name:'South Carolina',city:'Gamecocks',c:['#73000A','#000000'],i:'🐓'},
+    {name:'Iowa State',city:'Cyclones',c:['#C8102E','#F1BE48'],i:'🌪️'},
+    {name:'Oklahoma State',city:'Cowboys',c:['#FF6600','#000000'],i:'🤠'},
+    {name:'BYU',city:'Cougars',c:['#002E5D','#FFFFFF'],i:'🦁'},
+    {name:'Cincinnati',city:'Bearcats',c:['#E00122','#000000'],i:'🐱'},
+    {name:'UCF',city:'Knights',c:['#FFC904','#000000'],i:'⚔️'},
+    {name:'Houston',city:'Cougars',c:['#C8102E','#FFFFFF'],i:'🐾'},
+    {name:'SMU',city:'Mustangs',c:['#0038A8','#CC0035'],i:'🐴'},
+    {name:'St. Louis University',city:'Billikens',c:['#003DA5','#C8C9C7'],i:'🌟'},
+    {name:'Boise State',city:'Broncos',c:['#D64309','#0033A0'],i:'🐴'},
+    {name:'San Diego State',city:'Aztecs',c:['#A6192E','#231F20'],i:'🌞'},
+    {name:'Air Force',city:'Falcons',c:['#003087','#8A8B8C'],i:'✈️'},
+    {name:'Army',city:'Black Knights',c:['#000000','#D4BF7F'],i:'⚔️'},
+    {name:'Navy',city:'Midshipmen',c:['#00205B','#B0B7BC'],i:'⚓'},
+  ],
 };
 
 const calHolidays=[
@@ -1132,6 +1340,7 @@ function go(id){
   document.getElementById(id).classList.add('active');
   document.getElementById('scroll-view').scrollTop=0;
   if(id==='s-wled') renderSavedControllers();
+  if(id==='s-downlights') dlInitPixelUI();
 }
 
 // ═══════════════════════════════
@@ -1519,7 +1728,10 @@ function filterTeams(){
 
 function openTeamDetail(league,idx){
   if(idx<0)return;
-  currentTeam={...(sportsTeams[league]||[])[idx],league,idx};selectedTDPattern=0;const t=currentTeam;
+  // Only reset pattern when switching to a different team
+  const isSameTeam = currentTeam && currentTeam.league===league && currentTeam.idx===idx;
+  if(!isSameTeam) selectedTDPattern=0;
+  currentTeam={...(sportsTeams[league]||[])[idx],league,idx};const t=currentTeam;
   document.getElementById('td-bg').style.background=`linear-gradient(135deg,${t.c[0]},${t.c[1]||t.c[0]})`;
   document.getElementById('td-hero').style.background=t.c[0]+'22';
   document.getElementById('td-badge').innerHTML=t.i;
@@ -1541,14 +1753,14 @@ function activateTeam(){const pats=['Team Chase','Game Day Pulse','Victory Flash
 // ═══════════════════════════════
 function renderDL(){
   const strand=document.getElementById('dl-strand');
-  strand.innerHTML=Array.from({length:80},(_,i)=>{const n=i+1,isDL=dlDownLEDs.has(n);const bg=isDL?(dlOn?dlColor:'#1c2333'):'#22c55e33';const sz=isDL?'16px':'10px';return`<div class="dl-dot" style="background:${bg};width:${sz};height:${sz};${isDL&&dlOn?`box-shadow:0 0 5px ${dlColor}88`:''}"></div>`;}).join('');
-  document.getElementById('dl-swatch').style.background=dlOn?dlColor:'#1c2333';
-  document.getElementById('dl-hex-label').textContent=dlColor.toUpperCase();
-  document.getElementById('dl-onoff-label').textContent=dlOn?'On':'Off';
-  document.getElementById('dl-hex-inp').value=dlColor;
+  const totalLEDs=(typeof wled!=='undefined'&&wled.active?.ledCount)||80;
+  strand.innerHTML=Array.from({length:totalLEDs},(_,i)=>{const n=i+1,isDL=dlDownLEDs.has(n);const bg=isDL?dlColor:'#22c55e33';const sz=isDL?'16px':'10px';return`<div class="dl-dot" style="background:${bg};width:${sz};height:${sz};${isDL?`box-shadow:0 0 5px ${dlColor}88`:''}"></div>`;}).join('');
+  const swatch=document.getElementById('dl-swatch');if(swatch)swatch.style.background=dlColor;
+  const hexLabel=document.getElementById('dl-hex-label');if(hexLabel)hexLabel.textContent=dlColor.toUpperCase();
+  const hexInp=document.getElementById('dl-hex-inp');if(hexInp)hexInp.value=dlColor;
 }
 
-function toggleDL(){dlOn=!dlOn;document.getElementById('dl-toggle').classList.toggle('on',dlOn);renderDL();}
+function toggleDL(){dlOn=!dlOn;renderDL();}
 
 function renderDLPresets(){
   document.getElementById('dl-presets').innerHTML=dlPresetColors.map(p=>`<div class="dl-preset-row" style="border-color:${dlColor===p.c?'rgba(255,255,255,0.3)':'transparent'}" onclick="dlPickPreset('${p.c}')"><div style="width:6px;height:32px;border-radius:3px;background:${p.c};flex-shrink:0"></div><div style="font-size:11px;font-weight:500">${p.name}</div></div>`).join('');
@@ -1678,7 +1890,8 @@ const wled = {
   controllers: JSON.parse(localStorage.getItem('wled_controllers') || '[]'),
   active: null,       // {ip, name, ledCount, info}
   scanning: false,
-  lastPayload: null,  // last lights-on command — replayed when powering back on
+  lastPayload: null,  // last lights-on WLED command — replayed when powering back on
+  lastConfig: null,   // {name, colors} — used to restore the now-playing display
   // Pre-seeded IP — tries this first before scanning
   lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || '"192.168.0.154"'),
 };
@@ -1745,8 +1958,11 @@ async function wledPost(ip, data, timeout = 2000) {
 // ── Send to active controller ──
 async function wledSend(data) {
   if (!wled.active) { showToast('No controller connected'); return false; }
-  // Save as last payload whenever we're sending a lights-on command
-  if (data.on !== false) wled.lastPayload = data;
+  // Save payload + display config whenever we're sending a lights-on command
+  if (data.on !== false) {
+    wled.lastPayload = data;
+    wled.lastConfig = { name: nowPlayingName, colors: nowPlayingColors };
+  }
   const ok = await wledPost(wled.active.ip, data);
   if (!ok) { showToast('⚠️ Controller not responding'); updateConnectionBadge(false); }
   return ok;
@@ -2091,6 +2307,116 @@ function showConnectError(ip, msg, reason) {
 }
 
 // ═══════════════════════════════════════════════════
+// DOWNLIGHT LED MAP
+// ═══════════════════════════════════════════════════
+
+// Parse "1-2,5,9-10,12,15" → sorted 0-indexed array e.g. [0,1,4,8,9,11,14]
+function parsePixelString(str) {
+  const indices = new Set();
+  str.split(',').forEach(part => {
+    part = part.trim();
+    const range = part.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (range) {
+      const from = parseInt(range[1]), to = parseInt(range[2]);
+      for (let i = Math.min(from,to); i <= Math.max(from,to); i++) {
+        if (i >= 1) indices.add(i - 1); // convert 1-indexed → 0-indexed
+      }
+    } else if (/^\d+$/.test(part) && parseInt(part) >= 1) {
+      indices.add(parseInt(part) - 1);
+    }
+  });
+  return [...indices].sort((a, b) => a - b);
+}
+
+// Generate ledmap JSON content from an array of physical 0-indexed positions
+function generateLedmapContent(pixelIndices) {
+  return JSON.stringify(pixelIndices);
+}
+
+// Upload ledmap1.json to WLED filesystem via /edit
+async function uploadLedmap(ip, pixelIndices) {
+  const content = generateLedmapContent(pixelIndices);
+  const blob = new Blob([content], { type: 'application/json' });
+  const form = new FormData();
+  form.append('data', blob, 'ledmap1.json');
+  try {
+    const r = await fetchWithTimeout(`http://${ip}/edit`, { method: 'POST', body: form }, 8000);
+    return r && r.ok;
+  } catch(e) { return false; }
+}
+
+// Switch active LED map on WLED (0 = full strip default, 1 = downlights map)
+async function switchLedmap(ip, mapIndex) {
+  // WLED 0.14+ accepts {"ledmap": N} via the JSON endpoint
+  const ok = await wledPost(ip, { ledmap: mapIndex });
+  return ok;
+}
+
+// ── Downlight pixel UI ──
+// Load saved pixel string from localStorage on init
+let dlPixelString = localStorage.getItem('dl_pixel_string') || '';
+
+function dlInitPixelUI() {
+  const input = document.getElementById('dl-pixel-input');
+  if (input && dlPixelString) {
+    input.value = dlPixelString;
+    dlPixelInputChanged();
+  }
+}
+
+function dlPixelInputChanged() {
+  const str = document.getElementById('dl-pixel-input').value;
+  dlPixelString = str;
+  localStorage.setItem('dl_pixel_string', str);
+  const pixels = parsePixelString(str);
+
+  // Update count badge
+  const countEl = document.getElementById('dl-pixel-count');
+  if (countEl) countEl.textContent = pixels.length + ' pixel' + (pixels.length !== 1 ? 's' : '');
+
+  // Estimate total LEDs from saved controller info
+  const totalLEDs = wled.active?.ledCount || 100;
+  const label = document.getElementById('dl-pixel-total-label');
+  if (label) label.textContent = `Preview (${totalLEDs} total LEDs)`;
+
+  // Render preview strip
+  const preview = document.getElementById('dl-pixel-preview');
+  if (!preview) return;
+  const pixelSet = new Set(pixels); // 0-indexed
+  const dotSize = Math.max(6, Math.min(12, Math.floor(300 / totalLEDs)));
+  preview.innerHTML = Array.from({ length: totalLEDs }, (_, i) => {
+    const isDL = pixelSet.has(i);
+    return `<div style="width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${isDL ? '#fff5e0' : 'var(--surface3)'};${isDL ? 'box-shadow:0 0 4px #fff5e088' : ''};flex-shrink:0" title="LED ${i+1}"></div>`;
+  }).join('');
+}
+
+async function dlPushLedmap() {
+  const ip = wled.active?.ip;
+  if (!ip) { showToast('No controller connected'); return; }
+  const pixels = parsePixelString(dlPixelString);
+  if (pixels.length === 0) { showToast('Enter at least one pixel position'); return; }
+
+  const statusEl = document.getElementById('dl-push-status');
+  const btn = document.getElementById('dl-push-btn');
+  btn.disabled = true;
+  if (statusEl) statusEl.textContent = 'Uploading ledmap to WLED…';
+
+  const ok = await uploadLedmap(ip, pixels);
+  if (ok) {
+    if (statusEl) statusEl.textContent = `✅ Map uploaded — ${pixels.length} downlight pixels saved`;
+    showToast('✅ Downlight map pushed to WLED');
+    // Also update the legacy dlDownLEDs set used by the visual preview
+    dlDownLEDs.clear();
+    pixels.forEach(p => dlDownLEDs.add(p + 1)); // preview uses 1-indexed
+    renderDL();
+  } else {
+    if (statusEl) statusEl.textContent = '⚠️ Upload failed — check connection';
+    showToast('⚠️ Failed to push map');
+  }
+  btn.disabled = false;
+}
+
+// ═══════════════════════════════════════════════════
 // PATCH EXISTING APP FUNCTIONS TO CALL WLED API
 // ═══════════════════════════════════════════════════
 
@@ -2098,18 +2424,22 @@ function showConnectError(ip, msg, reason) {
 const _origTogglePower = togglePower;
 window.togglePower = function() {
   const wasOn = lightsOn;
+  if (!wasOn && wled.lastConfig) {
+    // We have a saved config — restore it directly, bypassing the "Choose a preset" branch
+    updateNowPlaying(wled.lastConfig.name, wled.lastConfig.colors, true);
+    showToast('Lights on');
+    if (wled.active) {
+      wledSend({ ...wled.lastPayload, on: true });
+    }
+    return;
+  }
   _origTogglePower();
   if (!wled.active) return;
   if (wasOn) {
-    // Turning off — just cut power, keep lastPayload intact for restore
+    // Turning off — just cut power, keep lastPayload/lastConfig intact for restore
     wledSend({ on: false });
   } else {
-    // Turning on — restore last configuration if we have one, else just turn on
-    if (wled.lastPayload) {
-      wledSend({ ...wled.lastPayload, on: true });
-    } else {
-      wledSend({ on: true });
-    }
+    wledSend({ on: true });
   }
 };
 
@@ -2182,14 +2512,29 @@ window.zpUpdateColor = function(hex) {
   if (wled.active && createMode === 'group') pushZonesToWLED();
 };
 
-// Override dl color changes
+// Override setLightMode — switches WLED ledmap
+const _origSetLightMode = setLightMode;
+window.setLightMode = function(m) {
+  _origSetLightMode(m);
+  if (!wled.active) return;
+  if (m === 'down') {
+    // Activate downlight ledmap (only downlight pixels rendered, others dark)
+    switchLedmap(wled.active.ip, 1).then(ok => {
+      if (!ok) showToast('⚠️ Could not switch to downlight map — push map first');
+    });
+  } else {
+    // Restore full strip (ledmap 0 = default, no remapping)
+    switchLedmap(wled.active.ip, 0);
+  }
+};
+
+// Override dl color changes — send solid color; ledmap handles which pixels light up
 const _origDlPickPreset = dlPickPreset;
 window.dlPickPreset = function(c) {
   _origDlPickPreset(c);
   if (wled.active) {
-    // Send color to down light LEDs as individual segment
     const rgb = hexToRgb(c);
-    if (rgb) wledSend({ on: true, seg: [{ id: 1, col: [rgb], fx: 0 }] });
+    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: 0 }] });
   }
 };
 
@@ -2197,7 +2542,7 @@ window.dlPickPreset = function(c) {
 const _origToggleDL = toggleDL;
 window.toggleDL = function() {
   _origToggleDL();
-  if (wled.active) wledSend({ seg: [{ id: 1, on: dlOn }] });
+  if (wled.active) wledSend({ on: dlOn });
 };
 
 // Override doSave — also activates on WLED
@@ -2651,5 +2996,78 @@ function initGPIO() {
 }
 
 initGPIO();
+
+// ═══════════════════════════════════════════════════
+// SMOKE TEST — runs on load, logs results to console
+// ═══════════════════════════════════════════════════
+(function smokeTest() {
+  const results = [];
+  let pass = 0, fail = 0;
+
+  function check(label, test) {
+    try {
+      const ok = !!test();
+      results.push((ok ? '✅' : '❌') + ' ' + label);
+      ok ? pass++ : fail++;
+    } catch(e) {
+      results.push('❌ ' + label + ' — threw: ' + e.message);
+      fail++;
+    }
+  }
+
+  // ── DOM elements ──
+  const domIds = [
+    'scroll-view','s-home','s-wled','s-create','s-downlights',
+    's-sports-leagues','s-sports-teams','s-team-detail',
+    'np-name','np-sub','np-indicator','power-btn','np-bg','np-colors',
+    'tab-all','tab-down',
+    'dl-strand','dl-swatch','dl-hex-label','dl-hex-inp','dl-presets',
+    'dl-pixel-input','dl-pixel-preview','dl-pixel-count','dl-push-btn',
+    'saved-controllers-list','manual-ip','scan-btn',
+    'td-hero','td-bg','td-badge','td-name','td-league-label','td-patterns',
+    'found-controllers-list',
+  ];
+  domIds.forEach(id => check('DOM #' + id, () => document.getElementById(id)));
+
+  // ── Critical functions ──
+  const fns = [
+    'go','togglePower','setLightMode','activateTeam','activatePattern',
+    'openTeamDetail','selTDPat','renderDL','renderDLPresets','dlPushLedmap',
+    'parsePixelString','uploadLedmap','switchLedmap',
+    'startScan','addManualIP','renderSavedControllers','switchToController',
+    'removeController','pingController','discoverWLED','probeIP',
+    'wledSend','wledGet','wledPost','fetchWithTimeout','diagProbe',
+    'updateNowPlaying','updateConnectionBadge','showToast',
+    'hexToRgb','injectWledScreens','dlInitPixelUI','dlPixelInputChanged',
+  ];
+  fns.forEach(fn => check('fn ' + fn + '()', () => typeof window[fn] === 'function'));
+
+  // ── Data structures ──
+  check('sportsTeams.NFL has 32+ teams', () => sportsTeams.NFL.length >= 32);
+  check('sportsTeams.NBA has 30 teams',  () => sportsTeams.NBA.length >= 30);
+  check('sportsTeams.MLB has 30 teams',  () => sportsTeams.MLB.length >= 30);
+  check('sportsTeams.NHL has 32 teams',  () => sportsTeams.NHL.length >= 32);
+  check('sportsTeams.College has 30+ teams', () => sportsTeams.College.length >= 30);
+  check('wledEffects has 100+ effects',  () => wledEffects.length >= 100);
+  check('wled object exists',            () => typeof wled === 'object' && wled !== null);
+  check('wled.controllers is array',     () => Array.isArray(wled.controllers));
+  check('presets array exists',          () => Array.isArray(presets));
+
+  // ── Key state variables ──
+  check('lightsOn is boolean',           () => typeof lightsOn === 'boolean');
+  check('lightMode is string',           () => typeof lightMode === 'string');
+  check('dlColor is hex string',         () => /^#[0-9a-fA-F]{6}$/.test(dlColor));
+
+  // ── Report ──
+  const status = fail === 0 ? '✅ ALL PASSED' : `⚠️ ${fail} FAILED, ${pass} passed`;
+  console.group('%cLightControl Smoke Test — ' + status, `color:${fail===0?'#22c55e':'#ef4444'};font-weight:bold`);
+  results.forEach(r => console.log(r));
+  console.groupEnd();
+
+  if (fail > 0) {
+    // Surface failures visibly during development
+    console.warn('Smoke test failures detected — check console for details');
+  }
+})();
 
 </script>
