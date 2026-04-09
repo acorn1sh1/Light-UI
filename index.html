@@ -1678,6 +1678,7 @@ const wled = {
   controllers: JSON.parse(localStorage.getItem('wled_controllers') || '[]'),
   active: null,       // {ip, name, ledCount, info}
   scanning: false,
+  lastPayload: null,  // last lights-on command — replayed when powering back on
   // Pre-seeded IP — tries this first before scanning
   lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || '"192.168.0.154"'),
 };
@@ -1744,6 +1745,8 @@ async function wledPost(ip, data, timeout = 2000) {
 // ── Send to active controller ──
 async function wledSend(data) {
   if (!wled.active) { showToast('No controller connected'); return false; }
+  // Save as last payload whenever we're sending a lights-on command
+  if (data.on !== false) wled.lastPayload = data;
   const ok = await wledPost(wled.active.ip, data);
   if (!ok) { showToast('⚠️ Controller not responding'); updateConnectionBadge(false); }
   return ok;
@@ -2091,11 +2094,23 @@ function showConnectError(ip, msg, reason) {
 // PATCH EXISTING APP FUNCTIONS TO CALL WLED API
 // ═══════════════════════════════════════════════════
 
-// Override togglePower
+// Override togglePower — capture state BEFORE the original toggles it
 const _origTogglePower = togglePower;
 window.togglePower = function() {
+  const wasOn = lightsOn;
   _origTogglePower();
-  if (wled.active) wledSend({ on: !lightsOn });
+  if (!wled.active) return;
+  if (wasOn) {
+    // Turning off — just cut power, keep lastPayload intact for restore
+    wledSend({ on: false });
+  } else {
+    // Turning on — restore last configuration if we have one, else just turn on
+    if (wled.lastPayload) {
+      wledSend({ ...wled.lastPayload, on: true });
+    } else {
+      wledSend({ on: true });
+    }
+  }
 };
 
 // Override activatePattern — sends color + solid effect
