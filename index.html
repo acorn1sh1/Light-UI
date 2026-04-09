@@ -74,6 +74,8 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
 .power-btn{background:var(--surface2);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;-webkit-appearance:none;}
 .power-btn.on{color:var(--success);border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);}
+.preview-btn{background:var(--surface2);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:0 10px;height:36px;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0;-webkit-appearance:none;white-space:nowrap;}
+.preview-btn.active{color:var(--accent);border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.1);}
 
 /* MODE TOGGLE */
 .mode-seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:3px;border:0.5px solid var(--border);margin-bottom:14px;}
@@ -410,7 +412,12 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
         <div class="np-sub" id="np-sub">Tap Presets or Create Your Own</div>
       </div>
       <div id="np-indicator" class="np-off-dot"></div>
+      <button class="preview-btn" id="preview-btn" onclick="toggleNPPreview()">Preview</button>
       <button class="power-btn" id="power-btn" onclick="togglePower()">⏻</button>
+    </div>
+    <!-- inline preview strip — hidden until Preview is tapped -->
+    <div id="np-preview-strip" style="display:none;margin-top:10px">
+      <div class="strand-strip" id="np-strand"></div>
     </div>
   </div>
 
@@ -649,7 +656,14 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-patterns">
   <div class="top-bar"><button class="back-btn" onclick="go('s-holidays')">← Holidays</button><span class="screen-title" id="patterns-title">Patterns</span></div>
   <div id="patterns-badge" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
-  <div class="preview-bar" id="patterns-preview-bar"></div>
+  <!-- Strand preview — same style as home page Now Playing preview -->
+  <div class="strand-preview" style="margin-bottom:12px">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+      <span>LIVE PREVIEW</span>
+      <span id="hl-active-name" style="font-style:italic;color:var(--muted)">Tap a pattern to activate</span>
+    </div>
+    <div class="strand-strip" id="hl-strand"></div>
+  </div>
   <div class="fav-hint">⭐ Star patterns to add them to your nightly playlist</div>
   <div class="pattern-list" id="pattern-list"></div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
@@ -666,7 +680,13 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-season-patterns">
   <div class="top-bar"><button class="back-btn" onclick="go('s-seasons')">← Seasons</button><span class="screen-title" id="sp-title">Patterns</span></div>
   <div id="sp-badge" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
-  <div class="preview-bar" id="sp-preview-bar"></div>
+  <div class="strand-preview" style="margin-bottom:12px">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+      <span>LIVE PREVIEW</span>
+      <span id="sp-active-name" style="font-style:italic;color:var(--muted)">Tap a pattern to activate</span>
+    </div>
+    <div class="strand-strip" id="sp-strand"></div>
+  </div>
   <div class="fav-hint">⭐ Star patterns to add them to your nightly playlist</div>
   <div class="pattern-list" id="sp-pattern-list"></div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
@@ -818,7 +838,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-admin-gpio">
   <div class="top-bar">
     <button class="back-btn" onclick="go('s-home')">← Home</button>
-    <span class="screen-title">GPIO Configuration</span>
+    <span class="screen-title">LED Setup</span>
     <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="saveGPIOConfig()">💾 Save & Push</button>
   </div>
 
@@ -874,7 +894,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div style="display:flex;flex-direction:column;gap:8px">
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-admin-gpio')">
       <span style="font-size:24px">🔌</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">GPIO Configuration</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Set LED count and type per output</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">LED Setup</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Configure LED strips &amp; push to WLED</div></div>
       <span style="color:var(--muted)">›</span>
     </div>
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-wled')">
@@ -1173,12 +1193,12 @@ const sportsTeams={
 };
 
 const calHolidays=[
-  {month:3,day:7,name:'Easter',icon:'🐰',color:'#a855f7'},
-  {month:4,day:10,name:"Mother's Day",icon:'🌸',color:'#ec4899'},
-  {month:6,day:4,name:'4th of July',icon:'🎆',color:'#ef4444'},
-  {month:9,day:31,name:'Halloween',icon:'🎃',color:'#f97316'},
-  {month:10,day:27,name:'Thanksgiving',icon:'🦃',color:'#f59e0b'},
-  {month:11,day:25,name:'Christmas',icon:'🎄',color:'#22c55e'},
+  {month:3,day:7,name:'Easter',icon:'🐰',color:'#a855f7',link:'easter'},
+  {month:4,day:10,name:"Mother's Day",icon:'🌸',color:'#ec4899',link:null},
+  {month:6,day:4,name:'4th of July',icon:'🎆',color:'#ef4444',link:'july4'},
+  {month:9,day:31,name:'Halloween',icon:'🎃',color:'#f97316',link:'halloween'},
+  {month:10,day:27,name:'Thanksgiving',icon:'🦃',color:'#f59e0b',link:'thanksgiving'},
+  {month:11,day:25,name:'Christmas',icon:'🎄',color:'#22c55e',link:'christmas'},
 ];
 
 const pHolidays=[
@@ -1368,6 +1388,7 @@ function updateNowPlaying(name,colors,playing){
   document.getElementById('power-btn').className='power-btn'+(playing?' on':'');
   document.getElementById('np-bg').style.background=playing&&colors.length?`linear-gradient(135deg,${colors.join(',')})`: 'transparent';
   document.getElementById('np-colors').innerHTML=playing?colors.map(c=>`<div class="np-dot" style="background:${c}"></div>`).join(''):'';
+  if(typeof _npPreviewOpen!=='undefined' && _npPreviewOpen) renderNPPreview();
 }
 
 function togglePower(){
@@ -1402,20 +1423,52 @@ function setCreateMode(m){
   renderCreatePreview();
 }
 
-function renderCreatePreview(){
-  const total=100,dotW=Math.max(3,Math.floor(560/total));
-  let html='';
-  if(createMode==='all'){
-    for(let i=0;i<total;i++) html+=`<div class="strand-dot" style="background:${alColor};width:${dotW}px;box-shadow:0 0 4px ${alColor}55"></div>`;
-  } else {
-    zones.forEach(z=>{
-      for(let i=0;i<z.leds;i++){
-        const bg=z.on?z.color:'#1c2333';
-        html+=`<div class="strand-dot" style="background:${bg};width:${dotW}px;${z.on?`box-shadow:0 0 4px ${z.color}55`:''}"></div>`;
-      }
-    });
+// ══════════════════════════════════════════════════
+// REUSABLE STRAND PREVIEW COMPONENT
+// ══════════════════════════════════════════════════
+
+// Single source of truth for LED count across all previews.
+// Priority: live controller → persisted last-seen count → GPIO config total → 100
+function getLEDCount() {
+  if (typeof wled !== 'undefined' && wled.active?.ledCount) return wled.active.ledCount;
+  const saved = parseInt(localStorage.getItem('lc_led_count'));
+  if (saved > 0) return saved;
+  if (typeof gpioOutputs !== 'undefined' && gpioOutputs.length) {
+    const t = gpioOutputs.reduce((s, o) => s + (parseInt(o.ledCount) || 0), 0);
+    if (t > 0) return t;
   }
-  document.getElementById('create-strand').innerHTML=html;
+  return 100;
+}
+
+// Render a strand of totalLEDs dots into an element.
+// getColor(i) → hex string for LED at 0-based index i.
+// Dark/off LEDs should return '#1c2333'.
+function renderStrand(elementId, totalLEDs, getColor) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const containerW = el.clientWidth || el.parentElement?.clientWidth || 320;
+  const dotW = Math.max(3, Math.floor((containerW - totalLEDs * 2) / totalLEDs));
+  el.innerHTML = Array.from({ length: totalLEDs }, (_, i) => {
+    const c = getColor(i) || '#1c2333';
+    const dark = c === '#1c2333' || c === '#000000' || c === '#000';
+    return `<div class="strand-dot" style="background:${c};width:${dotW}px${dark ? '' : `;box-shadow:0 0 4px ${c}55`}"></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+
+function renderCreatePreview(){
+  const total = getLEDCount();
+  if(createMode==='all'){
+    renderStrand('create-strand', total, () => alColor);
+  } else {
+    // Build a flat color-per-pixel array from zones
+    const pixelColors = [];
+    zones.forEach(z => {
+      for(let i = 0; i < z.leds; i++) pixelColors.push(z.on ? z.color : '#1c2333');
+    });
+    renderStrand('create-strand', total, i => pixelColors[i] || '#1c2333');
+  }
   document.getElementById('cr-color-dot').style.background=createMode==='all'?alColor:zones[0].color;
   document.getElementById('cr-color-name').textContent=createMode==='all'?alColor.toUpperCase():'(per group)';
   document.getElementById('cr-effect-name').textContent=wledEffects.find(e=>e.id===selectedEffect)?.name||'Solid';
@@ -1661,18 +1714,27 @@ function initHolidays(){
 
 function openHoliday(id){
   currentHoliday=holidays.find(h=>h.id===id);
+  if(!currentHoliday) return;
   if(!favPatterns[id])favPatterns[id]=new Set();
   document.getElementById('patterns-title').textContent=currentHoliday.name;
   document.getElementById('patterns-badge').innerHTML=`<span style="font-size:18px">${currentHoliday.icon}</span>${currentHoliday.name}`;
-  document.getElementById('patterns-preview-bar').style.background=`linear-gradient(to right,${currentHoliday.colors.join(',')})`;
-  renderPatterns();go('s-patterns');
+  renderPatterns();
+  go('s-patterns');
+  // Render default strand preview using holiday palette
+  const nameEl=document.getElementById('hl-active-name');
+  if(nameEl) nameEl.textContent='Tap a pattern to activate';
+  renderHolidayPreview(currentHoliday.colors);
 }
 
+function selectHolidayPattern(i){
+  const h=currentHoliday; if(!h) return;
+  activatePattern(h.patterns[i], h.colors);
+}
 function renderPatterns(){
   const h=currentHoliday;
   document.getElementById('pattern-list').innerHTML=h.patterns.map((p,i)=>{
     const isFav=favPatterns[h.id]?.has(i);
-    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="activatePattern('${p}',${JSON.stringify(h.colors)})">
+    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="selectHolidayPattern(${i})">
       <div class="color-dots">${h.colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('')}</div>
       <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'holiday')">⭐</button>
@@ -1689,7 +1751,63 @@ function toggleFavPat(i,type){
   if(type==='holiday')renderPatterns();else renderSeasonPatterns();
 }
 
-function activatePattern(name,colors){updateNowPlaying(name,colors,true);showToast(name+' activated!');}
+// Map pattern name keywords → WLED effect ID
+function patternToEffect(name){
+  const n=(name||'').toLowerCase();
+  if(n.includes('christmas'))        return 44; // Merry Christmas
+  if(n.includes('halloween'))        return 53; // Halloween
+  if(n.includes('fireworks')||n.includes('starburst')) return 89; // Fireworks Starburst
+  if(n.includes('burst'))            return 42; // Fireworks
+  if(n.includes('lightning')||n.includes('storm')||n.includes('blood')) return 57; // Lightning
+  if(n.includes('flicker')||n.includes('fireplace')||n.includes('candle')) return 88; // Candle
+  if(n.includes('fire')&&!n.includes('firework')) return 45; // Fire Flicker
+  if(n.includes('web')||n.includes('spider'))    return 82; // Halloween Eyes (closest)
+  if(n.includes('chase')||n.includes('cane')||n.includes('stripes')||n.includes('patriot')) return 28;
+  if(n.includes('glitter')||n.includes('champagne')) return 87; // Glitter
+  if(n.includes('sparkle'))          return 20; // Sparkle
+  if(n.includes('twinkle')||n.includes('shimmer')||n.includes('glow')||n.includes('blush')) return 17;
+  if(n.includes('pulse')||n.includes('breathe')) return 2;  // Breathe
+  if(n.includes('flash')||n.includes('countdown')||n.includes('blink')) return 1;
+  if(n.includes('drift')||n.includes('flow')||n.includes('rain')) return 15; // Running
+  if(n.includes('rainbow'))          return 9;
+  if(n.includes('fade')||n.includes('dissolve')) return 18;
+  if(n.includes('wave')||n.includes('ripple'))   return 79;
+  if(n.includes('hop')||n.includes('bounce'))    return 28;
+  if(n.includes('meteor')||n.includes('comet'))  return 76;
+  return 0; // Solid fallback
+}
+
+function activatePattern(name,colors){
+  updateNowPlaying(name,colors,true);
+  showToast(name+' activated!');
+  // Update whichever preview is currently visible
+  renderHolidayPreview(colors);
+  renderSeasonPreview(colors);
+  const hlName=document.getElementById('hl-active-name');
+  if(hlName) hlName.textContent=name;
+  const spName=document.getElementById('sp-active-name');
+  if(spName) spName.textContent=name;
+  if(wled.active && colors && colors.length){
+    const total=getLEDCount();
+    const fx=patternToEffect(name);
+    // WLED col: [primary, secondary, tertiary] — each is [r,g,b,w]
+    const col=colors.slice(0,3).map(hex=>{
+      if(isWhiteChannel(hex)) return [0,0,0,255];
+      const rgb=hexToRgb(hex)||[255,255,255];
+      return[rgb[0],rgb[1],rgb[2],0];
+    });
+    while(col.length<3) col.push([0,0,0,0]);
+    wledSend({on:true,bri:200,seg:[{id:0,start:0,stop:total,col,fx,on:true}]});
+  }
+}
+
+function renderHolidayPreview(colors){
+  const el=document.getElementById('hl-strand');
+  if(!el) return;
+  const total=getLEDCount();
+  if(!colors||!colors.length){ renderStrand('hl-strand',total,()=>'#1c2333'); return; }
+  renderStrand('hl-strand',total,i=>colors[i%colors.length]);
+}
 
 // ═══════════════════════════════
 // SEASONS
@@ -1700,18 +1818,34 @@ function initSeasons(){
 
 function openSeason(id){
   currentSeason=seasons.find(s=>s.id===id);
+  if(!currentSeason) return;
   if(!seasonFavPatterns[id])seasonFavPatterns[id]=new Set();
   document.getElementById('sp-title').textContent=currentSeason.name;
   document.getElementById('sp-badge').innerHTML=`<span style="font-size:18px">${currentSeason.icon}</span>${currentSeason.name}`;
-  document.getElementById('sp-preview-bar').style.background=`linear-gradient(to right,${currentSeason.colors.join(',')})`;
-  renderSeasonPatterns();go('s-season-patterns');
+  renderSeasonPatterns();
+  go('s-season-patterns');
+  const nameEl=document.getElementById('sp-active-name');
+  if(nameEl) nameEl.textContent='Tap a pattern to activate';
+  renderSeasonPreview(currentSeason.colors);
 }
 
+function renderSeasonPreview(colors){
+  const el=document.getElementById('sp-strand');
+  if(!el) return;
+  const total=getLEDCount();
+  if(!colors||!colors.length){ renderStrand('sp-strand',total,()=>'#1c2333'); return; }
+  renderStrand('sp-strand',total,i=>colors[i%colors.length]);
+}
+
+function selectSeasonPattern(i){
+  const s=currentSeason; if(!s) return;
+  activatePattern(s.patterns[i], s.colors);
+}
 function renderSeasonPatterns(){
   const s=currentSeason;
   document.getElementById('sp-pattern-list').innerHTML=s.patterns.map((p,i)=>{
     const isFav=seasonFavPatterns[s.id]?.has(i);
-    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="activatePattern('${p}',${JSON.stringify(s.colors)})">
+    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="selectSeasonPattern(${i})">
       <div class="color-dots">${s.colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('')}</div>
       <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'season')">⭐</button>
@@ -1780,9 +1914,11 @@ function activateTeam(){const pats=['Team Chase','Game Day Pulse','Victory Fade'
 // DOWN LIGHTS
 // ═══════════════════════════════
 function renderDL(){
-  const strand=document.getElementById('dl-strand');
-  const totalLEDs=(typeof wled!=='undefined'&&wled.active?.ledCount)||80;
-  strand.innerHTML=Array.from({length:totalLEDs},(_,i)=>{const n=i+1,isDL=dlDownLEDs.has(n);const bg=isDL?dlColor:'#22c55e33';const sz=isDL?'16px':'10px';return`<div class="dl-dot" style="background:${bg};width:${sz};height:${sz};${isDL?`box-shadow:0 0 5px ${dlColor}88`:''}"></div>`;}).join('');
+  const total = getLEDCount();
+  renderStrand('dl-strand', total, i => {
+    const n = i + 1; // dl-strand uses 1-indexed dlDownLEDs
+    return dlDownLEDs.has(n) ? dlColor : '#1c2333';
+  });
   const swatch=document.getElementById('dl-swatch');if(swatch)swatch.style.background=dlColor;
   const hexLabel=document.getElementById('dl-hex-label');if(hexLabel)hexLabel.textContent=dlColor.toUpperCase();
   const hexInp=document.getElementById('dl-hex-inp');if(hexInp)hexInp.value=dlColor;
@@ -1841,7 +1977,12 @@ function renderCalendar(){
   for(let d=1;d<=days;d++){const isToday=d===7&&calMonth===3&&calYear===2026;const ev=evMap[d];grid.innerHTML+=`<div class="cal-day ${isToday?'today':''}"><span class="dn">${d}</span>${ev?`<div class="day-dot-cal" style="background:${ev.color}"></div>`:''}</div>`;}
   const now=new Date(2026,3,7);
   const upcoming=calHolidays.map(e=>{let dt=new Date(calYear,e.month,e.day);if(dt<now)dt=new Date(calYear+1,e.month,e.day);return{...e,_date:dt};}).sort((a,b)=>a._date-b._date).slice(0,4);
-  document.getElementById('upcoming-list').innerHTML=upcoming.map(e=>{const isToday=e._date.toDateString()===now.toDateString();const fmt=isToday?'Today':e._date.toLocaleDateString('en-US',{month:'short',day:'numeric'});return`<div class="ev-item"><span style="font-size:20px">${e.icon}</span><span style="flex:1;font-size:12px;font-weight:500">${e.name}</span><span style="font-size:10px;color:var(--muted)">${fmt}</span><span style="font-size:9px;border-radius:20px;padding:2px 8px;font-weight:500;background:${isToday?'rgba(239,68,68,0.1)':'rgba(34,197,94,0.1)'};color:${isToday?'#ef4444':'#22c55e'};margin-left:6px">${isToday?'Today':'Auto'}</span></div>`;}).join('');
+  document.getElementById('upcoming-list').innerHTML=upcoming.map(e=>{
+    const isToday=e._date.toDateString()===now.toDateString();
+    const fmt=isToday?'Today':e._date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const clickAttr=e.link?`onclick="openHoliday('${e.link}')" style="cursor:pointer"`:'';
+    return`<div class="ev-item" ${clickAttr}><span style="font-size:20px">${e.icon}</span><span style="flex:1;font-size:12px;font-weight:500">${e.name}</span><span style="font-size:10px;color:var(--muted)">${fmt}</span><span style="font-size:9px;border-radius:20px;padding:2px 8px;font-weight:500;background:${isToday?'rgba(239,68,68,0.1)':'rgba(34,197,94,0.1)'};color:${isToday?'#ef4444':'#22c55e'};margin-left:6px">${isToday?'Today':'Auto'}</span>${e.link?'<span style="font-size:10px;color:var(--muted);margin-left:6px">›</span>':''}</div>`;
+  }).join('');
 }
 
 function calShift(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
@@ -1948,6 +2089,8 @@ function setActiveController(ip) {
   if (c) {
     wled.active = c;
     localStorage.setItem('wled_last_ip', JSON.stringify(ip));
+    // Persist LED count so previews stay accurate when controller is offline
+    if (c.ledCount) localStorage.setItem('lc_led_count', String(c.ledCount));
     updateConnectionBadge();
   }
 }
@@ -2433,25 +2576,19 @@ function dlPixelInputChanged() {
   dlPixelString = str;
   localStorage.setItem('dl_pixel_string', str);
   const pixels = parsePixelString(str);
+  const pixelSet = new Set(pixels); // 0-indexed
 
   // Update count badge
   const countEl = document.getElementById('dl-pixel-count');
   if (countEl) countEl.textContent = pixels.length + ' pixel' + (pixels.length !== 1 ? 's' : '');
 
-  // Estimate total LEDs from saved controller info
-  const totalLEDs = wled.active?.ledCount || 100;
+  // Update label with real LED count
+  const totalLEDs = getLEDCount();
   const label = document.getElementById('dl-pixel-total-label');
   if (label) label.textContent = `Preview (${totalLEDs} total LEDs)`;
 
-  // Render preview strip
-  const preview = document.getElementById('dl-pixel-preview');
-  if (!preview) return;
-  const pixelSet = new Set(pixels); // 0-indexed
-  const dotSize = Math.max(6, Math.min(12, Math.floor(300 / totalLEDs)));
-  preview.innerHTML = Array.from({ length: totalLEDs }, (_, i) => {
-    const isDL = pixelSet.has(i);
-    return `<div style="width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${isDL ? '#fff5e0' : 'var(--surface3)'};${isDL ? 'box-shadow:0 0 4px #fff5e088' : ''};flex-shrink:0" title="LED ${i+1}"></div>`;
-  }).join('');
+  // Render using the shared renderStrand component
+  renderStrand('dl-pixel-preview', totalLEDs, i => pixelSet.has(i) ? '#fff5e0' : '#1c2333');
 }
 
 async function dlPushLedmap() {
@@ -2604,7 +2741,7 @@ function isWhiteChannel(hex) { return W_CHANNEL_COLORS.has((hex||'').toLowerCase
 // For warm white we use the dedicated W channel [0,0,0,255]; colour picker sends RGB
 function buildDownlightPayload(colorHex) {
   const pixels = parsePixelString(dlPixelString || '');
-  const totalLEDs = wled.active?.ledCount || 100;
+  const totalLEDs = getLEDCount();
   const ranges = pixelsToRanges(pixels, totalLEDs);
   // #ffffff, #fff5e0, and null all use the dedicated W channel
   // Any other hex colour uses RGB with W=0
@@ -2627,7 +2764,7 @@ function buildDownlightPayload(colorHex) {
 
 // Build payload to restore full strip (W channel warm white), clearing any downlight segments
 function buildAllLightsPayload() {
-  const totalLEDs = wled.active?.ledCount || 100;
+  const totalLEDs = getLEDCount();
   const segs = [{ id: 0, start: 0, stop: totalLEDs, col: [[0,0,0,255]], fx: 0 }];
   // Remove each downlight segment by setting stop: 0
   for (let i = 1; i <= Math.max(dlSegmentCount, 10); i++) segs.push({ id: i, stop: 0 });
@@ -2679,14 +2816,49 @@ window.setLightMode = function(m) {
   }
 };
 
+// Shared helper — send current dlColor to WLED downlight segments
+function dlSendColor(hex) {
+  if (!wled.active) return;
+  wledSendDL(buildDownlightPayload(isWhiteChannel(hex) ? null : hex));
+}
+
 // Override dl color changes — rebuild downlight segments with new colour
 // Selecting 'Warm White' (the W-channel preset) sends no hex so W channel is used
 const _origDlPickPreset = dlPickPreset;
 window.dlPickPreset = function(c) {
   _origDlPickPreset(c);
-  if (!wled.active) return;
-  wledSendDL(buildDownlightPayload(isWhiteChannel(c) ? null : c));
+  dlSendColor(c);
 };
+
+// Override dlApplyCustom (Apply button + hex input) to also push to WLED
+const _origDlApplyCustom = dlApplyCustom;
+window.dlApplyCustom = function() {
+  _origDlApplyCustom();
+  dlSendColor(dlColor);
+};
+
+// Re-wire HSV sliders to also push colour to WLED on drag
+setupSlider('dl-hue', v => {
+  dlH = Math.round(v * 360);
+  dlUpdateTracks();
+  dlColor = hsvToHex(dlH, dlS, dlB);
+  renderDL(); renderDLPresets();
+  dlSendColor(dlColor);
+});
+setupSlider('dl-sat', v => {
+  dlS = Math.round(v * 100);
+  dlUpdateTracks();
+  dlColor = hsvToHex(dlH, dlS, dlB);
+  renderDL(); renderDLPresets();
+  dlSendColor(dlColor);
+});
+setupSlider('dl-bri', v => {
+  dlB = Math.round(v * 100);
+  dlUpdateTracks();
+  dlColor = hsvToHex(dlH, dlS, dlB);
+  renderDL(); renderDLPresets();
+  dlSendColor(dlColor);
+});
 
 // Override toggleDL
 const _origToggleDL = toggleDL;
@@ -2725,6 +2897,30 @@ function hexToRgb(hex) {
 }
 
 // ═══════════════════════════════════════════════════
+// ── Now Playing inline preview strip ──
+let _npPreviewOpen = false;
+
+function toggleNPPreview() {
+  _npPreviewOpen = !_npPreviewOpen;
+  const strip = document.getElementById('np-preview-strip');
+  const btn   = document.getElementById('preview-btn');
+  if (!strip || !btn) return;
+  strip.style.display = _npPreviewOpen ? 'block' : 'none';
+  btn.classList.toggle('active', _npPreviewOpen);
+  if (_npPreviewOpen) renderNPPreview();
+}
+
+function renderNPPreview() {
+  if (!document.getElementById('np-strand')) return;
+  const total = getLEDCount();
+  if (!lightsOn || !nowPlayingColors.length) {
+    renderStrand('np-strand', total, () => '#1c2333');
+    return;
+  }
+  const colors = nowPlayingColors;
+  renderStrand('np-strand', total, i => colors[i % colors.length]);
+}
+
 // PATCH HOME SCREEN — Add connection badge + nav
 // ═══════════════════════════════════════════════════
 function patchHomeScreen() {
@@ -2910,19 +3106,39 @@ initLockScreen();
 // GPIO CONFIGURATION
 // ═══════════════════════════════════════════════════
 
+// LED types matching WLED's supported hardware
 const LED_TYPES = [
-  'WS2812B', 'SK6812', 'WS2811', 'WS2813', 'WS2815',
-  'APA102', 'LPD8806', 'TM1814', 'TM1829', 'UCS1903',
-  'WS2801', 'P9813', 'TM1914', 'GS8208', 'SK9822',
+  { label: 'WS2812B',           code: 22, rgbw: false },
+  { label: 'SK6812 RGBW',       code: 30, rgbw: true  },
+  { label: 'WS2811',            code: 6,  rgbw: false },
+  { label: 'WS2813',            code: 22, rgbw: false },
+  { label: 'WS2815 (12V)',      code: 22, rgbw: false },
+  { label: 'TM1814 RGBW',       code: 46, rgbw: true  },
+  { label: 'APA102',            code: 88, rgbw: false },
+  { label: 'SK9822',            code: 92, rgbw: false },
+  { label: 'WS2801',            code: 80, rgbw: false },
+  { label: 'LPD8806',           code: 82, rgbw: false },
+];
+
+const COLOR_ORDERS = ['RGB','RBG','GRB','GBR','BRG','BGR'];
+const COLOR_ORDER_CODES = {RGB:0,RBG:1,GRB:2,GBR:3,BRG:4,BGR:5};
+
+const MA_OPTIONS = [
+  { label: '35 mA/LED  (5V)', val: 35 },
+  { label: '55 mA/LED  (5V WS281x)', val: 55 },
+  { label: '30 mA/LED  (custom)', val: 30 },
+  { label: '12 mA/LED  (12V)', val: 12 },
 ];
 
 const GPIO_PINS = [2,4,5,12,13,14,16,17,18,19,21,22,23,25,26,27,32,33];
 
 let gpioOutputs = JSON.parse(localStorage.getItem('lc_gpio') || '[]');
 
-// Default to 1 output if none saved
+// Default to 1 output if none saved — full schema
 if (gpioOutputs.length === 0) {
-  gpioOutputs = [{ id:1, name:'Roofline', pin:2, ledCount:100, ledType:'WS2812B', status:'unsaved' }];
+  gpioOutputs = [{ id:1, name:'Roofline', pin:16, ledCount:20, ledType:'SK6812 RGBW',
+                   colorOrder:'RGB', reversed:false, skipFirst:0, offRefresh:false,
+                   maPerLed:55, status:'unsaved' }];
 }
 
 let gpioNextId = Math.max(...gpioOutputs.map(o => o.id), 0) + 1;
@@ -2932,7 +3148,9 @@ function saveGPIOLocal() {
 }
 
 function addGPIOOutput() {
-  gpioOutputs.push({ id: gpioNextId++, name: 'Output ' + gpioNextId, pin: 4, ledCount: 100, ledType: 'WS2812B', status: 'unsaved' });
+  gpioOutputs.push({ id: gpioNextId++, name: 'Output ' + gpioNextId, pin: 4, ledCount: 30,
+    ledType: 'SK6812 RGBW', colorOrder: 'RGB', reversed: false, skipFirst: 0,
+    offRefresh: false, maPerLed: 55, status: 'unsaved' });
   renderGPIOList();
 }
 
@@ -2963,29 +3181,67 @@ function renderGPIOList() {
         <button class="gpio-del-btn" onclick="removeGPIOOutput(${o.id})">✕</button>
       </div>
       <div class="gpio-fields">
+
+        <div class="gpio-field" style="grid-column:1/-1">
+          <span class="gpio-field-label">LED Type</span>
+          <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'ledType',this.value)">
+            ${LED_TYPES.map(t => `<option value="${t.label}" ${o.ledType===t.label?'selected':''}>${t.label}</option>`).join('')}
+          </select>
+        </div>
+
         <div class="gpio-field">
-          <span class="gpio-field-label">GPIO Pin</span>
+          <span class="gpio-field-label">mA / LED</span>
+          <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'maPerLed',this.value)">
+            ${MA_OPTIONS.map(m => `<option value="${m.val}" ${(o.maPerLed||55)==m.val?'selected':''}>${m.label}</option>`).join('')}
+          </select>
+        </div>
+
+        <div class="gpio-field">
+          <span class="gpio-field-label">Color Order</span>
+          <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'colorOrder',this.value)">
+            ${COLOR_ORDERS.map(c => `<option value="${c}" ${(o.colorOrder||'RGB')===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+
+        <div class="gpio-field">
+          <span class="gpio-field-label">Data GPIO Pin</span>
           <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'pin',this.value)">
             ${GPIO_PINS.map(p => `<option value="${p}" ${o.pin===p?'selected':''}>${p}</option>`).join('')}
           </select>
         </div>
+
         <div class="gpio-field">
-          <span class="gpio-field-label">LED Count</span>
-          <input class="gpio-field-input" type="number" min="1" max="1500" value="${o.ledCount}"
+          <span class="gpio-field-label">Length (LEDs)</span>
+          <input class="gpio-field-input" type="number" min="1" max="1500"
+            value="${o.ledCount}" id="gpio-count-${o.id}"
             onchange="updateGPIOField(${o.id},'ledCount',this.value)"
             onblur="updateGPIOField(${o.id},'ledCount',this.value)" />
         </div>
-        <div class="gpio-field" style="grid-column:1/-1">
-          <span class="gpio-field-label">LED Type</span>
-          <select class="gpio-field-select" onchange="updateGPIOField(${o.id},'ledType',this.value)">
-            ${LED_TYPES.map(t => `<option value="${t}" ${o.ledType===t?'selected':''}>${t}</option>`).join('')}
-          </select>
+
+        <div class="gpio-field">
+          <span class="gpio-field-label">Skip First LEDs</span>
+          <input class="gpio-field-input" type="number" min="0" max="100"
+            value="${o.skipFirst||0}"
+            onchange="updateGPIOField(${o.id},'skipFirst',this.value)"
+            onblur="updateGPIOField(${o.id},'skipFirst',this.value)" />
         </div>
+
+        <div class="gpio-field" style="grid-column:1/-1;display:flex;gap:20px;align-items:center;padding:4px 0">
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer">
+            <input type="checkbox" ${o.reversed?'checked':''} onchange="updateGPIOField(${o.id},'reversed',this.checked)" style="width:16px;height:16px;accent-color:var(--accent)">
+            Reversed
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer">
+            <input type="checkbox" ${o.offRefresh?'checked':''} onchange="updateGPIOField(${o.id},'offRefresh',this.checked)" style="width:16px;height:16px;accent-color:var(--accent)">
+            Off Refresh
+          </label>
+        </div>
+
       </div>
       <div class="gpio-status">
         <div class="gpio-status-dot ${o.status==='ok'?'ok':o.status==='err'?'err':''}"></div>
         <span>${o.status==='ok'?'Pushed to WLED ✓':o.status==='err'?'Push failed — check connection':'Unsaved changes'}</span>
-        <span style="margin-left:auto;font-size:10px;color:var(--surface3)">~${Math.round(o.ledCount * 0.06 * 1000)}mA max</span>
+        <span style="margin-left:auto;font-size:10px;color:var(--surface3)">~${Math.round((o.ledCount||0)*(o.maPerLed||55))}mA max</span>
       </div>
     </div>
   `).join('');
@@ -3005,6 +3261,12 @@ function updateGPIOSummary() {
 }
 
 async function saveGPIOConfig() {
+  // Flush any number inputs that still have focus (mobile: user taps Save without blurring)
+  gpioOutputs.forEach(o => {
+    const el = document.getElementById(`gpio-count-${o.id}`);
+    if (el) { const v = parseInt(el.value); if (v > 0) o.ledCount = v; }
+  });
+
   saveGPIOLocal();
 
   if (!wled.active) {
@@ -3014,54 +3276,62 @@ async function saveGPIOConfig() {
     return;
   }
 
-  // Show push status
   const statusCard = document.getElementById('gpio-push-status');
   statusCard.style.display = 'block';
-  document.getElementById('gpio-push-title').textContent = 'Pushing GPIO config to WLED…';
+  document.getElementById('gpio-push-title').textContent = 'Pushing LED config to WLED…';
   document.getElementById('gpio-push-bar').style.width = '0%';
-  document.getElementById('gpio-push-msg').textContent = 'Sending LED configuration…';
+  document.getElementById('gpio-push-msg').textContent = 'Sending configuration…';
 
-  // Build WLED LED config payload
-  // WLED /json/cfg endpoint sets hardware config
-  const leds = {
-    ins: gpioOutputs.map((o, i) => ({
-      pin: [o.pin],
-      type: getLEDTypeCode(o.ledType),
-      count: parseInt(o.ledCount) || 100,
-      rgbw: o.ledType.includes('SK6812'),
-      start: gpioOutputs.slice(0, i).reduce((s, x) => s + (parseInt(x.ledCount)||0), 0),
-    }))
-  };
+  // Build WLED /json/cfg LED payload with all fields
+  let start = 0;
+  const ins = gpioOutputs.map(o => {
+    const ledType = LED_TYPES.find(t => t.label === o.ledType) || LED_TYPES[0];
+    const entry = {
+      pin:   [parseInt(o.pin)],
+      type:  ledType.code,
+      count: parseInt(o.ledCount) || 1,
+      rgbw:  ledType.rgbw,
+      order: COLOR_ORDER_CODES[o.colorOrder] ?? 0,
+      start,
+      rev:   !!o.reversed,
+      skip:  parseInt(o.skipFirst) || 0,
+      ref:   !!o.offRefresh,
+    };
+    start += entry.count;
+    return entry;
+  });
+
+  const totalMA = gpioOutputs.reduce((s,o) => s + (parseInt(o.ledCount)||0) * (parseInt(o.maPerLed)||55), 0);
 
   document.getElementById('gpio-push-bar').style.width = '40%';
 
   try {
-    const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 5000);
-    const res = await fetch(`http://${wled.active.ip}/json/cfg`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hw: { led: leds } }),
-      signal: ctrl.signal,
-    });
-    clearTimeout(tid);
+    // Use Promise.race timeout — avoids AbortController which breaks the service worker
+    const timer = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 8000));
+    const res = await Promise.race([
+      fetch(`http://${wled.active.ip}/json/cfg`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hw: { led: { ins, maxpwr: totalMA } } }),
+      }),
+      timer,
+    ]);
 
     document.getElementById('gpio-push-bar').style.width = '80%';
 
     if (res.ok) {
       gpioOutputs.forEach(o => o.status = 'ok');
+      // Persist the LED count so previews stay accurate
+      localStorage.setItem('lc_led_count', String(start));
       saveGPIOLocal();
       renderGPIOList();
       document.getElementById('gpio-push-bar').style.width = '100%';
-      document.getElementById('gpio-push-title').textContent = '✓ GPIO config pushed successfully';
+      document.getElementById('gpio-push-title').textContent = '✓ LED config pushed successfully';
       document.getElementById('gpio-push-msg').textContent = 'WLED will restart briefly to apply changes.';
-      showToast('GPIO config saved & pushed to WLED!');
-
-      // Trigger WLED reboot to apply
+      showToast('LED config saved & pushed to WLED!');
       setTimeout(async () => {
         await fetch(`http://${wled.active.ip}/win&RB`, { method: 'GET' }).catch(() => {});
       }, 1000);
-
     } else {
       throw new Error('HTTP ' + res.status);
     }
@@ -3069,25 +3339,20 @@ async function saveGPIOConfig() {
     gpioOutputs.forEach(o => o.status = 'err');
     saveGPIOLocal();
     renderGPIOList();
-    document.getElementById('gpio-push-bar').style.width = '100%';
     document.getElementById('gpio-push-bar').style.background = 'var(--danger)';
     document.getElementById('gpio-push-title').textContent = '⚠️ Push failed';
-    document.getElementById('gpio-push-msg').textContent = 'Config saved locally. Check controller connection and try again.';
+    document.getElementById('gpio-push-msg').textContent = err.message === 'timeout'
+      ? 'Request timed out — check controller connection.'
+      : 'Config saved locally. Check connection and try again.';
     showToast('⚠️ Push failed — saved locally only');
   }
 
-  setTimeout(() => { statusCard.style.display = 'none'; }, 4000);
+  setTimeout(() => { statusCard.style.display = 'none'; document.getElementById('gpio-push-bar').style.background = ''; }, 4000);
 }
 
-function getLEDTypeCode(type) {
-  // WLED LED type codes
-  const codes = {
-    'WS2812B': 22, 'SK6812': 30, 'WS2811': 6, 'WS2813': 22,
-    'WS2815': 22, 'APA102': 88, 'LPD8806': 82, 'TM1814': 46,
-    'TM1829': 44, 'UCS1903': 26, 'WS2801': 80, 'P9813': 84,
-    'TM1914': 48, 'GS8208': 22, 'SK9822': 92,
-  };
-  return codes[type] || 22;
+function getLEDTypeCode(typeLabel) {
+  const t = LED_TYPES.find(x => x.label === typeLabel);
+  return t ? t.code : 22;
 }
 
 // ── Admin Password Management ──
