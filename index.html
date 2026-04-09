@@ -1131,6 +1131,7 @@ function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.getElementById('scroll-view').scrollTop=0;
+  if(id==='s-wled') renderSavedControllers();
 }
 
 // ═══════════════════════════════
@@ -1677,7 +1678,8 @@ const wled = {
   controllers: JSON.parse(localStorage.getItem('wled_controllers') || '[]'),
   active: null,       // {ip, name, ledCount, info}
   scanning: false,
-  lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || 'null'),
+  // Pre-seeded IP — tries this first before scanning
+  lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || '"192.168.0.154"'),
 };
 
 function saveControllers() {
@@ -1694,29 +1696,49 @@ function setActiveController(ip) {
 }
 
 // ── HTTP helpers ──
+// Use Promise.race for timeouts — avoids AbortSignal which can't be cloned by the Service Worker
+function fetchWithTimeout(url, opts = {}, timeout = 2000) {
+  const timer = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('timeout')), timeout)
+  );
+  return Promise.race([fetch(url, opts), timer]);
+}
+
 async function wledGet(ip, path, timeout = 2000) {
-  const ctrl = new AbortController();
-  const tid = setTimeout(() => ctrl.abort(), timeout);
   try {
-    const r = await fetch(`http://${ip}${path}`, { signal: ctrl.signal });
-    clearTimeout(tid);
+    const r = await fetchWithTimeout(`http://${ip}${path}`, {}, timeout);
     return r.ok ? r.json() : null;
-  } catch { clearTimeout(tid); return null; }
+  } catch { return null; }
+}
+
+// Diagnostic probe — returns {ok, reason} for user-facing error messages
+async function diagProbe(ip) {
+  // Check 1: is the page served over HTTPS? (mixed-content will silently block HTTP)
+  if (location.protocol === 'https:') {
+    return { ok: false, reason: 'mixed-content', msg: 'This app is loaded over HTTPS, but WLED uses plain HTTP. Browsers block this. Open the app via http:// instead (e.g. save the file locally and open it directly).' };
+  }
+  try {
+    const r = await fetchWithTimeout(`http://${ip}/json/info`, {}, 3000);
+    if (!r.ok) return { ok: false, reason: 'http-error', msg: `Device responded but returned HTTP ${r.status}. Try opening http://${ip} in your browser.` };
+    const info = await r.json();
+    if (!info.ver) return { ok: false, reason: 'not-wled', msg: `Something answered at ${ip} but it doesn't look like WLED. Check the IP is correct.` };
+    return { ok: true, info };
+  } catch(e) {
+    if (e.message === 'timeout') return { ok: false, reason: 'timeout', msg: `No response from ${ip} after 3 seconds. Make sure your phone and the WLED device are on the same WiFi network.` };
+    if (e.message && e.message.toLowerCase().includes('network')) return { ok: false, reason: 'network', msg: `Network error reaching ${ip}. Your device may be on a different WiFi network, or the WLED controller may be offline.` };
+    return { ok: false, reason: 'unknown', msg: `Could not connect: ${e.message}` };
+  }
 }
 
 async function wledPost(ip, data, timeout = 2000) {
-  const ctrl = new AbortController();
-  const tid = setTimeout(() => ctrl.abort(), timeout);
   try {
-    const r = await fetch(`http://${ip}/json/state`, {
+    const r = await fetchWithTimeout(`http://${ip}/json/state`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-      signal: ctrl.signal,
-    });
-    clearTimeout(tid);
+    }, timeout);
     return r.ok;
-  } catch { clearTimeout(tid); return false; }
+  } catch { return false; }
 }
 
 // ── Send to active controller ──
@@ -1736,45 +1758,100 @@ async function probeIP(ip) {
   return null;
 }
 
+// Detect the device's actual local IP via WebRTC so we know which subnet to scan
+async function getLocalSubnet() {
+  return new Promise(resolve => {
+    try {
+      const pc = new RTCPeerConnection({ iceServers: [] });
+      pc.createDataChannel('');
+      const found = new Set();
+      pc.onicecandidate = e => {
+        if (!e || !e.candidate) {
+          pc.close();
+          resolve(found.size ? [...found] : null);
+          return;
+        }
+        const m = e.candidate.candidate.match(/(\d+\.\d+\.\d+)\.\d+/);
+        if (m && !m[1].startsWith('127')) found.add(m[1]);
+      };
+      pc.createOffer().then(o => pc.setLocalDescription(o));
+      // Timeout after 1.5s in case ICE is slow
+      setTimeout(() => { pc.close(); resolve(found.size ? [...found] : null); }, 1500);
+    } catch { resolve(null); }
+  });
+}
+
 async function discoverWLED(onFound, onDone) {
   if (wled.scanning) return;
   wled.scanning = true;
 
-  // 1. Try last known IP first
+  const updateLabel = txt => {
+    const el = document.getElementById('scan-status-label');
+    if (el) el.textContent = txt;
+  };
+  const updateBar = pct => {
+    const bar = document.getElementById('scan-progress-bar');
+    if (bar) bar.style.width = pct + '%';
+  };
+
+  // 1. Try last known IP first — instant if device is still there
   if (wled.lastSeen) {
+    updateLabel('Trying last known device…');
     const found = await probeIP(wled.lastSeen);
     if (found) { onFound(found); wled.scanning = false; onDone(); return; }
   }
 
-  // 2. Try mDNS common names
-  const mdnsNames = ['wled.local','wled-1.local','wled-2.local','wled-3.local'];
-  for (const h of mdnsNames) {
-    const found = await probeIP(h);
-    if (found) { onFound(found); }
-  }
+  // 2. Try mDNS common names (works on most home networks)
+  updateLabel('Trying wled.local…');
+  const mdnsNames = ['wled.local','wled-1.local','wled-2.local','wled-3.local','wled-4.local','wled-5.local'];
+  const mdnsResults = await Promise.all(mdnsNames.map(h => probeIP(h)));
+  mdnsResults.forEach(r => { if (r) onFound(r); });
+  if (mdnsResults.some(Boolean)) { wled.scanning = false; onDone(); return; }
 
-  // 3. Scan common subnets — try likely IPs first
-  const commonOctets = [42,100,101,102,103,104,105,110,120,150,200,201,202,210,220,230,240,250,2,3,4,5,10,11,20,21,30,31,50,51,60,61,70,71,80,81,90,91];
-  const subnets = ['192.168.1','192.168.0','192.168.2','10.0.0','10.0.1'];
+  // 3. Auto-detect local subnet via WebRTC, then scan it fully (all 254 addresses)
+  updateLabel('Detecting your network…');
+  const detectedSubnets = await getLocalSubnet();
 
-  // Build IP list: common octets on each subnet first
+  // Fallback subnets if WebRTC detection fails
+  const fallbackSubnets = ['192.168.1','192.168.0','192.168.2','192.168.10','192.168.50','10.0.0','10.0.1','10.1.1','172.16.0'];
+
+  // Put detected subnets first, then fallbacks (deduplicated)
+  const allSubnets = detectedSubnets
+    ? [...detectedSubnets, ...fallbackSubnets.filter(s => !detectedSubnets.includes(s))]
+    : fallbackSubnets;
+
+  // Build full IP list (1–254) for detected subnet, common octets for fallbacks
+  const commonOctets = [1,2,3,4,5,10,20,30,40,42,50,51,60,61,70,71,80,81,90,91,100,101,102,103,104,105,110,120,150,200,201,202,210,220,230,240,250,254];
   const ipList = [];
-  for (const sub of subnets) {
-    for (const oct of commonOctets) ipList.push(`${sub}.${oct}`);
+
+  for (let i = 0; i < allSubnets.length; i++) {
+    const sub = allSubnets[i];
+    const isDetected = detectedSubnets && detectedSubnets.includes(sub);
+    if (isDetected) {
+      // Full sweep of detected subnet
+      for (let oct = 1; oct <= 254; oct++) ipList.push(`${sub}.${oct}`);
+    } else {
+      // Common octets only for fallback subnets
+      for (const oct of commonOctets) ipList.push(`${sub}.${oct}`);
+    }
   }
 
-  // Scan in batches of 20 concurrent
-  const batchSize = 20;
+  updateLabel(detectedSubnets
+    ? `Scanning ${detectedSubnets[0]}.0/24…`
+    : 'Scanning common subnets…');
+
+  // Scan in batches of 30 concurrent requests
+  const batchSize = 30;
   for (let i = 0; i < ipList.length; i += batchSize) {
+    if (!wled.scanning) break; // allow cancellation
     const batch = ipList.slice(i, i + batchSize);
     const results = await Promise.all(batch.map(ip => probeIP(ip)));
     results.forEach(r => { if (r) onFound(r); });
-    // Update scan progress UI
-    const pct = Math.min(100, Math.round((i / ipList.length) * 100));
-    const bar = document.getElementById('scan-progress-bar');
-    if (bar) bar.style.width = pct + '%';
+    const pct = Math.min(99, Math.round((i / ipList.length) * 100));
+    updateBar(pct);
   }
 
+  updateBar(100);
   wled.scanning = false;
   onDone();
 }
@@ -1793,14 +1870,19 @@ function updateConnectionBadge(online) {
 
 // ── Inject Connection Screen into DOM ──
 function injectWledScreens() {
+  // Remove the external placeholder (it was outside scroll-view, so we don't use it)
   const placeholder = document.getElementById('wled-screens-placeholder');
-  placeholder.outerHTML = `
-<!-- WLED CONNECT SCREEN -->
+  if (placeholder) placeholder.remove();
+
+  // Inject s-wled as a sibling of the other screens, inside the scroll-view
+  const scrollView = document.getElementById('scroll-view');
+  const div = document.createElement('div');
+  div.innerHTML = `
 <div class="screen" id="s-wled">
   <div class="top-bar">
     <button class="back-btn" onclick="go('s-home')">← Home</button>
     <span class="screen-title">Controllers</span>
-    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="startScan()">🔍 Scan</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" id="scan-btn" onclick="startScan()">🔍 Scan</button>
   </div>
 
   <!-- SCAN STATUS -->
@@ -1811,23 +1893,19 @@ function injectWledScreens() {
     </div>
   </div>
 
-  <!-- FOUND CONTROLLERS -->
-  <div id="found-controllers-list">
-    <div style="text-align:center;padding:32px 16px;color:var(--muted)">
-      <div style="font-size:36px;margin-bottom:12px">📡</div>
-      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No controllers found yet</div>
-      <div style="font-size:11px;line-height:1.5">Make sure your phone is on the same WiFi as your WLED device, then tap Scan.</div>
-    </div>
-  </div>
+  <!-- SAVED CONTROLLERS LIST -->
+  <div class="section-label" style="margin-bottom:10px">My Controllers</div>
+  <div id="saved-controllers-list"></div>
 
   <!-- MANUAL ENTRY -->
   <div class="card" style="margin-top:8px">
-    <div style="font-size:12px;font-weight:500;margin-bottom:10px">Add Manually</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">If auto-scan doesn't find your device, enter its IP address directly. Find it in your router's device list or in the WLED app under Info.</div>
+    <div style="font-size:12px;font-weight:500;margin-bottom:10px">Add by IP Address</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Enter your WLED device's IP address. Find it in your router's device list or in the WLED app under Info.</div>
     <div style="display:flex;gap:8px">
-      <input class="field-input" id="manual-ip" placeholder="192.168.1.42" style="flex:1;margin-bottom:0" />
+      <input class="field-input" id="manual-ip" placeholder="192.168.0.154" style="flex:1;margin-bottom:0" />
       <button class="btn btn-primary btn-sm" onclick="addManualIP()">Add</button>
     </div>
+    <div id="connect-error-area"></div>
   </div>
 
   <div class="card" style="margin-top:4px">
@@ -1835,12 +1913,13 @@ function injectWledScreens() {
     <div style="font-size:11px;color:var(--muted);line-height:1.6">
       • Phone must be on the same WiFi as the lights<br>
       • WLED device must be powered on<br>
-      • Try the WLED app first to confirm device is working<br>
-      • Check your router for the device IP if scan fails
+      • Open <span style="color:var(--accent)">http://&lt;ip&gt;</span> in your browser to confirm the device is reachable<br>
+      • App must be opened via <b>http://</b> (not https://) to reach local devices
     </div>
   </div>
-</div>
-  `;
+</div>`;
+  scrollView.appendChild(div.firstElementChild);
+  renderSavedControllers();
 }
 
 // ── Scan UI ──
@@ -1848,81 +1927,164 @@ function startScan() {
   document.getElementById('scan-status').style.display = 'block';
   document.getElementById('scan-status-label').textContent = 'Scanning your network…';
   document.getElementById('scan-progress-bar').style.width = '0%';
-  document.getElementById('found-controllers-list').innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Scanning… this takes about 15 seconds</div>`;
+  const btn = document.getElementById('scan-btn');
+  if (btn) { btn.textContent = '⏹ Stop'; btn.onclick = stopScan; }
 
   const found = new Map();
 
   discoverWLED(
     (controller) => {
       found.set(controller.ip, controller);
-      // Auto-add to saved list if new
-      if (!wled.controllers.find(c => c.ip === controller.ip)) {
-        wled.controllers.push(controller);
-        saveControllers();
-      } else {
-        // Update info
-        const idx = wled.controllers.findIndex(c => c.ip === controller.ip);
-        if (idx >= 0) wled.controllers[idx] = controller;
-        saveControllers();
-      }
-      renderFoundList(found);
+      // Save or update in persistent list
+      const idx = wled.controllers.findIndex(c => c.ip === controller.ip);
+      if (idx >= 0) wled.controllers[idx] = controller;
+      else wled.controllers.push(controller);
+      saveControllers();
+      renderSavedControllers();
       // Auto-connect to first found if none active
-      if (!wled.active) { setActiveController(controller.ip); showToast('Connected to ' + controller.name + '!'); }
+      if (!wled.active) { setActiveController(controller.ip); updateConnectionBadge(); showToast('✅ Connected to ' + controller.name); }
     },
     () => {
-      document.getElementById('scan-status-label').textContent = found.size > 0 ? `Found ${found.size} controller${found.size > 1 ? 's' : ''}` : 'Scan complete — no devices found';
+      const label = found.size > 0
+        ? `Found ${found.size} controller${found.size > 1 ? 's' : ''}`
+        : 'Scan complete — no devices found';
+      document.getElementById('scan-status-label').textContent = label;
       document.getElementById('scan-progress-bar').style.width = '100%';
-      if (found.size === 0) {
-        document.getElementById('found-controllers-list').innerHTML = `
-          <div style="text-align:center;padding:24px;color:var(--muted)">
-            <div style="font-size:32px;margin-bottom:10px">🔌</div>
-            <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No WLED devices found</div>
-            <div style="font-size:11px;line-height:1.5">Make sure your lights are powered on and your phone is on the same WiFi. Try adding the IP manually below.</div>
-          </div>`;
-      }
+      const b = document.getElementById('scan-btn');
+      if (b) { b.textContent = '🔍 Scan'; b.onclick = startScan; }
+      if (found.size === 0 && wled.controllers.length === 0) renderSavedControllers();
     }
   );
 }
 
-function renderFoundList(found) {
-  const el = document.getElementById('found-controllers-list');
-  el.innerHTML = [...found.values()].map(c => {
+function stopScan() {
+  wled.scanning = false;
+  const btn = document.getElementById('scan-btn');
+  if (btn) { btn.textContent = '🔍 Scan'; btn.onclick = startScan; }
+}
+
+function renderSavedControllers() {
+  const el = document.getElementById('saved-controllers-list');
+  if (!el) return;
+  if (wled.controllers.length === 0) {
+    el.innerHTML = `
+      <div style="text-align:center;padding:28px 16px;color:var(--muted);background:var(--surface);border-radius:14px;border:0.5px solid var(--border);margin-bottom:12px">
+        <div style="font-size:32px;margin-bottom:10px">📡</div>
+        <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No controllers saved</div>
+        <div style="font-size:11px;line-height:1.5">Enter an IP address below or tap Scan to find devices on your network.</div>
+      </div>`;
+    return;
+  }
+  el.innerHTML = wled.controllers.map(c => {
     const isActive = wled.active?.ip === c.ip;
     return `
-      <div style="background:var(--surface2);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
-        <div style="width:36px;height:36px;border-radius:10px;background:${isActive ? 'rgba(34,197,94,0.15)' : 'var(--surface3)'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💡</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600">${c.name}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">${c.ip} · ${c.ledCount} LEDs</div>
+      <div style="background:var(--surface);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:14px;padding:14px 16px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:12px;background:${isActive ? 'rgba(34,197,94,0.15)' : 'var(--surface2)'};border:1px solid ${isActive ? 'rgba(34,197,94,0.3)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💡</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.ip}${c.ledCount ? ' · ' + c.ledCount + ' LEDs' : ''}</div>
+          </div>
+          ${isActive
+            ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:4px 12px;flex-shrink:0;font-weight:500">● Active</span>`
+            : `<button class="btn btn-primary btn-sm" style="flex-shrink:0" onclick="switchToController('${c.ip}')">Use</button>`
+          }
         </div>
-        ${isActive
-          ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:3px 10px">Active</span>`
-          : `<button class="btn btn-primary btn-sm" onclick="setActiveController('${c.ip}');renderFoundList(window._foundMap);showToast('Switched to ${c.name}')">Connect</button>`
-        }
+        <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border)">
+          <a href="http://${c.ip}" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;text-align:center;text-decoration:none">🌐 Open WLED</a>
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="pingController('${c.ip}')">🔄 Ping</button>
+          ${!isActive ? `<button class="btn btn-ghost btn-sm" style="flex:1;color:var(--danger)" onclick="removeController('${c.ip}')">🗑 Remove</button>` : ''}
+        </div>
       </div>`;
   }).join('');
-  window._foundMap = found;
+}
+
+function switchToController(ip) {
+  setActiveController(ip);
+  renderSavedControllers();
+  updateConnectionBadge();
+  showToast('✅ Switched to ' + (wled.active?.name || ip));
+}
+
+function removeController(ip) {
+  wled.controllers = wled.controllers.filter(c => c.ip !== ip);
+  saveControllers();
+  if (wled.active?.ip === ip) {
+    wled.active = wled.controllers[0] || null;
+    if (wled.active) localStorage.setItem('wled_last_ip', JSON.stringify(wled.active.ip));
+    else localStorage.removeItem('wled_last_ip');
+    updateConnectionBadge();
+  }
+  renderSavedControllers();
+  showToast('Removed ' + ip);
+}
+
+async function pingController(ip) {
+  showToast('Pinging ' + ip + '…');
+  const info = await wledGet(ip, '/json/info', 2500);
+  if (info && info.ver) {
+    // Refresh its info in the saved list
+    const idx = wled.controllers.findIndex(c => c.ip === ip);
+    if (idx >= 0) {
+      wled.controllers[idx] = { ...wled.controllers[idx], name: info.name || wled.controllers[idx].name, ledCount: info.leds?.count || wled.controllers[idx].ledCount, info };
+      saveControllers();
+    }
+    showToast('✅ ' + (info.name || ip) + ' is online');
+    renderSavedControllers();
+  } else {
+    showToast('⚠️ No response from ' + ip);
+  }
 }
 
 async function addManualIP() {
   const ip = document.getElementById('manual-ip').value.trim();
   if (!ip) return;
   showToast('Checking ' + ip + '…');
-  const controller = await probeIP(ip);
-  if (controller) {
-    if (!wled.controllers.find(c => c.ip === ip)) {
-      wled.controllers.push(controller);
-      saveControllers();
-    }
-    if (!wled.active) setActiveController(ip);
-    const found = new Map([[ip, controller]]);
-    document.getElementById('found-controllers-list').innerHTML = '';
-    renderFoundList(found);
-    showToast('Found: ' + controller.name);
+
+  const diag = await diagProbe(ip);
+  if (diag.ok) {
+    const controller = { ip, name: diag.info.name || `WLED @ ${ip}`, ledCount: diag.info.leds?.count || 0, info: diag.info };
+    const idx = wled.controllers.findIndex(c => c.ip === ip);
+    if (idx >= 0) wled.controllers[idx] = controller;
+    else wled.controllers.push(controller);
+    saveControllers();
+    if (!wled.active) { setActiveController(ip); updateConnectionBadge(); }
+    renderSavedControllers();
+    document.getElementById('connect-error-area').innerHTML = '';
+    showToast('✅ Added: ' + controller.name);
   } else {
-    showToast('⚠️ No WLED device at ' + ip);
+    showConnectError(ip, diag.msg, diag.reason);
   }
   document.getElementById('manual-ip').value = '';
+}
+
+function showConnectError(ip, msg, reason) {
+  const area = document.getElementById('connect-error-area');
+  if (!area) { showToast('⚠️ ' + msg); return; }
+
+  let extra = '';
+  if (reason === 'mixed-content') {
+    extra = `<div style="margin-top:10px;padding:10px;background:rgba(59,130,246,0.1);border-radius:8px;font-size:11px;line-height:1.6;color:var(--text)">
+      <b>Quick fix:</b><br>
+      1. Save all app files to a folder on your computer<br>
+      2. Open <code style="background:var(--surface3);padding:1px 4px;border-radius:3px">index.html</code> directly in Chrome (drag &amp; drop it)<br>
+      3. Or run: <code style="background:var(--surface3);padding:1px 4px;border-radius:3px">npx serve .</code> and open <code style="background:var(--surface3);padding:1px 4px;border-radius:3px">http://localhost:3000</code>
+    </div>`;
+  } else if (reason === 'timeout' || reason === 'network') {
+    extra = `<div style="margin-top:10px;padding:10px;background:rgba(59,130,246,0.1);border-radius:8px;font-size:11px;line-height:1.6;color:var(--text)">
+      <b>Things to check:</b><br>
+      • Open <a href="http://${ip}" target="_blank" style="color:var(--accent)">http://${ip}</a> in a new tab — does WLED load?<br>
+      • Is your phone on the same WiFi as the WLED device?<br>
+      • Is the WLED controller powered on?
+    </div>`;
+  }
+
+  area.innerHTML = `<div style="margin-top:12px;padding:12px;background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.3);border-radius:10px">
+    <div style="font-size:12px;font-weight:600;color:var(--danger);margin-bottom:4px">⚠️ Could not reach ${ip}</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5">${msg}</div>
+    ${extra}
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="document.getElementById('connect-error-area').innerHTML=''">Dismiss</button>
+  </div>`;
 }
 
 // ═══════════════════════════════════════════════════
