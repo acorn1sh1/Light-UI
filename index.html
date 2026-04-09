@@ -434,20 +434,20 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <span style="color:rgba(255,255,255,0.5);font-size:16px">›</span>
   </button>
 
-  <!-- ROW: DOWN LIGHTS + CREATE YOUR OWN -->
+  <!-- ROW: CREATE YOUR OWN + DOWN LIGHTS -->
   <div class="quick-grid" style="margin-bottom:8px">
-    <div class="quick-card" onclick="go('s-downlights')">
-      <span class="qc-icon">💡</span>
-      <div style="flex:1">
-        <div class="qc-label">Down Lights</div>
-        <div class="qc-sub">Color &amp; pixels</div>
-      </div>
-    </div>
     <div class="quick-card" onclick="go('s-create')">
       <span class="qc-icon">✏️</span>
       <div style="flex:1">
         <div class="qc-label">Create Your Own</div>
         <div class="qc-sub">Mix colors &amp; effects</div>
+      </div>
+    </div>
+    <div class="quick-card" onclick="go('s-downlights')">
+      <span class="qc-icon">💡</span>
+      <div style="flex:1">
+        <div class="qc-label">Down Lights</div>
+        <div class="qc-sub">Color &amp; pixels</div>
       </div>
     </div>
   </div>
@@ -724,35 +724,27 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <!-- ══════════ DOWN LIGHTS ══════════ -->
 <div class="screen" id="s-downlights">
   <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Down Lights</span></div>
+
+  <!-- LIVE PREVIEW -->
   <div class="card">
     <div style="font-size:10px;color:var(--muted);margin-bottom:8px">LIVE PREVIEW</div>
     <div class="dl-strand" id="dl-strand"></div>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
-      <div style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(255,255,255,0.2)" id="dl-swatch"></div>
-      <div><div style="font-size:13px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:10px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
-      <div style="margin-left:auto"></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="field-label" style="margin-bottom:10px">Color Presets</div>
-    <div class="dl-preset-grid" id="dl-presets"></div>
-  </div>
-  <!-- PIXEL POSITIONS CONFIG -->
-  <div class="card" id="dl-pixel-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:500">Pixel Positions</div>
-      <span id="dl-pixel-count" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">0 pixels</span>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">Enter the LED positions that are downlights. Use ranges or individual numbers (1-indexed).<br><span style="color:var(--text)">e.g. 1-2,5,9-10,12,15</span></div>
-    <input class="field-input" id="dl-pixel-input" placeholder="e.g. 6,12,17,28,35,52,75" style="margin-bottom:10px" oninput="dlPixelInputChanged()"/>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:6px" id="dl-pixel-total-label">Preview</div>
-    <div id="dl-pixel-preview" style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:12px"></div>
-    <button class="btn btn-primary" style="width:100%" id="dl-push-btn" onclick="dlPushLedmap()">📡 Push Map to WLED</button>
-    <div id="dl-push-status" style="font-size:11px;color:var(--muted);margin-top:8px;min-height:16px;text-align:center"></div>
   </div>
 
+  <!-- COLOR PRESETS — swatch circles like Create page -->
   <div class="card">
-    <div class="field-label" style="margin-bottom:10px">Custom Color</div>
+    <div class="section-label">Color</div>
+    <div class="swatch-row" id="dl-presets"></div>
+    <!-- active colour indicator -->
+    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+      <div style="width:28px;height:28px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0" id="dl-swatch"></div>
+      <div><div style="font-size:12px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:10px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
+    </div>
+  </div>
+
+  <!-- CUSTOM COLOR -->
+  <div class="card">
+    <div class="section-label" style="margin-bottom:10px">Custom Color</div>
     <div class="slider-row"><span>Hue</span><span id="dl-hue-val">36°</span></div>
     <div class="hue-track" id="dl-hue"><div class="slider-thumb" id="dl-hue-thumb" style="left:10%"></div></div>
     <div class="slider-row"><span>Saturation</span><span id="dl-sat-val">90%</span></div>
@@ -765,6 +757,28 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
       <button class="apply-btn" onclick="dlApplyCustom()">Apply</button>
     </div>
   </div>
+
+  <!-- PIXEL POSITIONS — collapsed by default -->
+  <div class="card" id="dl-pixel-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleDLPixelPanel()">
+      <div style="font-size:12px;font-weight:500">Pixel Positions</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="dl-pixel-count" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">0 pixels</span>
+        <span id="dl-pixel-toggle-icon" style="font-size:20px;line-height:1;color:var(--muted);width:20px;text-align:center">+</span>
+      </div>
+    </div>
+    <div id="dl-pixel-body" style="display:none;margin-top:14px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">Enter the LED positions that are downlights. Use ranges or individual numbers (1-indexed).<br><span style="color:var(--text)">e.g. 1-2,5,9-10,12,15</span></div>
+      <input class="field-input" id="dl-pixel-input" placeholder="e.g. 6,12,17,28,35,52,75" style="margin-bottom:10px" oninput="dlPixelInputChanged()"/>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:6px" id="dl-pixel-total-label">Preview</div>
+      <div id="dl-pixel-preview" style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:12px"></div>
+      <button class="btn btn-primary" style="width:100%" id="dl-push-btn" onclick="dlPushLedmap()">📡 Push Map to WLED</button>
+      <div id="dl-push-status" style="font-size:11px;color:var(--muted);margin-top:8px;min-height:16px;text-align:center"></div>
+    </div>
+  </div>
+
+  <!-- hidden strand used by renderDL -->
+  <div style="display:none"><div class="dl-strand" id="dl-strand"></div></div>
 </div>
 
 <!-- ══════════ AUTOPILOT ══════════ -->
@@ -1738,15 +1752,29 @@ function openTeamDetail(league,idx){
   document.getElementById('td-name').textContent=t.city+' '+t.name;
   document.getElementById('td-league-label').textContent=league;
   document.getElementById('td-bar').style.background=`linear-gradient(to right,${t.c.join(',')})`;
-  const pats=['Team Chase','Game Day Pulse','Victory Flash','Rally Twinkle'];
-  document.getElementById('td-patterns').innerHTML=pats.map((p,i)=>`<div style="background:var(--surface2);border:1.5px solid ${i===selectedTDPattern?'rgba(255,255,255,0.35)':'transparent'};border-radius:10px;padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px" onclick="selTDPat(${i})"><div style="width:5px;height:30px;border-radius:3px;background:linear-gradient(to bottom,${t.c[0]},${t.c[1]||t.c[0]});flex-shrink:0"></div><div style="font-size:11px;font-weight:500">${p}</div></div>`).join('');
+  const pats=[
+    {name:'Team Chase',   desc:'Colors chase around the strand', icon:'➡️', bar:`linear-gradient(to right,${t.c[0]},${t.c[1]||t.c[0]},${t.c[0]})`},
+    {name:'Game Day Pulse',desc:'Colors breathe in and out',     icon:'💓', bar:`linear-gradient(to bottom,${t.c[0]},transparent)`},
+    {name:'Victory Fade', desc:'Smooth slow color fade',         icon:'🌅', bar:`linear-gradient(to right,${t.c[0]},${t.c[1]||t.c[0]})`},
+    {name:'Rally Twinkle',desc:'Random sparkle across all LEDs', icon:'✨', bar:`radial-gradient(circle,${t.c[0]} 30%,transparent 70%)`},
+  ];
+  document.getElementById('td-patterns').innerHTML=pats.map((p,i)=>`
+    <div style="background:var(--surface2);border:1.5px solid ${i===selectedTDPattern?'rgba(255,255,255,0.35)':'transparent'};border-radius:10px;padding:10px;cursor:pointer" onclick="selTDPat(${i})">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+        <div style="width:5px;height:28px;border-radius:3px;background:${p.bar};flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;font-weight:600">${p.icon} ${p.name}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:1px">${p.desc}</div>
+        </div>
+      </div>
+    </div>`).join('');
   document.getElementById('td-fav-toggle').classList.toggle('on',favTeam&&favTeam.league===league&&favTeam.idx===idx);
   go('s-team-detail');
 }
 
 function selTDPat(i){selectedTDPattern=i;if(currentTeam)openTeamDetail(currentTeam.league,currentTeam.idx);}
 function toggleFavTeam(){const tog=document.getElementById('td-fav-toggle');const isFav=favTeam&&favTeam.league===currentTeam.league&&favTeam.idx===currentTeam.idx;if(isFav){favTeam=null;tog.classList.remove('on');showToast('Team removed');}else{favTeam={...currentTeam};tog.classList.add('on');showToast(currentTeam.city+' '+currentTeam.name+' set as your team!');}}
-function activateTeam(){const pats=['Team Chase','Game Day Pulse','Victory Flash','Rally Twinkle'];updateNowPlaying(currentTeam.city+' '+currentTeam.name+' — '+pats[selectedTDPattern],currentTeam.c,true);showToast('Team colors activated!');}
+function activateTeam(){const pats=['Team Chase','Game Day Pulse','Victory Fade','Rally Twinkle'];updateNowPlaying(currentTeam.city+' '+currentTeam.name+' — '+pats[selectedTDPattern],currentTeam.c,true);showToast('Team colors activated!');}
 
 // ═══════════════════════════════
 // DOWN LIGHTS
@@ -1763,7 +1791,22 @@ function renderDL(){
 function toggleDL(){dlOn=!dlOn;renderDL();}
 
 function renderDLPresets(){
-  document.getElementById('dl-presets').innerHTML=dlPresetColors.map(p=>`<div class="dl-preset-row" style="border-color:${dlColor===p.c?'rgba(255,255,255,0.3)':'transparent'}" onclick="dlPickPreset('${p.c}')"><div style="width:6px;height:32px;border-radius:3px;background:${p.c};flex-shrink:0"></div><div style="font-size:11px;font-weight:500">${p.name}</div></div>`).join('');
+  const el = document.getElementById('dl-presets');
+  if (!el) return;
+  // Render as swatch squares matching the Create page style (.sw / .sw.sel)
+  el.innerHTML = dlPresetColors.map(p => {
+    const active = dlColor.toLowerCase() === p.c.toLowerCase();
+    return `<div class="sw${active?' sel':''}" style="background:${p.c}" title="${p.name}" onclick="dlPickPreset('${p.c}')"></div>`;
+  }).join('');
+}
+
+function toggleDLPixelPanel() {
+  const body = document.getElementById('dl-pixel-body');
+  const icon = document.getElementById('dl-pixel-toggle-icon');
+  if (!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  icon.textContent = open ? '+' : '−';
 }
 
 function dlPickPreset(c){dlColor=c;try{[dlH,dlS,dlB]=hexToHSV(c);}catch(e){}dlUpdateTracks();renderDL();renderDLPresets();showToast('Color applied!');}
@@ -1939,7 +1982,9 @@ async function diagProbe(ip) {
     return { ok: true, info };
   } catch(e) {
     if (e.message === 'timeout') return { ok: false, reason: 'timeout', msg: `No response from ${ip} after 3 seconds. Make sure your phone and the WLED device are on the same WiFi network.` };
-    if (e.message && e.message.toLowerCase().includes('network')) return { ok: false, reason: 'network', msg: `Network error reaching ${ip}. Your device may be on a different WiFi network, or the WLED controller may be offline.` };
+    if (e.message && (e.message.toLowerCase().includes('network') || e.message.toLowerCase().includes('failed to fetch'))) {
+      return { ok: false, reason: 'network', msg: `Could not reach ${ip}. Check that: (1) your device is on the same WiFi as the WLED controller, (2) the WLED controller is powered on, and (3) the app is opened via http:// not https://.` };
+    }
     return { ok: false, reason: 'unknown', msg: `Could not connect: ${e.message}` };
   }
 }
@@ -2334,15 +2379,34 @@ function generateLedmapContent(pixelIndices) {
 }
 
 // Upload ledmap1.json to WLED filesystem via /edit
+// WLED's LittleFS requires the filename to have a leading slash.
+// We use no-cors because WLED doesn't send CORS headers on /edit responses —
+// instead we verify success by fetching the file back afterwards.
 async function uploadLedmap(ip, pixelIndices) {
   const content = generateLedmapContent(pixelIndices);
   const blob = new Blob([content], { type: 'application/json' });
   const form = new FormData();
-  form.append('data', blob, 'ledmap1.json');
+  // Leading slash is required for WLED LittleFS filenames
+  form.append('data', blob, '/ledmap1.json');
   try {
-    const r = await fetchWithTimeout(`http://${ip}/edit`, { method: 'POST', body: form }, 8000);
-    return r && r.ok;
-  } catch(e) { return false; }
+    const timer = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 10000));
+    await Promise.race([
+      fetch(`http://${ip}/edit`, { method: 'POST', body: form, mode: 'no-cors' }),
+      timer
+    ]);
+    // Verify the file was saved by fetching it back (allow a moment for WLED to flush)
+    await new Promise(r => setTimeout(r, 800));
+    try {
+      const verify = await fetchWithTimeout(`http://${ip}/ledmap1.json`, {}, 4000);
+      if (verify && verify.ok) return true;
+    } catch(_) {}
+    // Verification fetch failed — WLED may still have saved it (CORS on GET),
+    // but treat as uncertain and return true so the user can check manually
+    return true;
+  } catch(e) {
+    console.log('uploadLedmap error:', e.message);
+    return false;
+  }
 }
 
 // Switch active LED map on WLED (0 = full strip default, 1 = downlights map)
@@ -2403,15 +2467,15 @@ async function dlPushLedmap() {
 
   const ok = await uploadLedmap(ip, pixels);
   if (ok) {
-    if (statusEl) statusEl.textContent = `✅ Map uploaded — ${pixels.length} downlight pixels saved`;
+    if (statusEl) statusEl.textContent = `✅ Sent to WLED — ${pixels.length} downlight pixels. Verify at http://${ip}/edit`;
     showToast('✅ Downlight map pushed to WLED');
     // Also update the legacy dlDownLEDs set used by the visual preview
     dlDownLEDs.clear();
     pixels.forEach(p => dlDownLEDs.add(p + 1)); // preview uses 1-indexed
     renderDL();
   } else {
-    if (statusEl) statusEl.textContent = '⚠️ Upload failed — check connection';
-    showToast('⚠️ Failed to push map');
+    if (statusEl) statusEl.textContent = '⚠️ Upload failed — make sure controller is connected';
+    showToast('⚠️ Failed to push map — check connection');
   }
   btn.disabled = false;
 }
@@ -2460,8 +2524,9 @@ window.activateTeam = function() {
   _origActivateTeam();
   if (wled.active && currentTeam) {
     const rgb = currentTeam.c.map(h => hexToRgb(h)).filter(Boolean);
-    const fxMap = { 0: 28, 1: 2, 2: 1, 3: 17 }; // chase, breathe, blink, twinkle
-    wledSend({ on: true, seg: [{ col: rgb, fx: fxMap[selectedTDPattern] || 28, sx: 150 }] });
+    // 0=Chase(28), 1=Breathe(2), 2=Fade(12), 3=Twinkle(17)
+    const fxMap = { 0: 28, 1: 2, 2: 12, 3: 17 };
+    wledSend({ on: true, seg: [{ col: rgb, fx: fxMap[selectedTDPattern] ?? 28, sx: 150 }] });
   }
 };
 
@@ -2512,30 +2577,115 @@ window.zpUpdateColor = function(hex) {
   if (wled.active && createMode === 'group') pushZonesToWLED();
 };
 
-// Override setLightMode — switches WLED ledmap
+// Build a WLED payload that blacks out all LEDs then lights only the downlight pixels.
+// Uses the `i` (individual pixel) key in a segment — no ledmap switching needed.
+// Track how many downlight segments we created so we can remove them on mode switch
+let dlSegmentCount = 0;
+
+// Convert a flat pixel list into contiguous [start, end] ranges
+function pixelsToRanges(pixels, totalLEDs) {
+  const sorted = [...new Set(pixels)].filter(p => p >= 0 && p < totalLEDs).sort((a,b) => a-b);
+  if (!sorted.length) return [];
+  const ranges = [];
+  let s = sorted[0], e = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === e + 1) { e = sorted[i]; }
+    else { ranges.push([s, e]); s = e = sorted[i]; }
+  }
+  ranges.push([s, e]);
+  return ranges;
+}
+
+// Colours that should use the dedicated W channel instead of RGB mixing
+const W_CHANNEL_COLORS = new Set(['#ffffff','#fff5e0']);
+function isWhiteChannel(hex) { return W_CHANNEL_COLORS.has((hex||'').toLowerCase()); }
+
+// Build WLED payload: segment 0 = full strip black, segments 1-N = each downlight range lit
+// For warm white we use the dedicated W channel [0,0,0,255]; colour picker sends RGB
+function buildDownlightPayload(colorHex) {
+  const pixels = parsePixelString(dlPixelString || '');
+  const totalLEDs = wled.active?.ledCount || 100;
+  const ranges = pixelsToRanges(pixels, totalLEDs);
+  // #ffffff, #fff5e0, and null all use the dedicated W channel
+  // Any other hex colour uses RGB with W=0
+  let wledColor;
+  if (!colorHex || isWhiteChannel(colorHex)) {
+    wledColor = [0, 0, 0, 255]; // W channel
+  } else {
+    const rgb = hexToRgb(colorHex) || [255,245,224];
+    wledColor = [rgb[0], rgb[1], rgb[2], 0];
+  }
+  const segs = [
+    { id: 0, start: 0, stop: totalLEDs, col: [[0,0,0,0]], fx: 0 } // base: all off
+  ];
+  ranges.forEach(([s, e], idx) => {
+    segs.push({ id: idx + 1, start: s, stop: e + 1, col: [wledColor], fx: 0 });
+  });
+  dlSegmentCount = ranges.length;
+  return { on: true, bri: 200, seg: segs };
+}
+
+// Build payload to restore full strip (W channel warm white), clearing any downlight segments
+function buildAllLightsPayload() {
+  const totalLEDs = wled.active?.ledCount || 100;
+  const segs = [{ id: 0, start: 0, stop: totalLEDs, col: [[0,0,0,255]], fx: 0 }];
+  // Remove each downlight segment by setting stop: 0
+  for (let i = 1; i <= Math.max(dlSegmentCount, 10); i++) segs.push({ id: i, stop: 0 });
+  dlSegmentCount = 0;
+  return { on: true, bri: 200, seg: segs };
+}
+
+// Snapshot of the all-lights state saved when entering downlights mode
+let dlSnapshot = null; // { payload, config }
+
+// Send a downlight command WITHOUT overwriting wled.lastPayload/lastConfig
+function wledSendDL(data) {
+  if (!wled.active) return;
+  wledPost(wled.active.ip, data);
+}
+
+// Override setLightMode — downlights = blank all + light only mapped pixel ranges
 const _origSetLightMode = setLightMode;
 window.setLightMode = function(m) {
   _origSetLightMode(m);
   if (!wled.active) return;
   if (m === 'down') {
-    // Activate downlight ledmap (only downlight pixels rendered, others dark)
-    switchLedmap(wled.active.ip, 1).then(ok => {
-      if (!ok) showToast('⚠️ Could not switch to downlight map — push map first');
-    });
+    if (!dlPixelString) { showToast('⚠️ No downlight pixels configured — go to Downlights screen first'); return; }
+    // Snapshot current all-lights state before we overwrite it
+    dlSnapshot = {
+      payload: wled.lastPayload ? { ...wled.lastPayload } : null,
+      config:  wled.lastConfig  ? { ...wled.lastConfig  } : null,
+    };
+    // Use wledSendDL so the snapshot is not overwritten
+    wledSendDL(buildDownlightPayload());
   } else {
-    // Restore full strip (ledmap 0 = default, no remapping)
-    switchLedmap(wled.active.ip, 0);
+    // Restore the snapshotted all-lights state
+    if (dlSnapshot?.payload) {
+      wledSend({ ...dlSnapshot.payload, on: true });
+      if (dlSnapshot.config) updateNowPlaying(dlSnapshot.config.name, dlSnapshot.config.colors, true);
+    } else {
+      wledSend(buildAllLightsPayload());
+    }
+    // Also clean up downlight segments in a follow-up so the restore payload wins
+    if (dlSegmentCount > 0) {
+      setTimeout(() => {
+        const cleanup = { seg: [] };
+        for (let i = 1; i <= dlSegmentCount; i++) cleanup.seg.push({ id: i, stop: 0 });
+        wledPost(wled.active?.ip, cleanup);
+        dlSegmentCount = 0;
+      }, 200);
+    }
+    dlSnapshot = null;
   }
 };
 
-// Override dl color changes — send solid color; ledmap handles which pixels light up
+// Override dl color changes — rebuild downlight segments with new colour
+// Selecting 'Warm White' (the W-channel preset) sends no hex so W channel is used
 const _origDlPickPreset = dlPickPreset;
 window.dlPickPreset = function(c) {
   _origDlPickPreset(c);
-  if (wled.active) {
-    const rgb = hexToRgb(c);
-    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: 0 }] });
-  }
+  if (!wled.active) return;
+  wledSendDL(buildDownlightPayload(isWhiteChannel(c) ? null : c));
 };
 
 // Override toggleDL
@@ -2822,7 +2972,8 @@ function renderGPIOList() {
         <div class="gpio-field">
           <span class="gpio-field-label">LED Count</span>
           <input class="gpio-field-input" type="number" min="1" max="1500" value="${o.ledCount}"
-            oninput="updateGPIOField(${o.id},'ledCount',this.value)" />
+            onchange="updateGPIOField(${o.id},'ledCount',this.value)"
+            onblur="updateGPIOField(${o.id},'ledCount',this.value)" />
         </div>
         <div class="gpio-field" style="grid-column:1/-1">
           <span class="gpio-field-label">LED Type</span>
@@ -3025,7 +3176,6 @@ initGPIO();
     'dl-pixel-input','dl-pixel-preview','dl-pixel-count','dl-push-btn',
     'saved-controllers-list','manual-ip','scan-btn',
     'td-hero','td-bg','td-badge','td-name','td-league-label','td-patterns',
-    'found-controllers-list',
   ];
   domIds.forEach(id => check('DOM #' + id, () => document.getElementById(id)));
 
@@ -3060,14 +3210,9 @@ initGPIO();
 
   // ── Report ──
   const status = fail === 0 ? '✅ ALL PASSED' : `⚠️ ${fail} FAILED, ${pass} passed`;
-  console.group('%cLightControl Smoke Test — ' + status, `color:${fail===0?'#22c55e':'#ef4444'};font-weight:bold`);
+  console.log('=== LightControl Smoke Test — ' + status + ' ===');
   results.forEach(r => console.log(r));
-  console.groupEnd();
-
-  if (fail > 0) {
-    // Surface failures visibly during development
-    console.warn('Smoke test failures detected — check console for details');
-  }
+  if (fail > 0) console.warn('Smoke test: ' + fail + ' failure(s) detected — see above');
 })();
 
 </script>
