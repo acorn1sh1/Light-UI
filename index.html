@@ -132,10 +132,15 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .pattern-list{display:flex;flex-direction:column;gap:7px;}
 .pattern-row{background:var(--surface);border:0.5px solid var(--border);border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;}
 .pattern-row.favorited{border-color:rgba(59,130,246,0.4);}
+.pattern-row.is-default{border-left:3px solid #fbbf24;}
 .color-dots{display:flex;gap:3px;flex-shrink:0;}
 .cdot{width:9px;height:9px;border-radius:50%;}
 .fav-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;-webkit-appearance:none;}
 .fav-btn.active{background:rgba(59,130,246,0.15);border-color:var(--accent);color:var(--accent);}
+.crown-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;-webkit-appearance:none;opacity:0.45;transition:opacity .15s;}
+.crown-btn.active{opacity:1;background:rgba(251,191,36,0.15);border-color:#fbbf24;}
+.home-defaults-item{display:flex;align-items:center;background:var(--card,var(--surface));border-radius:11px;padding:11px 14px;margin-bottom:7px;cursor:pointer;border-left:3px solid #fbbf24;gap:10px;}
+.home-defaults-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 6px;}
 
 /* PRESETS LIBRARY */
 .preset-menu-grid{display:flex;flex-direction:column;gap:8px;}
@@ -441,6 +446,18 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <span style="color:rgba(255,255,255,0.5);font-size:16px">›</span>
   </button>
 
+  <!-- SYNC STATUS BADGE -->
+  <div id="home-sync-badge" style="display:none;align-items:center;gap:6px;font-size:10px;color:var(--muted);background:var(--surface);border-radius:8px;padding:7px 11px;margin-bottom:8px;border:0.5px solid var(--border)"></div>
+
+  <!-- DEFAULT EFFECTS -->
+  <div id="home-defaults" style="display:none;margin-bottom:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="home-defaults-label">Default Effects</span>
+      <button onclick="go('s-preset-menu')" style="font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;margin-bottom:6px">Manage ›</button>
+    </div>
+    <div id="home-defaults-list"></div>
+  </div>
+
   <!-- ROW: CREATE YOUR OWN + DOWN LIGHTS -->
   <div class="quick-grid" style="margin-bottom:8px">
     <div class="quick-card" onclick="go('s-create')">
@@ -642,7 +659,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Presets</span></div>
   <div class="preset-menu-grid">
     <div class="preset-menu-card" onclick="go('s-holidays')"><span class="pmc-icon">🎄</span><div style="flex:1"><div class="pmc-label">Holidays</div><div class="pmc-sub">Christmas, Halloween, 4th of July and more</div></div><span class="pmc-count">9</span></div>
-    <div class="preset-menu-card" onclick="go('s-sports-leagues')"><span class="pmc-icon">🏆</span><div style="flex:1"><div class="pmc-label">Sports Teams</div><div class="pmc-sub">NFL, NBA, MLB, NHL and 201 college programs</div></div><span class="pmc-count">5 leagues</span></div>
+    <div class="preset-menu-card" onclick="go('s-sports-leagues')"><span class="pmc-icon">🏆</span><div style="flex:1"><div class="pmc-label">Sports Teams</div><div class="pmc-sub">NFL, NBA, MLB, NHL and 100 college programs</div></div><span class="pmc-count">5 leagues</span></div>
     <div class="preset-menu-card" onclick="go('s-seasons')"><span class="pmc-icon">🍂</span><div style="flex:1"><div class="pmc-label">Seasons</div><div class="pmc-sub">Spring, Summer, Fall and Winter themes</div></div><span class="pmc-count">4 seasons</span></div>
     <div class="preset-menu-card" onclick="go('s-my-presets')"><span class="pmc-icon">💾</span><div style="flex:1"><div class="pmc-label">My Presets</div><div class="pmc-sub">Your saved zone color combinations</div></div><span class="pmc-count" id="my-preset-count">4 saved</span></div>
   </div>
@@ -712,7 +729,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div class="league-card" onclick="openLeague('NHL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏒</span><div style="font-size:13px;font-weight:600">NHL</div><div style="font-size:10px;color:var(--muted)">32 teams</div></div>
   </div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-top:10px" onclick="openLeague('College')">
-    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:13px;font-weight:600">College</div><div style="font-size:10px;color:var(--muted)">201 programs · SLU Billikens included</div></div><span style="color:var(--muted)">›</span>
+    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:13px;font-weight:600">College</div><div style="font-size:10px;color:var(--muted)">100 programs · SLU Billikens included</div></div><span style="color:var(--muted)">›</span>
   </div>
 </div>
 <div class="screen" id="s-sports-teams">
@@ -722,22 +739,23 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 </div>
 <div class="screen" id="s-team-detail">
   <div class="top-bar"><button class="back-btn" onclick="go('s-sports-teams')">← Teams</button><span class="screen-title">Team Colors</span></div>
-  <div class="td-hero" id="td-hero">
-    <div class="td-hero-bg" id="td-bg"></div>
-    <div class="td-hero-inner">
-      <div class="td-badge" id="td-badge"></div>
-      <div><div class="td-name" id="td-name"></div><div class="td-league" id="td-league-label"></div><div style="display:flex;gap:5px;margin-top:7px" id="td-dots"></div></div>
+  <!-- Team badge pill (matching holiday/season style) -->
+  <div id="td-badge-row" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
+  <!-- Strand preview -->
+  <div class="strand-preview" style="margin-bottom:12px">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+      <span>LIVE PREVIEW</span>
+      <span id="td-active-name" style="font-style:italic;color:var(--muted)">Tap a pattern to activate</span>
     </div>
+    <div class="strand-strip" id="td-strand"></div>
   </div>
-  <div style="height:7px;border-radius:4px;margin-bottom:12px" id="td-bar"></div>
-  <div class="card">
-    <div class="field-label" style="margin-bottom:10px">Game-Day Patterns</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px" id="td-patterns"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:10px 12px">
-      <div><div style="font-size:12px;font-weight:500">Set as my team</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Autopilot uses these colors</div></div>
-      <div class="mini-toggle" id="td-fav-toggle" onclick="toggleFavTeam()"></div>
-    </div>
-    <div class="btn-row"><button class="btn btn-primary" style="flex:1" onclick="activateTeam()">Activate on Lights</button></div>
+  <!-- Pattern list with crown + star -->
+  <div class="fav-hint">👑 Set default · ⭐ Add to playlist</div>
+  <div class="pattern-list" id="td-pattern-list"></div>
+  <!-- My team toggle -->
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+    <div><div style="font-size:12px;font-weight:500">Set as my team</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Autopilot uses these colors</div></div>
+    <div class="mini-toggle" id="td-fav-toggle" onclick="toggleFavTeam()"></div>
   </div>
 </div>
 
@@ -804,19 +822,38 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <!-- ══════════ AUTOPILOT ══════════ -->
 <div class="screen" id="s-autopilot">
   <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Autopilot</span></div>
-  <div class="card">
-    <div class="field-label" style="margin-bottom:10px">How should we pick patterns?</div>
-    <div class="ap-opt sel" id="ap-season" onclick="selAP('season')"><span style="font-size:20px">🍂</span><div><div style="font-size:12px;font-weight:500">Season-based</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Warm whites in winter, pastels in spring</div></div><div class="ap-radio"></div></div>
-    <div class="ap-opt" id="ap-team" onclick="selAP('team')"><span style="font-size:20px">🏆</span><div><div style="font-size:12px;font-weight:500">Favorite team colors</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Uses your saved team palette</div></div><div class="ap-radio"></div></div>
-    <div class="ap-opt" id="ap-random" onclick="selAP('random')"><span style="font-size:20px">🎲</span><div><div style="font-size:12px;font-weight:500">Fully random</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Surprise us — anything goes</div></div><div class="ap-radio"></div></div>
-    <div class="ap-opt" id="ap-fav" onclick="selAP('fav')"><span style="font-size:20px">⭐</span><div><div style="font-size:12px;font-weight:500">My favorites only</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Only patterns you've starred</div></div><div class="ap-radio"></div></div>
+
+  <!-- Main on/off toggle -->
+  <div class="card" style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+    <div style="font-size:28px;flex-shrink:0">🤖</div>
+    <div style="flex:1">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px">Auto-apply holiday default</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5">When your lights turn on, Autopilot activates today's holiday default pattern automatically.</div>
+    </div>
+    <div class="mini-toggle" id="ap-main-toggle" onclick="toggleAP()" style="width:48px;height:26px;flex-shrink:0"></div>
   </div>
-  <div class="card">
-    <div class="field-label" style="margin-bottom:10px">Change pattern every</div>
-    <div class="ap-opt sel" id="ap-night" onclick="selFreq('night')"><span style="font-size:20px">🌙</span><div><div style="font-size:12px;font-weight:500">Each night</div><div style="font-size:10px;color:var(--muted);margin-top:2px">New pick at dusk every day</div></div><div class="ap-radio"></div></div>
-    <div class="ap-opt" id="ap-week" onclick="selFreq('week')"><span style="font-size:20px">📆</span><div><div style="font-size:12px;font-weight:500">Each week</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Consistent look all week</div></div><div class="ap-radio"></div></div>
+
+  <!-- Today's status -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="field-label" style="margin-bottom:10px">Today</div>
+    <div id="ap-today-content"></div>
   </div>
-  <button style="width:100%;background:linear-gradient(135deg,#3b82f6,#6366f1);border:none;color:white;border-radius:12px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;" onclick="activateAP()">Activate Autopilot</button>
+
+  <!-- Upcoming holidays with defaults -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="field-label" style="margin-bottom:10px">Upcoming</div>
+    <div id="ap-upcoming-list"></div>
+  </div>
+
+  <!-- How it works -->
+  <div class="card">
+    <div class="field-label" style="margin-bottom:8px">How it works</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.8">
+      🔌 Smart switch turns lights on → WLED loads boot preset → App detects controller online → Autopilot applies today's holiday default.<br><br>
+      👑 Set a default on any holiday's pattern screen using the crown button. That pattern is what Autopilot will play.<br><br>
+      ✏️ If you tap a different pattern manually, it overrides Autopilot for that session.
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ CALENDAR ══════════ -->
@@ -940,11 +977,17 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 // ═══════════════════════════════
 // STATE
 // ═══════════════════════════════
-let lightsOn=false,lightMode='all',apOn=false,apMode='season',apFreq='night';
+let lightsOn=false,lightMode='all',apOn=localStorage.getItem('wled_ap_on')==='1',apMode='season',apFreq='night';
 let favTeam=null,currentLeague='NFL',currentTeam=null,selectedTDPattern=0;
+let teamDefaultPatterns=JSON.parse(localStorage.getItem('teamDefaultPatterns')||'{}');
+// teamFavPatterns: {teamKey: Set<patternName>} — loaded from localStorage array form
+const _tfpRaw=JSON.parse(localStorage.getItem('teamFavPatterns')||'{}');
+let teamFavPatterns={};
+Object.entries(_tfpRaw).forEach(([k,v])=>teamFavPatterns[k]=new Set(v));
 let nowPlayingName='Off',nowPlayingColors=[];
 let currentHoliday=null,currentSeason=null;
 let favPatterns={},seasonFavPatterns={};
+let defaultPatterns=JSON.parse(localStorage.getItem('defaultPatterns')||'{}');
 let calYear=2026,calMonth=3;
 let presetFilter='all',presetNextId=10;
 let selectedSaveCat=null,selectedSaveSubCat=null,selectedSaveSubSubCat=null;
@@ -967,16 +1010,44 @@ let zones=defaultZones.map(z=>({...z}));
 // ═══════════════════════════════
 // DATA
 // ═══════════════════════════════
+// seasonStart/seasonEnd: [month(0-indexed), day] — the date range when this holiday is "active" for lights.
+// Ranges that wrap year-end (e.g. Dec→Jan) are handled in getActiveHoliday().
 const holidays=[
-  {id:'christmas',name:'Christmas',icon:'🎄',bg:'linear-gradient(135deg,#1a3a1a,#2d5a2d)',colors:['#ef4444','#22c55e','#ffffff'],patterns:['Candy Cane Chase','Christmas Twinkle','Snow Drift','Holly Glow','Winter Pulse','Fireplace Flicker']},
-  {id:'halloween',name:'Halloween',icon:'🎃',bg:'linear-gradient(135deg,#2a1a00,#4a2c00)',colors:['#f97316','#9333ea','#000000'],patterns:['Haunted Flicker','Spider Web','Lightning Storm','Pumpkin Pulse','Ghost Drift','Blood Moon']},
-  {id:'july4',name:'4th of July',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
-  {id:'valentines',name:"Valentine's",icon:'💖',bg:'linear-gradient(135deg,#3a0a1a,#6a1a2a)',colors:['#ec4899','#ef4444','#fbbf24'],patterns:['Pink Blush','Rose Glow','Heart Pulse','Love Twinkle']},
-  {id:'stpats',name:"St. Patrick's",icon:'🍀',bg:'linear-gradient(135deg,#0a2a0a,#1a4a1a)',colors:['#22c55e','#16a34a','#fbbf24'],patterns:['Shamrock Shimmer','Luck Chase','Irish Glow']},
-  {id:'easter',name:'Easter',icon:'🐰',bg:'linear-gradient(135deg,#1a1a3a,#2d1a4a)',colors:['#a855f7','#f9a8d4','#86efac'],patterns:['Pastel Drift','Spring Sparkle','Bunny Hop','Easter Glow']},
-  {id:'thanksgiving',name:'Thanksgiving',icon:'🦃',bg:'linear-gradient(135deg,#2a1500,#4a2800)',colors:['#f97316','#d97706','#dc2626'],patterns:['Harvest Glow','Amber Pulse','Thankful Twinkle']},
-  {id:'newyear',name:"New Year's",icon:'🥂',bg:'linear-gradient(135deg,#1a1a1a,#2a2a2a)',colors:['#fbbf24','#ffffff','#a855f7'],patterns:['Golden Burst','Countdown Flash','Champagne Sparkle']},
-  {id:'hanukkah',name:'Hanukkah',icon:'🕎',bg:'linear-gradient(135deg,#001a3a,#002a5a)',colors:['#3b82f6','#ffffff','#60a5fa'],patterns:['Menorah Glow','Blue Shimmer','Festival Pulse']},
+  {id:'christmas',name:'Christmas',icon:'🎄',bg:'linear-gradient(135deg,#1a3a1a,#2d5a2d)',colors:['#ef4444','#22c55e','#ffffff'],
+   seasonStart:[11,1],seasonEnd:[0,1],   // Dec 1 – Jan 1
+   patterns:[
+    'Candy Cane Chase','Red Green White Chase','Green Red Chase','Sleigh Bells Chase','Christmas Comet',
+    'Christmas Twinkle','Snow Flurry Twinkle','Gold Sparkle','Christmas Glitter','Frosty Shimmer',
+    'Candy Cane Static','Red White Green Static','Red Green Static','Warm White Glow','Christmas Red Solid',
+    'Holly Glow','Winter Pulse','Poinsettia Pulse','Warm Candlelight',
+    'Fireplace Flicker',
+    'Snow Drift','Icicle Drip','Blizzard Drift',
+    'Northern Lights','Christmas Rainbow'
+  ]},
+  {id:'newyear',name:"New Year's",icon:'🥂',bg:'linear-gradient(135deg,#1a1a1a,#2a2a2a)',colors:['#fbbf24','#ffffff','#a855f7'],
+   seasonStart:[11,30],seasonEnd:[0,4],  // Dec 30 – Jan 4
+   patterns:['Golden Burst','Countdown Flash','Champagne Sparkle']},
+  {id:'valentines',name:"Valentine's",icon:'💖',bg:'linear-gradient(135deg,#3a0a1a,#6a1a2a)',colors:['#ec4899','#ef4444','#fbbf24'],
+   seasonStart:[1,1],seasonEnd:[1,15],   // Feb 1–15
+   patterns:['Pink Blush','Rose Glow','Heart Pulse','Love Twinkle']},
+  {id:'stpats',name:"St. Patrick's",icon:'🍀',bg:'linear-gradient(135deg,#0a2a0a,#1a4a1a)',colors:['#22c55e','#16a34a','#fbbf24'],
+   seasonStart:[2,10],seasonEnd:[2,18],  // Mar 10–18
+   patterns:['Shamrock Shimmer','Luck Chase','Irish Glow']},
+  {id:'easter',name:'Easter',icon:'🐰',bg:'linear-gradient(135deg,#1a1a3a,#2d1a4a)',colors:['#a855f7','#f9a8d4','#86efac'],
+   seasonStart:[2,20],seasonEnd:[3,20],  // Mar 20 – Apr 20 (approximate)
+   patterns:['Pastel Drift','Spring Sparkle','Bunny Hop','Easter Glow']},
+  {id:'july4',name:'4th of July',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
+   seasonStart:[5,28],seasonEnd:[6,7],   // Jun 28 – Jul 7
+   patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
+  {id:'halloween',name:'Halloween',icon:'🎃',bg:'linear-gradient(135deg,#2a1a00,#4a2c00)',colors:['#f97316','#9333ea','#000000'],
+   seasonStart:[9,1],seasonEnd:[10,2],   // Oct 1 – Nov 2
+   patterns:['Haunted Flicker','Spider Web','Lightning Storm','Pumpkin Pulse','Ghost Drift','Blood Moon']},
+  {id:'thanksgiving',name:'Thanksgiving',icon:'🦃',bg:'linear-gradient(135deg,#2a1500,#4a2800)',colors:['#f97316','#d97706','#dc2626'],
+   seasonStart:[10,15],seasonEnd:[11,1], // Nov 15 – Dec 1
+   patterns:['Harvest Glow','Amber Pulse','Thankful Twinkle']},
+  {id:'hanukkah',name:'Hanukkah',icon:'🕎',bg:'linear-gradient(135deg,#001a3a,#002a5a)',colors:['#3b82f6','#ffffff','#60a5fa'],
+   seasonStart:[11,1],seasonEnd:[11,30], // Dec 1–30 (overlaps Christmas; Christmas listed first so it takes priority)
+   patterns:['Menorah Glow','Blue Shimmer','Festival Pulse']},
 ];
 
 const seasons=[
@@ -1189,6 +1260,38 @@ const sportsTeams={
     {name:'Air Force',city:'Falcons',c:['#003087','#8A8B8C'],i:'✈️'},
     {name:'Army',city:'Black Knights',c:['#000000','#D4BF7F'],i:'⚔️'},
     {name:'Navy',city:'Midshipmen',c:['#00205B','#B0B7BC'],i:'⚓'},
+    {name:'Missouri',city:'Tigers',c:['#F1B300','#000000'],i:'🐯'},
+    {name:'Texas Tech',city:'Red Raiders',c:['#CC0000','#000000'],i:'🤠'},
+    {name:'NC State',city:'Wolfpack',c:['#CC0000','#FFFFFF'],i:'🐺'},
+    {name:'Virginia',city:'Cavaliers',c:['#232D4B','#F84C1E'],i:'🎓'},
+    {name:'Wake Forest',city:'Demon Deacons',c:['#9E7E38','#000000'],i:'😈'},
+    {name:'Boston College',city:'Eagles',c:['#8B1F3F','#D4AF37'],i:'🦅'},
+    {name:'Gonzaga',city:'Bulldogs',c:['#002868','#C8102E'],i:'🐕'},
+    {name:'UConn',city:'Huskies',c:['#003087','#FFFFFF'],i:'🐺'},
+    {name:'Villanova',city:'Wildcats',c:['#003087','#FFFFFF'],i:'🐱'},
+    {name:'Memphis',city:'Tigers',c:['#003087','#898D8D'],i:'🐯'},
+    {name:'Xavier',city:'Musketeers',c:['#0C2340','#9EA2A2'],i:'⚔️'},
+    {name:'Creighton',city:'Bluejays',c:['#005CA9','#FFFFFF'],i:'🐦'},
+    {name:'Marquette',city:'Golden Eagles',c:['#003366','#FFD100'],i:'🦅'},
+    {name:'Colorado State',city:'Rams',c:['#1E4D2B','#C8C372'],i:'🐏'},
+    {name:'UNLV',city:'Rebels',c:['#C60C30','#898D8D'],i:'✌️'},
+    {name:'Nevada',city:'Wolf Pack',c:['#003366','#808080'],i:'🐺'},
+    {name:'Fresno State',city:'Bulldogs',c:['#CC0000','#003082'],i:'🐕'},
+    {name:'Ohio',city:'Bobcats',c:['#00694E','#FFFFFF'],i:'🐱'},
+    {name:'Miami (OH)',city:'RedHawks',c:['#B61E2E','#FFFFFF'],i:'🦅'},
+    {name:'Ball State',city:'Cardinals',c:['#BA0C2F','#FFFFFF'],i:'🦅'},
+    {name:'James Madison',city:'Dukes',c:['#450084','#CBB677'],i:'👑'},
+    {name:'Appalachian State',city:'Mountaineers',c:['#000000','#FFB612'],i:'⛰️'},
+    {name:'Liberty',city:'Flames',c:['#002868','#C41230'],i:'🔥'},
+    {name:'Hawaii',city:'Warriors',c:['#005145','#FFFFFF'],i:'🌺'},
+    {name:'Tulane',city:'Green Wave',c:['#006747','#FFFFFF'],i:'🌊'},
+    {name:'Georgetown',city:'Hoyas',c:['#041E42','#A0A0A0'],i:'🦌'},
+    {name:'Butler',city:'Bulldogs',c:['#044F67','#FFFFFF'],i:'🐕'},
+    {name:'Seton Hall',city:'Pirates',c:['#074FA1','#FFFFFF'],i:'☠️'},
+    {name:'Providence',city:'Friars',c:['#000000','#FFFFFF'],i:'⚫'},
+    {name:'St. John\'s',city:'Red Storm',c:['#CC0000','#FFFFFF'],i:'🌪️'},
+    {name:'Temple',city:'Owls',c:['#9D2235','#FFFFFF'],i:'🦉'},
+    {name:'Drake',city:'Bulldogs',c:['#004B8D','#FFFFFF'],i:'🐕'},
   ],
 };
 
@@ -1375,6 +1478,7 @@ function go(id){
   document.getElementById('scroll-view').scrollTop=0;
   if(id==='s-wled') renderSavedControllers();
   if(id==='s-downlights') dlInitPixelUI();
+  if(id==='s-autopilot') renderAPToday();
 }
 
 // ═══════════════════════════════
@@ -1406,8 +1510,105 @@ function setLightMode(m){
 
 function toggleAP(){
   apOn=!apOn;
+  localStorage.setItem('wled_ap_on', apOn?'1':'0');
   document.getElementById('ap-home-toggle').classList.toggle('on',apOn);
-  document.getElementById('ap-home-sub').textContent=apOn?'On':'Off';
+  const mainT=document.getElementById('ap-main-toggle');
+  if(mainT) mainT.classList.toggle('on',apOn);
+  updateAPHomeSub();
+  renderAPToday();
+  showToast(apOn ? '🤖 Autopilot on' : 'Autopilot off');
+}
+
+// What autopilot will do today — shown on home quick card
+function updateAPHomeSub(){
+  const el=document.getElementById('ap-home-sub');
+  if(!el) return;
+  if(!apOn){el.textContent='Off';return;}
+  const h=getActiveHoliday();
+  if(!h){el.textContent='On · No holiday today';return;}
+  const def=defaultPatterns[h.id];
+  el.textContent=def ? `${h.icon} ${def.split(' ').slice(0,3).join(' ')}…` : `${h.icon} No default set`;
+}
+
+// Render the "Today" panel on the Autopilot screen
+function renderAPToday(){
+  // Sync toggle visual to current state
+  const mainT=document.getElementById('ap-main-toggle');
+  if(mainT) mainT.classList.toggle('on',apOn);
+
+  const el=document.getElementById('ap-today-content');
+  if(!el) return;
+  const h=getActiveHoliday();
+  if(!h){
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:28px">📅</span>
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--muted)">No holiday active today</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">Autopilot will activate when a holiday season begins</div>
+      </div>
+    </div>`;
+    renderAPUpcoming();
+    return;
+  }
+  const def=defaultPatterns[h.id];
+  const colors=def?(payloadColors(def)||h.colors):h.colors;
+  const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+  const [sm,sd]=h.seasonStart,[em,ed]=h.seasonEnd;
+  const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const rangeStr=`${MONTHS_SHORT[sm]} ${sd} – ${MONTHS_SHORT[em]} ${ed}`;
+  el.innerHTML=`<div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:32px">${h.icon}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:600">${h.name} <span style="font-size:9px;color:var(--muted);font-weight:400">${rangeStr}</span></div>
+      ${def
+        ? `<div style="font-size:11px;color:var(--success);margin-top:3px">Will play: ${def}</div>`
+        : `<div style="font-size:11px;color:var(--warning);margin-top:3px">No default set — tap 👑 on a pattern</div>`
+      }
+    </div>
+    <div class="color-dots" style="flex-shrink:0">${dots}</div>
+  </div>
+  ${def?`<button onclick="openHoliday('${h.id}');go('s-patterns')" style="margin-top:10px;width:100%;background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);border-radius:8px;padding:9px;font-size:12px;font-weight:500;cursor:pointer;-webkit-appearance:none">Open ${h.name} Patterns ›</button>`:''}`;
+  renderAPUpcoming();
+}
+
+// Render the next 3 upcoming holidays with their defaults
+function renderAPUpcoming(){
+  const el=document.getElementById('ap-upcoming-list');
+  if(!el) return;
+  const now=new Date();
+  const thisYear=now.getFullYear();
+  // Build list of upcoming holidays (with next occurrence date)
+  const upcoming=holidays
+    .filter(h=>h.seasonStart)
+    .map(h=>{
+      const [sm,sd]=h.seasonStart;
+      // Try this year first, then next year
+      let dt=new Date(thisYear,sm,sd);
+      if(dt<=now) dt=new Date(thisYear+1,sm,sd);
+      return{...h,_dt:dt};
+    })
+    .sort((a,b)=>a._dt-b._dt)
+    .slice(0,4);
+
+  const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  el.innerHTML=upcoming.map(h=>{
+    const def=defaultPatterns[h.id];
+    const colors=def?(payloadColors(def)||h.colors):h.colors;
+    const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+    const [sm,sd]=h.seasonStart;
+    const dateStr=`${MONTHS_SHORT[sm]} ${sd}`;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);cursor:pointer" onclick="openHoliday('${h.id}');go('s-patterns')">
+      <span style="font-size:20px;flex-shrink:0">${h.icon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:500">${h.name}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px">${def?def:'No default set'}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="color-dots">${dots}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">${dateStr}</div>
+      </div>
+    </div>`;
+  }).join('')+'<div style="padding-top:8px;font-size:10px;color:var(--muted);text-align:center">Tap any holiday to set its default</div>';
 }
 
 // ═══════════════════════════════
@@ -1706,6 +1907,23 @@ function doSave(){
 }
 
 // ═══════════════════════════════
+// ── Returns the holiday whose season range contains today, or null ──────────
+// Holidays array is ordered by priority (Christmas before Hanukkah, etc.)
+// Handles year-wrap ranges (e.g. Dec 30 → Jan 4).
+function getActiveHoliday(){
+  const now=new Date();
+  const md=now.getMonth()*100+now.getDate();
+  for(const h of holidays){
+    if(!h.seasonStart||!h.seasonEnd) continue;
+    const smd=h.seasonStart[0]*100+h.seasonStart[1];
+    const emd=h.seasonEnd[0]*100+h.seasonEnd[1];
+    // Year-wrap: e.g. Nov 30 (1130) → Jan 4 (4) — smd > emd
+    const inRange=smd<=emd ? (md>=smd && md<=emd) : (md>=smd || md<=emd);
+    if(inRange) return h;
+  }
+  return null;
+}
+
 // HOLIDAYS
 // ═══════════════════════════════
 function initHolidays(){
@@ -1720,23 +1938,94 @@ function openHoliday(id){
   document.getElementById('patterns-badge').innerHTML=`<span style="font-size:18px">${currentHoliday.icon}</span>${currentHoliday.name}`;
   renderPatterns();
   go('s-patterns');
-  // Render default strand preview using holiday palette
   const nameEl=document.getElementById('hl-active-name');
-  if(nameEl) nameEl.textContent='Tap a pattern to activate';
-  renderHolidayPreview(currentHoliday.colors);
+  const defName=defaultPatterns[id];
+  if(defName){
+    const defColors=payloadColors(defName)||currentHoliday.colors;
+    if(nameEl) nameEl.textContent=defName+' · default';
+    renderHolidayPreview(defColors);
+  } else {
+    if(nameEl) nameEl.textContent='Tap a pattern to activate';
+    renderHolidayPreview(currentHoliday.colors);
+  }
+}
+
+// Extract display hex colors from a stored WLED payload (RGBW → hex, skip empty slots)
+function payloadColors(name){
+  const fn=ALL_PAYLOADS[name];
+  if(!fn) return null;
+  const cols=fn(1).seg?.[0]?.col||[];
+  return cols
+    .filter(c=>c[0]||c[1]||c[2]||c[3])          // drop [0,0,0,0] empty slots
+    .map(c=>{
+      if(c[3]>0&&!c[0]&&!c[1]&&!c[2]) return '#fffacd'; // W-only → warm white
+      return '#'+[c[0],c[1],c[2]].map(v=>v.toString(16).padStart(2,'0')).join('');
+    });
 }
 
 function selectHolidayPattern(i){
   const h=currentHoliday; if(!h) return;
-  activatePattern(h.patterns[i], h.colors);
+  const name=h.patterns[i];
+  const colors=payloadColors(name)||h.colors;
+  activatePattern(name, colors);
 }
+
+function setDefaultPattern(i){
+  const h=currentHoliday; if(!h) return;
+  const name=h.patterns[i];
+  if(defaultPatterns[h.id]===name){
+    // Tap again to clear
+    delete defaultPatterns[h.id];
+    if(bootDefault?.holidayId===h.id && bootDefault?.patternName===name){
+      bootDefault=null;
+      localStorage.removeItem('wled_boot_default');
+    }
+    showToast('Default cleared');
+  } else {
+    defaultPatterns[h.id]=name;
+    // Record as the controller boot default, stamped with change time
+    bootDefault={holidayId:h.id, patternName:name, changedAt:Date.now(), syncedAt:null};
+    localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
+    renderSyncBadge();
+    if(wled.active){
+      // Activate immediately so the user sees it, then push to WLED boot preset.
+      // Debounced — if the crown is tapped again before the timer fires, cancel
+      // the previous sync and restart, so only the final choice gets pushed.
+      const colors=payloadColors(name)||h.colors;
+      activatePattern(name, colors);
+      clearTimeout(_pendingSyncTimer);
+      _pendingSyncTimer=setTimeout(()=>{
+        syncBootDefaultToController(wled.active.ip).then(ok=>{
+          if(ok) showToast('⚡ Power-on default saved to controller');
+          else   showToast('Default saved locally — controller not responding');
+        });
+      }, 800); // give activatePattern's wledSend time to complete
+    } else {
+      showToast('Default saved — will sync when controller connects');
+    }
+  }
+  localStorage.setItem('defaultPatterns',JSON.stringify(defaultPatterns));
+  renderPatterns();
+  renderHomeDefaults();
+}
+
 function renderPatterns(){
   const h=currentHoliday;
+  const defName=defaultPatterns[h.id]||null;
   document.getElementById('pattern-list').innerHTML=h.patterns.map((p,i)=>{
     const isFav=favPatterns[h.id]?.has(i);
-    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="selectHolidayPattern(${i})">
-      <div class="color-dots">${h.colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('')}</div>
-      <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
+    const isDefault=defName===p;
+    const colors=payloadColors(p)||h.colors;
+    const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+    const badge=isDefault?`<span style="font-size:9px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
+    const sub=isDefault?'Activates when holiday opens':'Tap to activate';
+    return`<div class="pattern-row ${isFav?'favorited':''} ${isDefault?'is-default':''}" onclick="selectHolidayPattern(${i})">
+      <div class="color-dots">${dots}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${p}${badge}</div>
+        <div style="font-size:10px;color:var(--muted)">${sub}</div>
+      </div>
+      <button class="crown-btn ${isDefault?'active':''}" onclick="event.stopPropagation();setDefaultPattern(${i})" title="${isDefault?'Clear default':'Set as default'}">👑</button>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'holiday')">⭐</button>
     </div>`;
   }).join('');
@@ -1750,6 +2039,145 @@ function toggleFavPat(i,type){
   if(store[id].has(i))store[id].delete(i);else store[id].add(i);
   if(type==='holiday')renderPatterns();else renderSeasonPatterns();
 }
+
+// ── Pre-tuned WLED payloads — auto-generated from Christmas_Effects.xlsx ──────
+// Each entry: n => WLED /json/state payload, where n = total LED count.
+// These take priority over the generic patternToEffect() fallback below.
+const CHRISTMAS_PAYLOADS = {
+  'Candy Cane Chase':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,0,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
+  'Red Green White Chase': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[255,255,255,0]],fx:28,sx:150,ix:128,pal:0,on:true}]}),
+  'Green Red Chase':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,160,0,0],[255,0,0,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Sleigh Bells Chase':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[212,175,55,0],[255,255,255,0]],fx:28,sx:220,ix:160,pal:0,on:true}]}),
+  'Christmas Comet':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:76,sx:90,ix:180,pal:0,on:true}]}),
+  'Christmas Twinkle':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,150,0,0],[255,255,255,0]],fx:80,sx:80,ix:220,pal:0,on:true}]}),
+  'Snow Flurry Twinkle':   n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[180,220,255,0],[0,0,0,0]],fx:80,sx:60,ix:200,pal:0,on:true}]}),
+  'Gold Sparkle':          n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,223,0,0],[255,255,240,0]],fx:20,sx:100,ix:180,pal:0,on:true}]}),
+  'Christmas Glitter':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[212,175,55,0]],fx:87,sx:150,ix:200,pal:0,on:true}]}),
+  'Frosty Shimmer':        n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[150,200,255,0],[0,0,0,0]],fx:17,sx:80,ix:180,pal:0,on:true}]}),
+  'Candy Cane Static':     n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,0,0]],fx:73,sx:128,ix:0,pal:0,on:true}]}),
+  'Red White Green Static':n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,160,0,0]],fx:74,sx:128,ix:0,pal:0,on:true}]}),
+  'Red Green Static':      n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[0,0,0,0]],fx:73,sx:128,ix:0,pal:0,on:true}]}),
+  'Warm White Glow':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:0,sx:0,ix:0,pal:0,on:true}]}),
+  'Christmas Red Solid':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:0,sx:0,ix:0,pal:0,on:true}]}),
+  'Holly Glow':            n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,160,0,0],[180,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Winter Pulse':          n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:2,sx:22,ix:255,pal:0,on:true}]}),
+  'Poinsettia Pulse':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Warm Candlelight':      n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,147,41,0],[0,0,0,255],[0,0,0,0]],fx:88,sx:100,ix:180,pal:0,on:true}]}),
+  'Fireplace Flicker':     n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,70,0,0],[255,180,0,0],[180,30,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
+  'Snow Drift':            n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:77,sx:90,ix:200,pal:0,on:true}]}),
+  'Icicle Drip':           n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[180,220,255,0],[0,0,0,0]],fx:77,sx:70,ix:220,pal:0,on:true}]}),
+  'Blizzard Drift':        n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[150,200,255,0],[0,0,0,0]],fx:15,sx:80,ix:200,pal:0,on:true}]}),
+  'Northern Lights':       n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,100,0],[100,0,200,0],[0,100,200,0]],fx:67,sx:40,ix:200,pal:0,on:true}]}),
+  'Christmas Rainbow':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:9,sx:60,ix:200,pal:0,on:true}]}),
+};
+
+// ── Halloween ─────────────────────────────────────────────────────────────────
+const HALLOWEEN_PAYLOADS = {
+  'Haunted Flicker': n=>({on:true,bri:180,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[100,0,150,0],[0,0,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
+  'Spider Web':      n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[60,0,80,0],[0,0,0,0]],fx:17,sx:40,ix:200,pal:0,on:true}]}),
+  'Lightning Storm': n=>({on:true,bri:220,transition:0,seg:[{id:0,start:0,stop:n,col:[[150,0,200,0],[50,0,80,0],[200,200,200,0]],fx:57,sx:200,ix:220,pal:0,on:true}]}),
+  'Pumpkin Pulse':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Ghost Drift':     n=>({on:true,bri:160,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[120,0,180,0],[0,0,0,0]],fx:77,sx:60,ix:200,pal:0,on:true}]}),
+  'Blood Moon':      n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:20,ix:255,pal:0,on:true}]}),
+};
+// ── 4th of July ───────────────────────────────────────────────────────────────
+const JULY4_PAYLOADS = {
+  'Fireworks Burst': n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:89,sx:180,ix:220,pal:0,on:true}]}),
+  'Patriot Chase':   n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
+  'Stars & Stripes': n=>({on:true,bri:220,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,200,0],[255,255,255,0]],fx:74,sx:128,ix:0,pal:0,on:true}]}),
+  'Liberty Sparkle': n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
+};
+// ── Valentine's Day ───────────────────────────────────────────────────────────
+const VALENTINES_PAYLOADS = {
+  'Pink Blush':   n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,20,100,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Rose Glow':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,0,50,0],[255,50,150,0],[0,0,0,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
+  'Heart Pulse':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,0,30,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
+  'Love Twinkle': n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,20,100,0],[200,0,50,0],[255,180,200,0]],fx:80,sx:80,ix:220,pal:0,on:true}]}),
+};
+// ── St. Patrick's Day ─────────────────────────────────────────────────────────
+const STPATS_PAYLOADS = {
+  'Shamrock Shimmer': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,180,0,0],[212,175,55,0],[0,0,0,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
+  'Luck Chase':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,180,0,0],[212,175,55,0],[0,0,0,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
+  'Irish Glow':       n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+};
+// ── Easter ────────────────────────────────────────────────────────────────────
+const EASTER_PAYLOADS = {
+  'Pastel Drift':   n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,150,200,0],[150,220,150,0]],fx:15,sx:60,ix:200,pal:0,on:true}]}),
+  'Spring Sparkle': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,180,220,0],[150,220,150,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
+  'Bunny Hop':      n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Easter Glow':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,220,150,0],[150,220,180,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
+};
+// ── Thanksgiving ──────────────────────────────────────────────────────────────
+const THANKSGIVING_PAYLOADS = {
+  'Harvest Glow':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,80,0,0],[180,120,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Amber Pulse':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,140,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
+  'Thankful Twinkle': n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[200,140,0,0],[150,60,0,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
+};
+// ── New Year's ────────────────────────────────────────────────────────────────
+const NEWYEAR_PAYLOADS = {
+  'Golden Burst':      n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,255,255,0],[255,220,100,0]],fx:89,sx:200,ix:240,pal:0,on:true}]}),
+  'Countdown Flash':   n=>({on:true,bri:255,transition:0,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,255,255,0],[0,0,0,0]],fx:1,sx:220,ix:200,pal:0,on:true}]}),
+  'Champagne Sparkle': n=>({on:true,bri:230,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,255,255,0],[200,100,220,0]],fx:20,sx:130,ix:200,pal:0,on:true}]}),
+};
+// ── Hanukkah ──────────────────────────────────────────────────────────────────
+const HANUKKAH_PAYLOADS = {
+  'Menorah Glow':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,80,200,0],[255,255,255,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Blue Shimmer':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,80,200,0],[255,255,255,0],[100,180,255,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
+  'Festival Pulse': n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,60,180,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+};
+// ── Spring ────────────────────────────────────────────────────────────────────
+const SPRING_PAYLOADS = {
+  'Petal Drift':     n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,220,0],[255,180,200,0],[150,220,150,0]],fx:15,sx:60,ix:200,pal:0,on:true}]}),
+  'Garden Bloom':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,200,100,0],[255,150,180,0],[230,200,100,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
+  'Morning Dew':     n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,220,180,0],[220,255,240,0],[0,0,0,0]],fx:17,sx:50,ix:200,pal:0,on:true}]}),
+  'Soft Breeze':     n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,120,220,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:25,ix:255,pal:0,on:true}]}),
+  'Pastel Chase':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[150,230,200,0]],fx:28,sx:120,ix:128,pal:0,on:true}]}),
+  'Rainbow Shimmer': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:9,sx:80,ix:200,pal:0,on:true}]}),
+};
+// ── Summer ────────────────────────────────────────────────────────────────────
+const SUMMER_PAYLOADS = {
+  'Sunshine Burst': n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,220,0,0],[255,140,0,0],[255,255,100,0]],fx:89,sx:180,ix:220,pal:0,on:true}]}),
+  'Ocean Wave':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,150,220,0],[0,220,200,0],[0,80,180,0]],fx:79,sx:80,ix:200,pal:0,on:true}]}),
+  'Tropical Fade':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,100,0,0],[0,200,100,0],[0,180,255,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Heat Wave':      n=>({on:true,bri:210,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,100,0,0],[255,200,0,0],[220,30,0,0]],fx:15,sx:100,ix:200,pal:0,on:true}]}),
+  'Beach Glow':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,200,100,0],[0,180,220,0],[255,255,200,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
+  'Summer Nights':  n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,0,200,0],[0,100,220,0],[0,0,0,0]],fx:67,sx:40,ix:200,pal:0,on:true}]}),
+};
+// ── Fall ──────────────────────────────────────────────────────────────────────
+const FALL_PAYLOADS = {
+  'Harvest Drift': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[200,120,0,0],[160,40,0,0]],fx:15,sx:70,ix:200,pal:0,on:true}]}),
+  'Maple Fade':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Ember Glow':    n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[200,60,0,0],[100,30,0,0],[0,0,0,0]],fx:88,sx:100,ix:180,pal:0,on:true}]}),
+  'Autumn Chase':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[180,100,0,0],[160,40,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Pumpkin Spice': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[230,100,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
+  'Cozy Flicker':  n=>({on:true,bri:180,transition:0,seg:[{id:0,start:0,stop:n,col:[[200,60,0,0],[180,100,0,0],[100,30,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
+};
+// ── Winter ────────────────────────────────────────────────────────────────────
+const WINTER_PAYLOADS = {
+  'Snow Drift':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:77,sx:90,ix:200,pal:0,on:true}]}),
+  'Frost Shimmer':   n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,220,255,0],[255,255,255,0],[100,180,255,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
+  'Icy Pulse':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[150,200,255,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Blizzard Chase':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[150,200,255,0],[0,0,0,0]],fx:15,sx:100,ix:200,pal:0,on:true}]}),
+  'Polar Glow':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Winter Solstice': n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,180,0],[0,100,200,0],[0,200,120,0]],fx:67,sx:40,ix:200,pal:0,on:true}]}),
+};
+// ── Master lookup — covers all holidays + all seasons ─────────────────────────
+// activatePattern() and payloadColors() use this single object.
+const ALL_PAYLOADS = {
+  ...CHRISTMAS_PAYLOADS,
+  ...HALLOWEEN_PAYLOADS,
+  ...JULY4_PAYLOADS,
+  ...VALENTINES_PAYLOADS,
+  ...STPATS_PAYLOADS,
+  ...EASTER_PAYLOADS,
+  ...THANKSGIVING_PAYLOADS,
+  ...NEWYEAR_PAYLOADS,
+  ...HANUKKAH_PAYLOADS,
+  ...SPRING_PAYLOADS,
+  ...SUMMER_PAYLOADS,
+  ...FALL_PAYLOADS,
+  ...WINTER_PAYLOADS,
+};
 
 // Map pattern name keywords → WLED effect ID
 function patternToEffect(name){
@@ -1787,18 +2215,47 @@ function activatePattern(name,colors){
   if(hlName) hlName.textContent=name;
   const spName=document.getElementById('sp-active-name');
   if(spName) spName.textContent=name;
-  if(wled.active && colors && colors.length){
+  if(wled.active){
     const total=getLEDCount();
-    const fx=patternToEffect(name);
-    // WLED col: [primary, secondary, tertiary] — each is [r,g,b,w]
-    const col=colors.slice(0,3).map(hex=>{
-      if(isWhiteChannel(hex)) return [0,0,0,255];
-      const rgb=hexToRgb(hex)||[255,255,255];
-      return[rgb[0],rgb[1],rgb[2],0];
-    });
-    while(col.length<3) col.push([0,0,0,0]);
-    wledSend({on:true,bri:200,seg:[{id:0,start:0,stop:total,col,fx,on:true}]});
+    // Use pre-tuned payload if available (covers all holidays + seasons)
+    const storedFn=ALL_PAYLOADS[name];
+    if(storedFn){
+      wledSend(storedFn(total));
+    } else if(colors && colors.length){
+      // Fallback: derive effect from pattern name keywords + colors from holiday data
+      const fx=patternToEffect(name);
+      const col=colors.slice(0,3).map(hex=>{
+        if(isWhiteChannel(hex)) return [0,0,0,255];
+        const rgb=hexToRgb(hex)||[255,255,255];
+        return[rgb[0],rgb[1],rgb[2],0];
+      });
+      while(col.length<3) col.push([0,0,0,0]);
+      wledSend({on:true,bri:200,seg:[{id:0,start:0,stop:total,col,fx,on:true}]});
+    }
   }
+}
+
+function renderHomeDefaults(){
+  const wrap=document.getElementById('home-defaults');
+  const list=document.getElementById('home-defaults-list');
+  if(!wrap||!list) return;
+  const entries=Object.entries(defaultPatterns).filter(([hid])=>holidays.find(h=>h.id===hid));
+  if(!entries.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  list.innerHTML=entries.map(([hid,pname])=>{
+    const h=holidays.find(x=>x.id===hid);
+    const colors=payloadColors(pname)||h.colors;
+    const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+    return`<div class="home-defaults-item" onclick="openHoliday('${hid}')">
+      <span style="font-size:20px;flex-shrink:0">${h.icon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${h.name}</div>
+        <div style="font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pname}</div>
+      </div>
+      <div class="color-dots" style="margin-right:8px;flex-shrink:0">${dots}</div>
+      <span style="color:var(--muted);font-size:14px;flex-shrink:0">›</span>
+    </div>`;
+  }).join('');
 }
 
 function renderHolidayPreview(colors){
@@ -1839,14 +2296,18 @@ function renderSeasonPreview(colors){
 
 function selectSeasonPattern(i){
   const s=currentSeason; if(!s) return;
-  activatePattern(s.patterns[i], s.colors);
+  const name=s.patterns[i];
+  const colors=payloadColors(name)||s.colors;
+  activatePattern(name, colors);
 }
 function renderSeasonPatterns(){
   const s=currentSeason;
   document.getElementById('sp-pattern-list').innerHTML=s.patterns.map((p,i)=>{
     const isFav=seasonFavPatterns[s.id]?.has(i);
+    const colors=payloadColors(p)||s.colors;
+    const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
     return`<div class="pattern-row ${isFav?'favorited':''}" onclick="selectSeasonPattern(${i})">
-      <div class="color-dots">${s.colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('')}</div>
+      <div class="color-dots">${dots}</div>
       <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'season')">⭐</button>
     </div>`;
@@ -1857,6 +2318,30 @@ function renderSeasonPatterns(){
 // ═══════════════════════════════
 // SPORTS
 // ═══════════════════════════════
+// ── Team helpers ─────────────────────────────────────────────────────────────
+function teamKey(league,idx){return league+'_'+idx;}
+
+// Build a proper WLED payload from team colors + pattern name
+function teamPatternPayload(t,patternName,total){
+  const toC=h=>{const r=hexToRgb(h);return r?[r[0],r[1],r[2],0]:[0,0,0,0];};
+  const c1=toC(t.c[0]),c2=toC(t.c[1]||t.c[0]),c3=t.c[2]?toC(t.c[2]):[0,0,0,0];
+  const base={on:true,bri:220,transition:7};
+  const seg=(fx,sx,ix)=>[{id:0,start:0,stop:total,col:[c1,c2,c3],fx,sx,ix,pal:0,on:true}];
+  switch(patternName){
+    case 'Game Day Pulse': return{...base,seg:seg(2,40,255)};
+    case 'Victory Fade':   return{...base,seg:seg(12,30,255)};
+    case 'Rally Twinkle':  return{...base,seg:seg(17,100,220)};
+    default:               return{...base,seg:seg(28,160,128)}; // Team Chase
+  }
+}
+
+function renderTeamStrandPreview(colors){
+  const total=getLEDCount();
+  if(!colors||!colors.length){renderStrand('td-strand',total,()=>'#1c2333');return;}
+  renderStrand('td-strand',total,i=>colors[i%colors.length]);
+}
+
+// ── Sports screens ────────────────────────────────────────────────────────────
 function openLeague(league){
   currentLeague=league;
   document.getElementById('teams-screen-title').textContent=league;
@@ -1866,7 +2351,17 @@ function openLeague(league){
 }
 
 function renderTeamList(list){
-  document.getElementById('team-list').innerHTML=list.map(t=>`<div class="team-row" onclick="openTeamDetail('${currentLeague}',${(sportsTeams[currentLeague]||[]).indexOf(t)})"><div style="display:flex;gap:3px">${t.c.map(c=>`<div class="tc" style="background:${c}"></div>`).join('')}</div><div style="flex:1;font-size:12px;font-weight:500">${t.city} ${t.name}</div><span style="color:var(--muted);font-size:13px">›</span></div>`).join('');
+  document.getElementById('team-list').innerHTML=list.map(t=>{
+    const idx=(sportsTeams[currentLeague]||[]).indexOf(t);
+    const key=teamKey(currentLeague,idx);
+    const hasDef=!!teamDefaultPatterns[key];
+    return`<div class="team-row" onclick="openTeamDetail('${currentLeague}',${idx})">
+      <div style="display:flex;gap:3px">${t.c.map(c=>`<div class="tc" style="background:${c}"></div>`).join('')}</div>
+      <div style="flex:1;font-size:12px;font-weight:500">${t.city} ${t.name}</div>
+      ${hasDef?'<span style="font-size:11px;opacity:0.75;margin-right:2px">👑</span>':''}
+      <span style="color:var(--muted);font-size:13px">›</span>
+    </div>`;
+  }).join('');
 }
 
 function filterTeams(){
@@ -1876,39 +2371,118 @@ function filterTeams(){
 
 function openTeamDetail(league,idx){
   if(idx<0)return;
-  // Only reset pattern when switching to a different team
-  const isSameTeam = currentTeam && currentTeam.league===league && currentTeam.idx===idx;
-  if(!isSameTeam) selectedTDPattern=0;
-  currentTeam={...(sportsTeams[league]||[])[idx],league,idx};const t=currentTeam;
-  document.getElementById('td-bg').style.background=`linear-gradient(135deg,${t.c[0]},${t.c[1]||t.c[0]})`;
-  document.getElementById('td-hero').style.background=t.c[0]+'22';
-  document.getElementById('td-badge').innerHTML=t.i;
-  document.getElementById('td-name').textContent=t.city+' '+t.name;
-  document.getElementById('td-league-label').textContent=league;
-  document.getElementById('td-bar').style.background=`linear-gradient(to right,${t.c.join(',')})`;
-  const pats=[
-    {name:'Team Chase',   desc:'Colors chase around the strand', icon:'➡️', bar:`linear-gradient(to right,${t.c[0]},${t.c[1]||t.c[0]},${t.c[0]})`},
-    {name:'Game Day Pulse',desc:'Colors breathe in and out',     icon:'💓', bar:`linear-gradient(to bottom,${t.c[0]},transparent)`},
-    {name:'Victory Fade', desc:'Smooth slow color fade',         icon:'🌅', bar:`linear-gradient(to right,${t.c[0]},${t.c[1]||t.c[0]})`},
-    {name:'Rally Twinkle',desc:'Random sparkle across all LEDs', icon:'✨', bar:`radial-gradient(circle,${t.c[0]} 30%,transparent 70%)`},
-  ];
-  document.getElementById('td-patterns').innerHTML=pats.map((p,i)=>`
-    <div style="background:var(--surface2);border:1.5px solid ${i===selectedTDPattern?'rgba(255,255,255,0.35)':'transparent'};border-radius:10px;padding:10px;cursor:pointer" onclick="selTDPat(${i})">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-        <div style="width:5px;height:28px;border-radius:3px;background:${p.bar};flex-shrink:0"></div>
-        <div>
-          <div style="font-size:11px;font-weight:600">${p.icon} ${p.name}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:1px">${p.desc}</div>
-        </div>
-      </div>
-    </div>`).join('');
+  currentTeam={...(sportsTeams[league]||[])[idx],league,idx};
+  const t=currentTeam;
+  // Badge pill
+  const badgeRow=document.getElementById('td-badge-row');
+  if(badgeRow) badgeRow.innerHTML=`<span style="font-size:18px">${t.i}</span>${t.city} ${t.name} · <span style="opacity:0.6">${league}</span>`;
+  // Strand preview
+  renderTeamStrandPreview(t.c);
+  // Default label on preview
+  const nameEl=document.getElementById('td-active-name');
+  if(nameEl){
+    const def=teamDefaultPatterns[teamKey(league,idx)];
+    nameEl.textContent=def?def+' · default':'Tap a pattern to activate';
+  }
+  // Pattern list
+  renderTDPatterns();
+  // My team toggle
   document.getElementById('td-fav-toggle').classList.toggle('on',favTeam&&favTeam.league===league&&favTeam.idx===idx);
   go('s-team-detail');
 }
 
-function selTDPat(i){selectedTDPattern=i;if(currentTeam)openTeamDetail(currentTeam.league,currentTeam.idx);}
-function toggleFavTeam(){const tog=document.getElementById('td-fav-toggle');const isFav=favTeam&&favTeam.league===currentTeam.league&&favTeam.idx===currentTeam.idx;if(isFav){favTeam=null;tog.classList.remove('on');showToast('Team removed');}else{favTeam={...currentTeam};tog.classList.add('on');showToast(currentTeam.city+' '+currentTeam.name+' set as your team!');}}
-function activateTeam(){const pats=['Team Chase','Game Day Pulse','Victory Fade','Rally Twinkle'];updateNowPlaying(currentTeam.city+' '+currentTeam.name+' — '+pats[selectedTDPattern],currentTeam.c,true);showToast('Team colors activated!');}
+function renderTDPatterns(){
+  const t=currentTeam; if(!t)return;
+  const key=teamKey(t.league,t.idx);
+  const defName=teamDefaultPatterns[key]||null;
+  const favs=teamFavPatterns[key]||new Set();
+  const pats=[
+    {name:'Team Chase',    desc:'Colors chase around strand', icon:'➡️'},
+    {name:'Game Day Pulse',desc:'Colors breathe in and out',  icon:'💓'},
+    {name:'Victory Fade',  desc:'Smooth slow color fade',     icon:'🌅'},
+    {name:'Rally Twinkle', desc:'Random sparkle across LEDs', icon:'✨'},
+  ];
+  document.getElementById('td-pattern-list').innerHTML=pats.map(p=>{
+    const isDef=defName===p.name,isFav=favs.has(p.name);
+    const dots=t.c.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+    const badge=isDef?`<span style="font-size:9px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
+    return`<div class="pattern-row ${isDef?'is-default':''}" onclick="selectTDPattern('${p.name}')">
+      <div class="color-dots">${dots}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${p.icon} ${p.name}${badge}</div>
+        <div style="font-size:10px;color:var(--muted)">${p.desc}</div>
+      </div>
+      <button class="crown-btn ${isDef?'active':''}" onclick="event.stopPropagation();setTeamDefault('${p.name}')" title="${isDef?'Clear default':'Set as default'}">👑</button>
+      <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleTeamFavPat('${p.name}')">⭐</button>
+    </div>`;
+  }).join('');
+}
+
+function selectTDPattern(patternName){
+  const t=currentTeam; if(!t)return;
+  renderTeamStrandPreview(t.c);
+  const nameEl=document.getElementById('td-active-name');
+  if(nameEl) nameEl.textContent=patternName;
+  updateNowPlaying(t.city+' '+t.name+' — '+patternName,t.c,true);
+  showToast(patternName+' activated!');
+  if(wled.active){
+    wledSend(teamPatternPayload(t,patternName,getLEDCount()));
+  }
+}
+
+function setTeamDefault(patternName){
+  const t=currentTeam; if(!t)return;
+  const key=teamKey(t.league,t.idx);
+  if(teamDefaultPatterns[key]===patternName){
+    delete teamDefaultPatterns[key];
+    if(bootDefault?.teamKey===key&&bootDefault?.patternName===patternName){
+      bootDefault=null; localStorage.removeItem('wled_boot_default');
+    }
+    showToast('Default cleared');
+  } else {
+    teamDefaultPatterns[key]=patternName;
+    bootDefault={teamKey:key,patternName,teamData:{c:t.c,city:t.city,name:t.name},changedAt:Date.now(),syncedAt:null};
+    localStorage.setItem('wled_boot_default',JSON.stringify(bootDefault));
+    renderSyncBadge();
+    if(wled.active){
+      selectTDPattern(patternName);
+      clearTimeout(_pendingSyncTimer);
+      _pendingSyncTimer=setTimeout(()=>{
+        syncBootDefaultToController(wled.active.ip).then(ok=>{
+          if(ok) showToast('⚡ Power-on default saved to controller');
+          else   showToast('Default saved locally — controller not responding');
+        });
+      },800);
+    } else {
+      showToast('Default saved — will sync when controller connects');
+    }
+  }
+  localStorage.setItem('teamDefaultPatterns',JSON.stringify(teamDefaultPatterns));
+  renderTDPatterns();
+}
+
+function toggleTeamFavPat(patternName){
+  const t=currentTeam; if(!t)return;
+  const key=teamKey(t.league,t.idx);
+  if(!teamFavPatterns[key]) teamFavPatterns[key]=new Set();
+  if(teamFavPatterns[key].has(patternName)) teamFavPatterns[key].delete(patternName);
+  else teamFavPatterns[key].add(patternName);
+  // Serialize Sets to arrays for storage
+  const serial={};
+  Object.entries(teamFavPatterns).forEach(([k,v])=>serial[k]=[...v]);
+  localStorage.setItem('teamFavPatterns',JSON.stringify(serial));
+  renderTDPatterns();
+}
+
+function toggleFavTeam(){
+  const tog=document.getElementById('td-fav-toggle');
+  const isFav=favTeam&&favTeam.league===currentTeam.league&&favTeam.idx===currentTeam.idx;
+  if(isFav){favTeam=null;tog.classList.remove('on');showToast('Team removed');}
+  else{favTeam={...currentTeam};tog.classList.add('on');showToast(currentTeam.city+' '+currentTeam.name+' set as your team!');}
+}
+// Legacy stub — kept so any lingering references don't throw
+function activateTeam(){if(currentTeam)selectTDPattern(teamDefaultPatterns[teamKey(currentTeam.league,currentTeam.idx)]||'Team Chase');}
+function selTDPat(i){const pats=['Team Chase','Game Day Pulse','Victory Fade','Rally Twinkle'];selectTDPattern(pats[i]||'Team Chase');}
 
 // ═══════════════════════════════
 // DOWN LIGHTS
@@ -1988,11 +2562,10 @@ function renderCalendar(){
 function calShift(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 
 // ═══════════════════════════════
-// AUTOPILOT
+// AUTOPILOT (legacy stubs — kept for safety, logic moved to toggleAP)
 // ═══════════════════════════════
-function selAP(m){apMode=m;['season','team','random','fav'].forEach(x=>document.getElementById('ap-'+x).classList.toggle('sel',x===m));}
-function selFreq(f){apFreq=f;['night','week'].forEach(x=>document.getElementById('ap-'+x).classList.toggle('sel',x===f));}
-function activateAP(){apOn=true;document.getElementById('ap-home-toggle').classList.add('on');document.getElementById('ap-home-sub').textContent='On';showToast('Autopilot activated!');setTimeout(()=>go('s-home'),1200);}
+function selAP(m){apMode=m;}
+function selFreq(f){apFreq=f;}
 
 // ═══════════════════════════════
 // MY PRESETS
@@ -2045,6 +2618,11 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').cat
 
 initHolidays();
 initSeasons();
+renderHomeDefaults();
+renderSyncBadge();
+// Sync ap-home-toggle visual and subtitle to persisted state
+document.getElementById('ap-home-toggle').classList.toggle('on',apOn);
+updateAPHomeSub();
 buildAlSwatches();
 alUpdateTracks();
 buildEffectList(wledEffects);
@@ -2141,6 +2719,90 @@ async function wledPost(ip, data, timeout = 2000) {
     }, timeout);
     return r.ok;
   } catch { return false; }
+}
+
+// ── Boot-default persistence ───────────────────────────────────────────────
+// bootDefault shape: { holidayId, patternName, changedAt, syncedAt } | null
+//   changedAt  = ms timestamp when the user last changed the default
+//   syncedAt   = ms timestamp when the controller last confirmed receipt
+//   dirty      = changedAt > syncedAt  (controller is stale)
+let bootDefault = JSON.parse(localStorage.getItem('wled_boot_default') || 'null');
+
+function isBootDefaultDirty() {
+  if (!bootDefault) return false;
+  return !bootDefault.syncedAt || bootDefault.changedAt > bootDefault.syncedAt;
+}
+
+function markBootDefaultSynced() {
+  if (!bootDefault) return;
+  bootDefault.syncedAt = Date.now();
+  localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
+  renderSyncBadge();
+}
+
+function renderSyncBadge() {
+  const el = document.getElementById('home-sync-badge');
+  if (!el) return;
+  if (!bootDefault) { el.style.display = 'none'; return; }
+  if (isBootDefaultDirty()) {
+    el.style.display = 'flex';
+    el.innerHTML = `<span style="color:#f59e0b">⚠</span> Default not yet synced to controller
+      <button onclick="manualSyncDefault()" style="margin-left:auto;font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0">Sync now</button>`;
+  } else {
+    const when = bootDefault.syncedAt ? new Date(bootDefault.syncedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
+    el.style.display = 'flex';
+    el.innerHTML = `<span style="color:#22c55e">✓</span> Controller in sync${when ? ' · '+when : ''}`;
+    // Auto-hide after 8 seconds once synced
+    setTimeout(() => { if (el) el.style.display = 'none'; }, 8000);
+  }
+}
+
+async function manualSyncDefault() {
+  if (!wled.active) { showToast('No controller connected'); return; }
+  showToast('Syncing…');
+  const ok = await syncBootDefaultToController(wled.active.ip); // stamps syncedAt internally
+  if (ok) showToast('⚡ Controller synced');
+  else showToast('⚠️ Controller not responding');
+}
+
+// POST to /json/cfg — used to set the WLED boot preset
+async function wledCfgPost(ip, data, timeout = 3000) {
+  try {
+    const r = await fetchWithTimeout(`http://${ip}/json/cfg`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }, timeout);
+    return r.ok;
+  } catch { return false; }
+}
+
+// Push the current bootDefault to a controller:
+//   1. Activate the effect so the controller is showing it
+//   2. Save that state as WLED preset 1
+//   3. Tell WLED to load preset 1 on every boot
+let _syncInProgress = false;   // concurrency guard — only one sync at a time
+let _pendingSyncTimer = null;  // debounce handle for crown-button rapid taps
+
+async function syncBootDefaultToController(ip) {
+  if (_syncInProgress) return false;     // skip if already syncing
+  if (!bootDefault) return false;
+  const fn = CHRISTMAS_PAYLOADS[bootDefault.patternName];
+  if (!fn) return false;
+  _syncInProgress = true;
+  try {
+    const total = getLEDCount();
+    const ok = await wledPost(ip, fn(total));            // 1. activate effect
+    if (!ok) return false;
+    await new Promise(r => setTimeout(r, 350));
+    await wledPost(ip, { psave: 1, n: 'App Default' });  // 2. save as preset 1
+    await new Promise(r => setTimeout(r, 250));
+    await wledCfgPost(ip, { def: { ps: 1, on: true } }); // 3. boot = preset 1
+    markBootDefaultSynced();                              // 4. stamp synced time
+    return true;
+  } finally {
+    _syncInProgress = false;
+  }
 }
 
 // ── Send to active controller ──
@@ -2411,6 +3073,12 @@ function switchToController(ip) {
   renderSavedControllers();
   updateConnectionBadge();
   showToast('✅ Switched to ' + (wled.active?.name || ip));
+  // Only sync if the default has changed since this controller last received it
+  if(wled.active && isBootDefaultDirty()){
+    syncBootDefaultToController(ip).then(ok=>{
+      if(ok) showToast('⚡ Boot default synced');
+    });
+  }
 }
 
 function removeController(ip) {
@@ -2943,14 +3611,45 @@ function patchHomeScreen() {
   }
 }
 
-// ── Poll connection status every 10s ──
+// ── Poll connection status every 15s ──
 async function pollConnection() {
   if (!wled.active) return;
   const state = await wledGet(wled.active.ip, '/json/state', 2000);
   const online = !!state;
+  const wasOnline = wled.active._online ?? null; // null = first poll, don't treat as transition
+  wled.active._online = online;
+
   const dot = document.getElementById('status-dot-indicator');
   if (dot) dot.style.background = online ? 'var(--success)' : 'var(--danger)';
   updateConnectionBadge(online);
+
+  // Controller just came back online (smart switch turned on, power restored, etc.)
+  if (online && wasOnline === false) {
+    if (isBootDefaultDirty()) {
+      // Default changed while controller was off — push the updated one now
+      showToast('Controller online — syncing updated default…');
+      syncBootDefaultToController(wled.active.ip).then(ok => {
+        if (ok) showToast('⚡ Default synced to controller');
+        // After sync, let autopilot apply the pattern visually (if on)
+        if (ok && apOn) applyAutopilotNow();
+      });
+    } else if (apOn) {
+      // Default is already synced — Autopilot applies today's holiday pattern via app
+      setTimeout(applyAutopilotNow, 600); // slight delay so WLED finishes its boot
+    }
+    // If autopilot is off and default is clean, trust WLED Preset 1 — no requests.
+  }
+}
+
+// Apply today's active holiday default to the controller right now (Autopilot action)
+function applyAutopilotNow(){
+  const h=getActiveHoliday();
+  if(!h) return;
+  const def=defaultPatterns[h.id];
+  if(!def) return;
+  const colors=payloadColors(def)||h.colors;
+  showToast(`🤖 Autopilot: ${def}`);
+  activatePattern(def, colors);
 }
 
 // ── Init connection layer ──
@@ -2967,7 +3666,21 @@ function initWLED() {
         else wled.controllers.push(c);
         saveControllers();
         setActiveController(wled.lastSeen);
+        wled.active._online = true; // mark as online so first poll doesn't double-sync
         showToast('Reconnected to ' + c.name);
+        // If the default changed while the controller was off, push it now
+        if (isBootDefaultDirty()) {
+          syncBootDefaultToController(wled.lastSeen).then(ok => {
+            if (ok) {
+              showToast('⚡ Updated default synced to controller');
+              if (apOn) setTimeout(applyAutopilotNow, 400);
+            }
+          });
+        } else if (apOn) {
+          // Default is clean — Autopilot applies today's holiday pattern via app
+          setTimeout(applyAutopilotNow, 800);
+        }
+        // If autopilot is off and clean, trust WLED Preset 1 — no extra requests.
       } else {
         updateConnectionBadge(false);
       }
