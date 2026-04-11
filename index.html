@@ -23,7 +23,7 @@
 html,body{height:100%;overflow:hidden;}
 body{font-family:system-ui,-apple-system,sans-serif;background:#000;display:flex;justify-content:center;align-items:center;}
 .app{background:var(--bg);color:var(--text);font-size:14px;width:100%;max-width:430px;height:100vh;height:100dvh;overflow:hidden;position:relative;display:flex;flex-direction:column;}
-.scroll-view{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 18px 120px;padding-top:calc(18px + var(--safe-top));}
+.scroll-view{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 88px;padding-top:calc(14px + var(--safe-top));}
 .scroll-view::-webkit-scrollbar{display:none;}
 
 /* SCREENS */
@@ -31,9 +31,9 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#000;display:flex
 .screen.active{display:block;}
 
 /* TOP BAR */
-.top-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-top:4px;}
-.back-btn{background:var(--surface);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:7px 13px;cursor:pointer;font-size:13px;flex-shrink:0;-webkit-appearance:none;}
-.screen-title{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.top-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-top:2px;}
+.back-btn{background:var(--surface);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;flex-shrink:0;-webkit-appearance:none;}
+.screen-title{font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
 
 /* CARDS */
 .card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
@@ -42,7 +42,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#000;display:flex
 .btn-sm{padding:5px 11px;font-size:11px;}
 .btn-ghost{background:transparent;color:var(--muted);}
 .btn-row{display:flex;gap:8px;margin-top:12px;}
-.field-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.field-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
 .field-input{width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;margin-bottom:12px;-webkit-appearance:none;}
 .field-input:focus{border-color:var(--accent);}
 .field-input::placeholder{color:var(--muted);}
@@ -51,13 +51,13 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .mini-toggle.on{background:var(--accent);border-color:var(--accent);}
 .mini-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:2px;left:3px;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
 .mini-toggle.on::after{left:23px;}
-.section-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.section-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
 
 /* ── HOME ── */
-.home-header{text-align:center;padding:20px 0 24px;}
-.logo-ring{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px;}
-.home-title{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px;}
-.home-sub{font-size:12px;color:var(--muted);}
+.home-header{text-align:center;padding:12px 0 16px;}
+.logo-ring{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;}
+.home-title{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:3px;}
+.home-sub{font-size:13px;color:var(--muted);}
 
 /* NOW PLAYING */
 .now-playing{background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px;position:relative;overflow:hidden;}
@@ -66,9 +66,9 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .np-dots{display:flex;gap:3px;flex-shrink:0;}
 .np-dot{width:10px;height:10px;border-radius:50%;}
 .np-info{flex:1;min-width:0;}
-.np-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;}
-.np-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.np-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.np-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
+.np-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.np-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .np-pulse{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
 .np-off-dot{width:8px;height:8px;border-radius:50%;background:var(--surface3);border:1px solid var(--muted);flex-shrink:0;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
@@ -98,16 +98,16 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 
 /* QUICK GRID */
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.quick-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.quick-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:13px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;}
 .qc-icon{font-size:20px;flex-shrink:0;}
-.qc-label{font-size:12px;font-weight:500;}
-.qc-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.qc-label{font-size:13px;font-weight:500;}
+.qc-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 
 /* WIDE CARD */
 .wide-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
 .wide-icon{font-size:24px;flex-shrink:0;}
-.wl{font-size:13px;font-weight:600;}
-.ws{font-size:11px;color:var(--muted);margin-top:2px;}
+.wl{font-size:14px;font-weight:600;}
+.ws{font-size:12px;color:var(--muted);margin-top:2px;}
 
 /* STATUS */
 .status-bar{background:var(--surface2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);}
@@ -117,7 +117,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .holiday-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .holiday-card{border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.15s;}
 .h-icon{font-size:24px;margin-bottom:6px;display:block;}
-.h-name{font-size:10px;font-weight:500;color:white;line-height:1.3;}
+.h-name{font-size:11px;font-weight:500;color:white;line-height:1.3;}
 
 /* SEASONS */
 .season-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -128,9 +128,9 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 
 /* PATTERNS */
 .preview-bar{height:8px;border-radius:4px;margin-bottom:14px;}
-.fav-hint{font-size:11px;color:var(--muted);margin-bottom:12px;padding:9px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent);}
+.fav-hint{font-size:12px;color:var(--muted);margin-bottom:12px;padding:9px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent);}
 .pattern-list{display:flex;flex-direction:column;gap:7px;}
-.pattern-row{background:var(--surface);border:0.5px solid var(--border);border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.pattern-row{background:var(--surface);border:0.5px solid var(--border);border-radius:11px;padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;}
 .pattern-row.favorited{border-color:rgba(59,130,246,0.4);}
 .pattern-row.is-default{border-left:3px solid #fbbf24;}
 .color-dots{display:flex;gap:3px;flex-shrink:0;}
@@ -139,18 +139,18 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .fav-btn.active{background:rgba(59,130,246,0.15);border-color:var(--accent);color:var(--accent);}
 .crown-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;-webkit-appearance:none;opacity:0.45;transition:opacity .15s;}
 .crown-btn.active{opacity:1;background:rgba(251,191,36,0.15);border-color:#fbbf24;}
-.home-defaults-item{display:flex;align-items:center;background:var(--card,var(--surface));border-radius:11px;padding:11px 14px;margin-bottom:7px;cursor:pointer;border-left:3px solid #fbbf24;gap:10px;}
-.home-defaults-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 6px;}
+.home-defaults-item{display:flex;align-items:center;background:var(--card,var(--surface));border-radius:11px;padding:12px 14px;margin-bottom:7px;cursor:pointer;border-left:3px solid #fbbf24;gap:10px;}
+.home-defaults-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 6px;}
 
 /* PRESETS LIBRARY */
 .preset-menu-grid{display:flex;flex-direction:column;gap:8px;}
 .preset-menu-card{background:var(--surface2);border:1.5px solid transparent;border-radius:13px;padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.15s;}
 .pmc-icon{font-size:28px;flex-shrink:0;}
 .pmc-label{font-size:14px;font-weight:600;margin-bottom:3px;}
-.pmc-sub{font-size:11px;color:var(--muted);line-height:1.4;}
-.pmc-count{font-size:10px;background:var(--surface3);border-radius:20px;padding:3px 10px;color:var(--muted);white-space:nowrap;}
+.pmc-sub{font-size:12px;color:var(--muted);line-height:1.4;}
+.pmc-count{font-size:11px;background:var(--surface3);border-radius:20px;padding:3px 10px;color:var(--muted);white-space:nowrap;}
 .filter-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
-.ftab{background:var(--surface2);border:0.5px solid var(--border);border-radius:20px;padding:5px 11px;font-size:11px;cursor:pointer;color:var(--muted);}
+.ftab{background:var(--surface2);border:0.5px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;cursor:pointer;color:var(--muted);}
 .ftab.active{color:white;}
 .preset-card{background:var(--surface2);border:1.5px solid transparent;border-radius:13px;padding:12px 14px;margin-bottom:8px;}
 .preset-thumb{display:flex;gap:2px;height:26px;border-radius:6px;overflow:hidden;margin-bottom:8px;}
@@ -159,7 +159,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 /* SPORTS */
 .league-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .league-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:18px 12px;cursor:pointer;text-align:center;}
-.team-list-scroll{max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;}
+.team-list-scroll{max-height:50vh;overflow-y:auto;display:flex;flex-direction:column;gap:5px;}
 .team-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1.5px solid transparent;}
 .tc{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:9px;padding:8px 12px;margin-bottom:10px;}
@@ -178,7 +178,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .hue-track{width:100%;height:24px;border-radius:8px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);cursor:pointer;position:relative;border:0.5px solid var(--border2);margin-bottom:12px;}
 .sat-track,.bri-track{width:100%;height:24px;border-radius:8px;cursor:pointer;position:relative;border:0.5px solid var(--border2);margin-bottom:12px;}
 .slider-thumb{position:absolute;top:-3px;width:14px;height:30px;border-radius:5px;border:2.5px solid white;background:transparent;pointer-events:none;transform:translateX(-50%);box-shadow:0 2px 6px rgba(0,0,0,0.5);}
-.slider-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:5px;}
+.slider-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
 .swatch-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
 .sw{width:30px;height:30px;border-radius:8px;cursor:pointer;border:2px solid transparent;}
 .sw.sel{border-color:white;}
@@ -188,12 +188,12 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 /* EFFECT PICKER */
 .effect-search{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:9px;padding:8px 12px;margin-bottom:10px;}
 .effect-search input{background:transparent;border:none;color:var(--text);font-size:13px;outline:none;flex:1;}
-.effect-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto;}
+.effect-list{display:flex;flex-direction:column;gap:5px;max-height:35vh;overflow-y:auto;}
 .effect-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1.5px solid transparent;}
 .effect-row.sel{border-color:var(--accent);background:rgba(59,130,246,0.07);}
-.effect-cat{font-size:9px;background:var(--surface3);border-radius:20px;padding:2px 8px;color:var(--muted);white-space:nowrap;}
-.effect-name{font-size:12px;font-weight:500;flex:1;}
-.effect-desc{font-size:10px;color:var(--muted);}
+.effect-cat{font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 8px;color:var(--muted);white-space:nowrap;}
+.effect-name{font-size:13px;font-weight:500;flex:1;}
+.effect-desc{font-size:11px;color:var(--muted);}
 .param-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .param-label{font-size:11px;color:var(--muted);width:70px;flex-shrink:0;}
 .param-slider{flex:1;accent-color:var(--accent);}
@@ -203,7 +203,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
 .cal-arrow{background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;-webkit-appearance:none;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
-.cal-dow{text-align:center;font-size:9px;color:var(--muted);padding:3px 0 6px;}
+.cal-dow{text-align:center;font-size:10px;color:var(--muted);padding:3px 0 6px;}
 .cal-day{aspect-ratio:1;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:11px;}
 .cal-day.today{background:var(--surface2);font-weight:700;}
 .cal-day.today .dn{color:var(--accent);}
@@ -239,7 +239,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .scc-icon{font-size:26px;display:block;margin-bottom:6px;}
 .scc-label{font-size:13px;font-weight:600;}
 .scc-sub{font-size:10px;color:var(--muted);margin-top:3px;}
-.sub-cat-list,.sub-sub-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;}
+.sub-cat-list,.sub-sub-list{display:flex;flex-direction:column;gap:6px;max-height:40vh;overflow-y:auto;}
 .sub-cat-row,.sub-sub-row{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surface2);border-radius:10px;cursor:pointer;border:1.5px solid transparent;}
 .sub-cat-row.sel,.sub-sub-row.sel{border-color:var(--accent);background:rgba(59,130,246,0.07);}
 .breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap;}
@@ -255,7 +255,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .tag-opt{background:var(--surface2);border:1.5px solid transparent;border-radius:9px;padding:8px 4px;text-align:center;cursor:pointer;}
 .tag-opt.sel{border-color:var(--accent);background:rgba(59,130,246,0.1);}
 .tag-icon{font-size:16px;display:block;margin-bottom:3px;}
-.tag-name{font-size:9px;color:var(--muted);}
+.tag-name{font-size:10px;color:var(--muted);}
 
 /* TOAST */
 .toast{position:absolute;bottom:calc(24px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--success);color:white;border-radius:20px;padding:8px 20px;font-size:12px;font-weight:500;opacity:0;transition:opacity 0.3s;white-space:nowrap;pointer-events:none;z-index:100;}
@@ -353,7 +353,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .gpio-name-inp::placeholder { color:var(--muted); }
 .gpio-fields { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .gpio-field { display:flex; flex-direction:column; gap:4px; }
-.gpio-field-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+.gpio-field-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; }
 .gpio-field-input { background:var(--surface); border:0.5px solid var(--border2); border-radius:8px; padding:7px 10px; color:var(--text); font-size:12px; outline:none; -webkit-appearance:none; }
 .gpio-field-input:focus { border-color:var(--accent); }
 .gpio-field-select { background:var(--surface); border:0.5px solid var(--border2); border-radius:8px; padding:7px 10px; color:var(--text); font-size:12px; outline:none; -webkit-appearance:none; }
@@ -365,9 +365,32 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .gpio-summary-bar { background:var(--surface2); border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; gap:16px; }
 .gpio-stat { text-align:center; flex:1; }
 .gpio-stat-val { font-size:20px; font-weight:700; }
-.gpio-stat-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+.gpio-stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
 .coverage-track { height:6px; background:var(--surface3); border-radius:3px; overflow:hidden; margin-top:8px; }
 .coverage-fill { height:100%; border-radius:3px; background:linear-gradient(to right,var(--accent),#6366f1); transition:width 0.4s; }
+
+/* ── AUTOPILOT MODES ── */
+.ap-mode-seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:3px;border:0.5px solid var(--border);margin-bottom:14px;}
+.ap-mode-tab{flex:1;border-radius:8px;padding:9px 6px;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:500;transition:all 0.2s;-webkit-appearance:none;line-height:1.3;}
+.ap-mode-tab .ap-tab-icon{font-size:16px;display:block;margin-bottom:2px;}
+.ap-mode-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+.ap-zone-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+.ap-zone-row:last-child{border-bottom:none;}
+.random-palette{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0;}
+.palette-swatch{height:36px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all 0.15s;position:relative;}
+.palette-swatch.sel{border-color:white;transform:scale(1.08);}
+.np-save-btn{background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;-webkit-appearance:none;transition:all 0.15s;}
+.np-save-btn:active{background:var(--surface2);color:var(--accent);}
+
+/* ── QUICK-SAVE MODAL ── */
+.qs-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.65);z-index:50;display:none;align-items:flex-end;}
+.qs-overlay.open{display:flex;}
+.qs-sheet{background:var(--surface);border-radius:18px 18px 0 0;padding:20px 20px calc(20px + var(--safe-bot));width:100%;}
+.qs-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.qs-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;-webkit-appearance:none;}
+.qs-cat{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.qs-cat-btn{background:var(--surface2);border:1.5px solid transparent;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;color:var(--muted);-webkit-appearance:none;transition:all 0.15s;}
+.qs-cat-btn.sel{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,0.08);}
 
 </style>
 </head>
@@ -417,12 +440,36 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
         <div class="np-sub" id="np-sub">Tap Presets or Create Your Own</div>
       </div>
       <div id="np-indicator" class="np-off-dot"></div>
+      <button class="np-save-btn" id="np-save-btn" onclick="openQuickSave()" title="Save as preset" style="display:none">💾</button>
       <button class="preview-btn" id="preview-btn" onclick="toggleNPPreview()">Preview</button>
       <button class="power-btn" id="power-btn" onclick="togglePower()">⏻</button>
     </div>
     <!-- inline preview strip — hidden until Preview is tapped -->
     <div id="np-preview-strip" style="display:none;margin-top:10px">
       <div class="strand-strip" id="np-strand"></div>
+    </div>
+  </div>
+
+  <!-- QUICK SAVE OVERLAY -->
+  <div class="qs-overlay" id="qs-overlay" onclick="if(event.target===this)closeQuickSave()">
+    <div class="qs-sheet">
+      <div class="qs-title">
+        Save as Preset
+        <button class="qs-close" onclick="closeQuickSave()">✕</button>
+      </div>
+      <div class="field-label" style="margin-bottom:6px">Name</div>
+      <input class="field-input" id="qs-name" placeholder="e.g. My Favorite Look" style="margin-bottom:14px"/>
+      <div class="field-label" style="margin-bottom:8px">Save To</div>
+      <div class="qs-cat" id="qs-cat-row">
+        <button class="qs-cat-btn sel" onclick="setQSCat('mypresets')">💾 My Presets</button>
+        <button class="qs-cat-btn" onclick="setQSCat('holidays')">🎄 Holidays</button>
+        <button class="qs-cat-btn" onclick="setQSCat('seasons')">🍂 Seasons</button>
+      </div>
+      <div id="qs-sub-row" style="display:none;margin-bottom:14px">
+        <div class="field-label" style="margin-bottom:6px" id="qs-sub-label">Choose Holiday</div>
+        <select id="qs-sub-select" class="field-input" style="margin-bottom:0;padding-right:12px"></select>
+      </div>
+      <button onclick="doQuickSave()" style="width:100%;background:var(--accent);border:none;color:white;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;margin-top:4px">Save Preset</button>
     </div>
   </div>
 
@@ -447,7 +494,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   </button>
 
   <!-- SYNC STATUS BADGE -->
-  <div id="home-sync-badge" style="display:none;align-items:center;gap:6px;font-size:10px;color:var(--muted);background:var(--surface);border-radius:8px;padding:7px 11px;margin-bottom:8px;border:0.5px solid var(--border)"></div>
+  <div id="home-sync-badge" style="display:none;align-items:center;gap:8px;font-size:12px;color:var(--muted);background:var(--surface);border-radius:10px;padding:9px 13px;margin-bottom:10px;border:0.5px solid var(--border);transition:all 0.3s"></div>
 
   <!-- DEFAULT EFFECTS -->
   <div id="home-defaults" style="display:none;margin-bottom:8px">
@@ -505,9 +552,9 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 
   <!-- PREVIEW -->
   <div class="strand-preview">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
       <span>LIVE PREVIEW</span>
-      <span id="create-mode-badge" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">All Lights</span>
+      <span id="create-mode-badge" style="font-size:11px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">All Lights</span>
     </div>
     <div class="strand-strip" id="create-strand"></div>
     <div style="margin-top:9px;font-size:11px;color:var(--muted)">
@@ -675,7 +722,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div id="patterns-badge" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
   <!-- Strand preview — same style as home page Now Playing preview -->
   <div class="strand-preview" style="margin-bottom:12px">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
       <span>LIVE PREVIEW</span>
       <span id="hl-active-name" style="font-style:italic;color:var(--muted)">Tap a pattern to activate</span>
     </div>
@@ -684,7 +731,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div class="fav-hint">⭐ Star patterns to add them to your nightly playlist</div>
   <div class="pattern-list" id="pattern-list"></div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
-    <div><div style="font-size:12px;font-weight:500" id="fav-count-label">0 in playlist</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Rotates randomly each night</div></div>
+    <div><div style="font-size:13px;font-weight:500" id="fav-count-label">0 in playlist</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Rotates randomly each night</div></div>
     <button class="btn btn-primary btn-sm" onclick="showToast('Playlist saved!')">Save</button>
   </div>
 </div>
@@ -698,16 +745,16 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div class="top-bar"><button class="back-btn" onclick="go('s-seasons')">← Seasons</button><span class="screen-title" id="sp-title">Patterns</span></div>
   <div id="sp-badge" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
   <div class="strand-preview" style="margin-bottom:12px">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
       <span>LIVE PREVIEW</span>
       <span id="sp-active-name" style="font-style:italic;color:var(--muted)">Tap a pattern to activate</span>
     </div>
     <div class="strand-strip" id="sp-strand"></div>
   </div>
-  <div class="fav-hint">⭐ Star patterns to add them to your nightly playlist</div>
+  <div class="fav-hint">👑 Set default · ⭐ Add to playlist</div>
   <div class="pattern-list" id="sp-pattern-list"></div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
-    <div><div style="font-size:12px;font-weight:500" id="sp-fav-count">0 in playlist</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Rotates randomly each night</div></div>
+    <div><div style="font-size:13px;font-weight:500" id="sp-fav-count">0 in playlist</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Rotates randomly each night</div></div>
     <button class="btn btn-primary btn-sm" onclick="showToast('Playlist saved!')">Save</button>
   </div>
 </div>
@@ -723,13 +770,13 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-sports-leagues">
   <div class="top-bar"><button class="back-btn" onclick="go('s-preset-menu')">← Presets</button><span class="screen-title">Sports Teams</span></div>
   <div class="league-grid">
-    <div class="league-card" onclick="openLeague('NFL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏈</span><div style="font-size:13px;font-weight:600">NFL</div><div style="font-size:10px;color:var(--muted)">32 teams</div></div>
-    <div class="league-card" onclick="openLeague('NBA')"><span style="font-size:28px;display:block;margin-bottom:7px">🏀</span><div style="font-size:13px;font-weight:600">NBA</div><div style="font-size:10px;color:var(--muted)">30 teams</div></div>
-    <div class="league-card" onclick="openLeague('MLB')"><span style="font-size:28px;display:block;margin-bottom:7px">⚾</span><div style="font-size:13px;font-weight:600">MLB</div><div style="font-size:10px;color:var(--muted)">30 teams</div></div>
-    <div class="league-card" onclick="openLeague('NHL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏒</span><div style="font-size:13px;font-weight:600">NHL</div><div style="font-size:10px;color:var(--muted)">32 teams</div></div>
+    <div class="league-card" onclick="openLeague('NFL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏈</span><div style="font-size:14px;font-weight:600">NFL</div><div style="font-size:11px;color:var(--muted)">32 teams</div></div>
+    <div class="league-card" onclick="openLeague('NBA')"><span style="font-size:28px;display:block;margin-bottom:7px">🏀</span><div style="font-size:14px;font-weight:600">NBA</div><div style="font-size:11px;color:var(--muted)">30 teams</div></div>
+    <div class="league-card" onclick="openLeague('MLB')"><span style="font-size:28px;display:block;margin-bottom:7px">⚾</span><div style="font-size:14px;font-weight:600">MLB</div><div style="font-size:11px;color:var(--muted)">30 teams</div></div>
+    <div class="league-card" onclick="openLeague('NHL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏒</span><div style="font-size:14px;font-weight:600">NHL</div><div style="font-size:11px;color:var(--muted)">32 teams</div></div>
   </div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-top:10px" onclick="openLeague('College')">
-    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:13px;font-weight:600">College</div><div style="font-size:10px;color:var(--muted)">100 programs · SLU Billikens included</div></div><span style="color:var(--muted)">›</span>
+    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:14px;font-weight:600">College</div><div style="font-size:11px;color:var(--muted)">100 programs · SLU Billikens included</div></div><span style="color:var(--muted)">›</span>
   </div>
 </div>
 <div class="screen" id="s-sports-teams">
@@ -743,7 +790,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div id="td-badge-row" style="display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;width:fit-content"></div>
   <!-- Strand preview -->
   <div class="strand-preview" style="margin-bottom:12px">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between">
       <span>LIVE PREVIEW</span>
       <span id="td-active-name" style="font-style:italic;color:var(--muted)">Tap a pattern to activate</span>
     </div>
@@ -754,7 +801,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div class="pattern-list" id="td-pattern-list"></div>
   <!-- My team toggle -->
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px">
-    <div><div style="font-size:12px;font-weight:500">Set as my team</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Autopilot uses these colors</div></div>
+    <div><div style="font-size:13px;font-weight:500">Set as my team</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Autopilot uses these colors</div></div>
     <div class="mini-toggle" id="td-fav-toggle" onclick="toggleFavTeam()"></div>
   </div>
 </div>
@@ -827,31 +874,80 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div class="card" style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
     <div style="font-size:28px;flex-shrink:0">🤖</div>
     <div style="flex:1">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px">Auto-apply holiday default</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.5">When your lights turn on, Autopilot activates today's holiday default pattern automatically.</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:3px">Autopilot</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5">Automatically picks the right look for holidays, seasons, or just surprises you.</div>
     </div>
     <div class="mini-toggle" id="ap-main-toggle" onclick="toggleAP()" style="width:48px;height:26px;flex-shrink:0"></div>
   </div>
 
-  <!-- Today's status -->
-  <div class="card" style="margin-bottom:12px">
-    <div class="field-label" style="margin-bottom:10px">Today</div>
-    <div id="ap-today-content"></div>
+  <!-- Mode selector -->
+  <div class="ap-mode-seg" id="ap-mode-seg">
+    <button class="ap-mode-tab active" id="ap-tab-holiday" onclick="setAPMode('holiday')">
+      <span class="ap-tab-icon">🗓️</span>Smart Holiday
+    </button>
+    <button class="ap-mode-tab" id="ap-tab-playlist" onclick="setAPMode('playlist')">
+      <span class="ap-tab-icon">⭐</span>My Playlist
+    </button>
+    <button class="ap-mode-tab" id="ap-tab-random" onclick="setAPMode('random')">
+      <span class="ap-tab-icon">🎲</span>Random
+    </button>
   </div>
 
-  <!-- Upcoming holidays with defaults -->
-  <div class="card" style="margin-bottom:12px">
-    <div class="field-label" style="margin-bottom:10px">Upcoming</div>
-    <div id="ap-upcoming-list"></div>
+  <!-- Panel: Smart Holiday -->
+  <div id="ap-panel-holiday">
+    <div class="card" style="margin-bottom:10px">
+      <div class="field-label" style="margin-bottom:10px">Today's Zone</div>
+      <div id="ap-today-content"></div>
+    </div>
+    <!-- Between-seasons fallback -->
+    <div class="card" style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+        <div style="font-size:13px;font-weight:500">Between holidays</div>
+        <select id="ap-fallback-select" onchange="saveAPFallback()" style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:5px 10px;color:var(--text);font-size:12px;outline:none;-webkit-appearance:none;cursor:pointer">
+          <option value="random">🎲 Random look</option>
+          <option value="playlist">⭐ My playlist</option>
+          <option value="off">⏻ Stay off</option>
+        </select>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">What to play when no holiday zone is active</div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="field-label" style="margin-bottom:10px">Upcoming Holiday Zones</div>
+      <div id="ap-upcoming-list"></div>
+    </div>
   </div>
 
-  <!-- How it works -->
-  <div class="card">
-    <div class="field-label" style="margin-bottom:8px">How it works</div>
-    <div style="font-size:11px;color:var(--muted);line-height:1.8">
-      🔌 Smart switch turns lights on → WLED loads boot preset → App detects controller online → Autopilot applies today's holiday default.<br><br>
-      👑 Set a default on any holiday's pattern screen using the crown button. That pattern is what Autopilot will play.<br><br>
-      ✏️ If you tap a different pattern manually, it overrides Autopilot for that session.
+  <!-- Panel: My Playlist -->
+  <div id="ap-panel-playlist" style="display:none">
+    <div class="card" style="margin-bottom:10px">
+      <div class="field-label" style="margin-bottom:10px">Starred Patterns</div>
+      <div id="ap-playlist-content"></div>
+    </div>
+    <div style="background:var(--surface2);border-radius:10px;padding:11px 13px;font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px">
+      ⭐ Star patterns using the star button on any holiday, season, or team screen. Autopilot will randomly rotate through them each session.
+    </div>
+  </div>
+
+  <!-- Panel: Random Creative -->
+  <div id="ap-panel-random" style="display:none">
+    <div class="card" style="margin-bottom:10px">
+      <div class="field-label" style="margin-bottom:10px">Color Mood</div>
+      <div class="random-palette" id="ap-palette-grid"></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Pick a mood or leave blank for anything goes</div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="field-label" style="margin-bottom:8px">Preview</div>
+      <div class="strand-strip" id="ap-random-strand" style="margin-bottom:10px"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:500;flex:1" id="ap-random-label">Tap Generate to see a look</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="generateRandomLook()" style="flex:1;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:white;border-radius:9px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;-webkit-appearance:none">🎲 Generate New Look</button>
+        <button onclick="saveRandomAsPreset()" id="ap-save-random-btn" style="background:var(--surface2);border:0.5px solid var(--border2);color:var(--muted);border-radius:9px;padding:11px 14px;font-size:13px;cursor:pointer;-webkit-appearance:none;display:none">💾 Save</button>
+      </div>
+    </div>
+    <div style="background:var(--surface2);border-radius:10px;padding:11px 13px;font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px">
+      🎲 Each time the lights turn on, Autopilot generates a fresh random look using your chosen mood. If you love it, save it as a preset before it changes.
     </div>
   </div>
 </div>
@@ -977,7 +1073,11 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 // ═══════════════════════════════
 // STATE
 // ═══════════════════════════════
-let lightsOn=false,lightMode='all',apOn=localStorage.getItem('wled_ap_on')==='1',apMode='season',apFreq='night';
+let lightsOn=false,lightMode='all',apOn=localStorage.getItem('wled_ap_on')==='1';
+let apMode=localStorage.getItem('wled_ap_mode')||'holiday';       // 'holiday' | 'playlist' | 'random'
+let apFallback=localStorage.getItem('wled_ap_fallback')||'random'; // 'random' | 'playlist' | 'off'
+let apSelectedPalette=localStorage.getItem('wled_ap_palette')||'';  // '' = any
+let _lastRandomLook=null; // {name, colors, fx, sx, ix}
 let favTeam=null,currentLeague='NFL',currentTeam=null,selectedTDPattern=0;
 let teamDefaultPatterns=JSON.parse(localStorage.getItem('teamDefaultPatterns')||'{}');
 // teamFavPatterns: {teamKey: Set<patternName>} — loaded from localStorage array form
@@ -1014,7 +1114,7 @@ let zones=defaultZones.map(z=>({...z}));
 // Ranges that wrap year-end (e.g. Dec→Jan) are handled in getActiveHoliday().
 const holidays=[
   {id:'christmas',name:'Christmas',icon:'🎄',bg:'linear-gradient(135deg,#1a3a1a,#2d5a2d)',colors:['#ef4444','#22c55e','#ffffff'],
-   seasonStart:[11,1],seasonEnd:[0,1],   // Dec 1 – Jan 1
+   seasonStart:[10,28],seasonEnd:[11,31], // Nov 28 (day after Thanksgiving) – Dec 31
    patterns:[
     'Candy Cane Chase','Red Green White Chase','Green Red Chase','Sleigh Bells Chase','Christmas Comet',
     'Christmas Twinkle','Snow Flurry Twinkle','Gold Sparkle','Christmas Glitter','Frosty Shimmer',
@@ -1025,7 +1125,7 @@ const holidays=[
     'Northern Lights','Christmas Rainbow'
   ]},
   {id:'newyear',name:"New Year's",icon:'🥂',bg:'linear-gradient(135deg,#1a1a1a,#2a2a2a)',colors:['#fbbf24','#ffffff','#a855f7'],
-   seasonStart:[11,30],seasonEnd:[0,4],  // Dec 30 – Jan 4
+   seasonStart:[11,31],seasonEnd:[0,4],  // Dec 31 – Jan 4 (New Year's Eve/Day window)
    patterns:['Golden Burst','Countdown Flash','Champagne Sparkle']},
   {id:'valentines',name:"Valentine's",icon:'💖',bg:'linear-gradient(135deg,#3a0a1a,#6a1a2a)',colors:['#ec4899','#ef4444','#fbbf24'],
    seasonStart:[1,1],seasonEnd:[1,15],   // Feb 1–15
@@ -1036,14 +1136,20 @@ const holidays=[
   {id:'easter',name:'Easter',icon:'🐰',bg:'linear-gradient(135deg,#1a1a3a,#2d1a4a)',colors:['#a855f7','#f9a8d4','#86efac'],
    seasonStart:[2,20],seasonEnd:[3,20],  // Mar 20 – Apr 20 (approximate)
    patterns:['Pastel Drift','Spring Sparkle','Bunny Hop','Easter Glow']},
-  {id:'july4',name:'4th of July',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
-   seasonStart:[5,28],seasonEnd:[6,7],   // Jun 28 – Jul 7
+  {id:'memorial',name:'Memorial Day',icon:'🇺🇸',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
+   seasonStart:[4,24],seasonEnd:[4,31],  // May 24 – May 31
+   patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
+  {id:'july4',name:'USA Holidays',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
+   seasonStart:[5,27],seasonEnd:[6,11],  // Jun 27 – Jul 11 (week before and after)
+   patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
+  {id:'laborday',name:'Labor Day',icon:'🇺🇸',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
+   seasonStart:[8,1],seasonEnd:[8,7],   // Sep 1 – Sep 7
    patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
   {id:'halloween',name:'Halloween',icon:'🎃',bg:'linear-gradient(135deg,#2a1a00,#4a2c00)',colors:['#f97316','#9333ea','#000000'],
-   seasonStart:[9,1],seasonEnd:[10,2],   // Oct 1 – Nov 2
+   seasonStart:[9,1],seasonEnd:[9,31],   // Oct 1 – Oct 31 (all of October)
    patterns:['Haunted Flicker','Spider Web','Lightning Storm','Pumpkin Pulse','Ghost Drift','Blood Moon']},
   {id:'thanksgiving',name:'Thanksgiving',icon:'🦃',bg:'linear-gradient(135deg,#2a1500,#4a2800)',colors:['#f97316','#d97706','#dc2626'],
-   seasonStart:[10,15],seasonEnd:[11,1], // Nov 15 – Dec 1
+   seasonStart:[10,1],seasonEnd:[10,27], // Nov 1 – Nov 27 (all of November before Christmas zone)
    patterns:['Harvest Glow','Amber Pulse','Thankful Twinkle']},
   {id:'hanukkah',name:'Hanukkah',icon:'🕎',bg:'linear-gradient(135deg,#001a3a,#002a5a)',colors:['#3b82f6','#ffffff','#60a5fa'],
    seasonStart:[11,1],seasonEnd:[11,30], // Dec 1–30 (overlaps Christmas; Christmas listed first so it takes priority)
@@ -1307,7 +1413,9 @@ const calHolidays=[
 const pHolidays=[
   {id:'christmas',name:'Christmas',icon:'🎄',bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',text:'#22c55e'},
   {id:'halloween',name:'Halloween',icon:'🎃',bg:'rgba(249,115,22,0.12)',border:'rgba(249,115,22,0.3)',text:'#f97316'},
-  {id:'july4',name:'4th of July',icon:'🎆',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
+  {id:'july4',name:'USA Holidays',icon:'🎆',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
+  {id:'memorial',name:'Memorial Day',icon:'🇺🇸',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
+  {id:'laborday',name:'Labor Day',icon:'🇺🇸',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
   {id:'sports',name:'Sports',icon:'🏆',bg:'rgba(245,158,11,0.12)',border:'rgba(245,158,11,0.3)',text:'#f59e0b'},
   {id:'seasons',name:'Seasons',icon:'🍂',bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',text:'#22c55e'},
   {id:'birthday',name:'Birthday',icon:'🎂',bg:'rgba(236,72,153,0.12)',border:'rgba(236,72,153,0.3)',text:'#ec4899'},
@@ -1443,7 +1551,8 @@ const wledEffects=[
 
 const saveHolidays=[
   {id:'christmas',name:'Christmas',icon:'🎄'},{id:'halloween',name:'Halloween',icon:'🎃'},
-  {id:'july4',name:'4th of July',icon:'🎆'},{id:'valentines',name:"Valentine's",icon:'💖'},
+  {id:'july4',name:'USA Holidays',icon:'🎆'},{id:'memorial',name:'Memorial Day',icon:'🇺🇸'},{id:'laborday',name:'Labor Day',icon:'🇺🇸'},
+  {id:'valentines',name:"Valentine's",icon:'💖'},
   {id:'stpats',name:"St. Patrick's",icon:'🍀'},{id:'easter',name:'Easter',icon:'🐰'},
   {id:'thanksgiving',name:'Thanksgiving',icon:'🦃'},{id:'newyear',name:"New Year's",icon:'🥂'},
   {id:'hanukkah',name:'Hanukkah',icon:'🕎'},
@@ -1493,6 +1602,8 @@ function updateNowPlaying(name,colors,playing){
   document.getElementById('np-bg').style.background=playing&&colors.length?`linear-gradient(135deg,${colors.join(',')})`: 'transparent';
   document.getElementById('np-colors').innerHTML=playing?colors.map(c=>`<div class="np-dot" style="background:${c}"></div>`).join(''):'';
   if(typeof _npPreviewOpen!=='undefined' && _npPreviewOpen) renderNPPreview();
+  syncNPSaveBtn();
+  updateAPHomeSub();
 }
 
 function togglePower(){
@@ -1517,98 +1628,6 @@ function toggleAP(){
   updateAPHomeSub();
   renderAPToday();
   showToast(apOn ? '🤖 Autopilot on' : 'Autopilot off');
-}
-
-// What autopilot will do today — shown on home quick card
-function updateAPHomeSub(){
-  const el=document.getElementById('ap-home-sub');
-  if(!el) return;
-  if(!apOn){el.textContent='Off';return;}
-  const h=getActiveHoliday();
-  if(!h){el.textContent='On · No holiday today';return;}
-  const def=defaultPatterns[h.id];
-  el.textContent=def ? `${h.icon} ${def.split(' ').slice(0,3).join(' ')}…` : `${h.icon} No default set`;
-}
-
-// Render the "Today" panel on the Autopilot screen
-function renderAPToday(){
-  // Sync toggle visual to current state
-  const mainT=document.getElementById('ap-main-toggle');
-  if(mainT) mainT.classList.toggle('on',apOn);
-
-  const el=document.getElementById('ap-today-content');
-  if(!el) return;
-  const h=getActiveHoliday();
-  if(!h){
-    el.innerHTML=`<div style="display:flex;align-items:center;gap:12px">
-      <span style="font-size:28px">📅</span>
-      <div>
-        <div style="font-size:12px;font-weight:500;color:var(--muted)">No holiday active today</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:3px">Autopilot will activate when a holiday season begins</div>
-      </div>
-    </div>`;
-    renderAPUpcoming();
-    return;
-  }
-  const def=defaultPatterns[h.id];
-  const colors=def?(payloadColors(def)||h.colors):h.colors;
-  const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
-  const [sm,sd]=h.seasonStart,[em,ed]=h.seasonEnd;
-  const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const rangeStr=`${MONTHS_SHORT[sm]} ${sd} – ${MONTHS_SHORT[em]} ${ed}`;
-  el.innerHTML=`<div style="display:flex;align-items:center;gap:12px">
-    <span style="font-size:32px">${h.icon}</span>
-    <div style="flex:1;min-width:0">
-      <div style="font-size:13px;font-weight:600">${h.name} <span style="font-size:9px;color:var(--muted);font-weight:400">${rangeStr}</span></div>
-      ${def
-        ? `<div style="font-size:11px;color:var(--success);margin-top:3px">Will play: ${def}</div>`
-        : `<div style="font-size:11px;color:var(--warning);margin-top:3px">No default set — tap 👑 on a pattern</div>`
-      }
-    </div>
-    <div class="color-dots" style="flex-shrink:0">${dots}</div>
-  </div>
-  ${def?`<button onclick="openHoliday('${h.id}');go('s-patterns')" style="margin-top:10px;width:100%;background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);border-radius:8px;padding:9px;font-size:12px;font-weight:500;cursor:pointer;-webkit-appearance:none">Open ${h.name} Patterns ›</button>`:''}`;
-  renderAPUpcoming();
-}
-
-// Render the next 3 upcoming holidays with their defaults
-function renderAPUpcoming(){
-  const el=document.getElementById('ap-upcoming-list');
-  if(!el) return;
-  const now=new Date();
-  const thisYear=now.getFullYear();
-  // Build list of upcoming holidays (with next occurrence date)
-  const upcoming=holidays
-    .filter(h=>h.seasonStart)
-    .map(h=>{
-      const [sm,sd]=h.seasonStart;
-      // Try this year first, then next year
-      let dt=new Date(thisYear,sm,sd);
-      if(dt<=now) dt=new Date(thisYear+1,sm,sd);
-      return{...h,_dt:dt};
-    })
-    .sort((a,b)=>a._dt-b._dt)
-    .slice(0,4);
-
-  const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  el.innerHTML=upcoming.map(h=>{
-    const def=defaultPatterns[h.id];
-    const colors=def?(payloadColors(def)||h.colors):h.colors;
-    const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
-    const [sm,sd]=h.seasonStart;
-    const dateStr=`${MONTHS_SHORT[sm]} ${sd}`;
-    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);cursor:pointer" onclick="openHoliday('${h.id}');go('s-patterns')">
-      <span style="font-size:20px;flex-shrink:0">${h.icon}</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:500">${h.name}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:1px">${def?def:'No default set'}</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div class="color-dots">${dots}</div>
-        <div style="font-size:9px;color:var(--muted);margin-top:3px">${dateStr}</div>
-      </div>
-    </div>`;
-  }).join('')+'<div style="padding-top:8px;font-size:10px;color:var(--muted);text-align:center">Tap any holiday to set its default</div>';
 }
 
 // ═══════════════════════════════
@@ -1899,8 +1918,10 @@ function doSave(){
   const now=new Date();
   presets.unshift({id:presetNextId++,name,tag,groups:zones.map(z=>({name:z.name,color:z.color})),notes:document.getElementById('save-notes').value.trim(),date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
   updateNowPlaying(name,zones.map(z=>z.color),true);
-  document.getElementById('my-preset-count').textContent=presets.length+' saved';
-  document.getElementById('home-preset-count').textContent=presets.length+' saved presets';
+  const myPresetCount=document.getElementById('my-preset-count');
+  if(myPresetCount) myPresetCount.textContent=presets.length+' saved';
+  const homePresetCount=document.getElementById('home-preset-count');
+  if(homePresetCount) homePresetCount.textContent=presets.length+' saved presets';
   renderPresetFilterBar();renderPresetList();
   showToast('"'+name+'" saved to '+dest+'!');
   setTimeout(()=>go('s-home'),1500);
@@ -1997,11 +2018,11 @@ function setDefaultPattern(i){
       _pendingSyncTimer=setTimeout(()=>{
         syncBootDefaultToController(wled.active.ip).then(ok=>{
           if(ok) showToast('⚡ Power-on default saved to controller');
-          else   showToast('Default saved locally — controller not responding');
+          else   showToast('⚠️ Saved locally — controller not responding');
         });
       }, 800); // give activatePattern's wledSend time to complete
     } else {
-      showToast('Default saved — will sync when controller connects');
+      showToast('✓ Default saved — will sync next time controller connects');
     }
   }
   localStorage.setItem('defaultPatterns',JSON.stringify(defaultPatterns));
@@ -2017,7 +2038,7 @@ function renderPatterns(){
     const isDefault=defName===p;
     const colors=payloadColors(p)||h.colors;
     const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
-    const badge=isDefault?`<span style="font-size:9px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
+    const badge=isDefault?`<span style="font-size:10px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
     const sub=isDefault?'Activates when holiday opens':'Tap to activate';
     return`<div class="pattern-row ${isFav?'favorited':''} ${isDefault?'is-default':''}" onclick="selectHolidayPattern(${i})">
       <div class="color-dots">${dots}</div>
@@ -2239,18 +2260,23 @@ function renderHomeDefaults(){
   const wrap=document.getElementById('home-defaults');
   const list=document.getElementById('home-defaults-list');
   if(!wrap||!list) return;
-  const entries=Object.entries(defaultPatterns).filter(([hid])=>holidays.find(h=>h.id===hid));
+  const entries=Object.entries(defaultPatterns).filter(([id])=>
+    holidays.find(h=>h.id===id) || seasons.find(s=>s.id===id)
+  );
   if(!entries.length){ wrap.style.display='none'; return; }
   wrap.style.display='block';
-  list.innerHTML=entries.map(([hid,pname])=>{
-    const h=holidays.find(x=>x.id===hid);
-    const colors=payloadColors(pname)||h.colors;
+  list.innerHTML=entries.map(([id,pname])=>{
+    const h=holidays.find(x=>x.id===id);
+    const s=!h && seasons.find(x=>x.id===id);
+    const item=h||s;
+    const colors=payloadColors(pname)||item.colors;
     const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
-    return`<div class="home-defaults-item" onclick="openHoliday('${hid}')">
-      <span style="font-size:20px;flex-shrink:0">${h.icon}</span>
+    const onclick=h?`openHoliday('${id}')`:`openSeason('${id}');go('s-season-patterns')`;
+    return`<div class="home-defaults-item" onclick="${onclick}">
+      <span style="font-size:20px;flex-shrink:0">${item.icon}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:600;color:var(--text)">${h.name}</div>
-        <div style="font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pname}</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${item.name}</div>
+        <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pname}</div>
       </div>
       <div class="color-dots" style="margin-right:8px;flex-shrink:0">${dots}</div>
       <span style="color:var(--muted);font-size:14px;flex-shrink:0">›</span>
@@ -2298,21 +2324,65 @@ function selectSeasonPattern(i){
   const s=currentSeason; if(!s) return;
   const name=s.patterns[i];
   const colors=payloadColors(name)||s.colors;
+  const el=document.getElementById('sp-active-name');
+  if(el) el.textContent=name;
+  renderSeasonPreview(colors);
   activatePattern(name, colors);
 }
 function renderSeasonPatterns(){
   const s=currentSeason;
+  const defName=defaultPatterns[s.id]||null;
   document.getElementById('sp-pattern-list').innerHTML=s.patterns.map((p,i)=>{
     const isFav=seasonFavPatterns[s.id]?.has(i);
+    const isDefault=defName===p;
     const colors=payloadColors(p)||s.colors;
     const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
-    return`<div class="pattern-row ${isFav?'favorited':''}" onclick="selectSeasonPattern(${i})">
+    const badge=isDefault?`<span style="font-size:10px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
+    const sub=isDefault?'Activates when season opens':'Tap to activate';
+    return`<div class="pattern-row ${isFav?'favorited':''} ${isDefault?'is-default':''}" onclick="selectSeasonPattern(${i})">
       <div class="color-dots">${dots}</div>
-      <div style="flex:1"><div style="font-size:12px;font-weight:500">${p}</div><div style="font-size:10px;color:var(--muted)">Tap to activate</div></div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${p}${badge}</div>
+        <div style="font-size:11px;color:var(--muted)">${sub}</div>
+      </div>
+      <button class="crown-btn ${isDefault?'active':''}" onclick="event.stopPropagation();setSeasonDefault('${p}')" title="${isDefault?'Clear default':'Set as default'}">👑</button>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'season')">⭐</button>
     </div>`;
   }).join('');
   document.getElementById('sp-fav-count').textContent=(seasonFavPatterns[s.id]?.size||0)+' in playlist';
+}
+
+function setSeasonDefault(patternName){
+  const s=currentSeason; if(!s) return;
+  if(defaultPatterns[s.id]===patternName){
+    // Tap again to clear
+    delete defaultPatterns[s.id];
+    if(bootDefault?.holidayId===s.id && bootDefault?.patternName===patternName){
+      bootDefault=null; localStorage.removeItem('wled_boot_default');
+    }
+    showToast('Default cleared');
+  } else {
+    defaultPatterns[s.id]=patternName;
+    bootDefault={holidayId:s.id, patternName, changedAt:Date.now(), syncedAt:null};
+    localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
+    renderSyncBadge();
+    if(wled.active){
+      const colors=payloadColors(patternName)||s.colors;
+      activatePattern(patternName, colors);
+      clearTimeout(_pendingSyncTimer);
+      _pendingSyncTimer=setTimeout(()=>{
+        syncBootDefaultToController(wled.active.ip).then(ok=>{
+          if(ok) showToast('⚡ Power-on default saved to controller');
+          else   showToast('⚠️ Saved locally — controller not responding');
+        });
+      }, 800);
+    } else {
+      showToast('✓ Default saved — will sync next time controller connects');
+    }
+  }
+  localStorage.setItem('defaultPatterns', JSON.stringify(defaultPatterns));
+  renderSeasonPatterns();
+  renderHomeDefaults();
 }
 
 // ═══════════════════════════════
@@ -2405,7 +2475,7 @@ function renderTDPatterns(){
   document.getElementById('td-pattern-list').innerHTML=pats.map(p=>{
     const isDef=defName===p.name,isFav=favs.has(p.name);
     const dots=t.c.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
-    const badge=isDef?`<span style="font-size:9px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
+    const badge=isDef?`<span style="font-size:10px;background:rgba(251,191,36,0.18);color:#fbbf24;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:middle">DEFAULT</span>`:'';
     return`<div class="pattern-row ${isDef?'is-default':''}" onclick="selectTDPattern('${p.name}')">
       <div class="color-dots">${dots}</div>
       <div style="flex:1">
@@ -2450,11 +2520,11 @@ function setTeamDefault(patternName){
       _pendingSyncTimer=setTimeout(()=>{
         syncBootDefaultToController(wled.active.ip).then(ok=>{
           if(ok) showToast('⚡ Power-on default saved to controller');
-          else   showToast('Default saved locally — controller not responding');
+          else   showToast('⚠️ Saved locally — controller not responding');
         });
       },800);
     } else {
-      showToast('Default saved — will sync when controller connects');
+      showToast('✓ Default saved — will sync next time controller connects');
     }
   }
   localStorage.setItem('teamDefaultPatterns',JSON.stringify(teamDefaultPatterns));
@@ -2555,17 +2625,371 @@ function renderCalendar(){
     const isToday=e._date.toDateString()===now.toDateString();
     const fmt=isToday?'Today':e._date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
     const clickAttr=e.link?`onclick="openHoliday('${e.link}')" style="cursor:pointer"`:'';
-    return`<div class="ev-item" ${clickAttr}><span style="font-size:20px">${e.icon}</span><span style="flex:1;font-size:12px;font-weight:500">${e.name}</span><span style="font-size:10px;color:var(--muted)">${fmt}</span><span style="font-size:9px;border-radius:20px;padding:2px 8px;font-weight:500;background:${isToday?'rgba(239,68,68,0.1)':'rgba(34,197,94,0.1)'};color:${isToday?'#ef4444':'#22c55e'};margin-left:6px">${isToday?'Today':'Auto'}</span>${e.link?'<span style="font-size:10px;color:var(--muted);margin-left:6px">›</span>':''}</div>`;
+    return`<div class="ev-item" ${clickAttr}><span style="font-size:20px">${e.icon}</span><span style="flex:1;font-size:13px;font-weight:500">${e.name}</span><span style="font-size:11px;color:var(--muted)">${fmt}</span><span style="font-size:10px;border-radius:20px;padding:2px 8px;font-weight:500;background:${isToday?'rgba(239,68,68,0.1)':'rgba(34,197,94,0.1)'};color:${isToday?'#ef4444':'#22c55e'};margin-left:6px">${isToday?'Today':'Auto'}</span>${e.link?'<span style="font-size:11px;color:var(--muted);margin-left:6px">›</span>':''}</div>`;
   }).join('');
 }
 
 function calShift(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 
-// ═══════════════════════════════
-// AUTOPILOT (legacy stubs — kept for safety, logic moved to toggleAP)
-// ═══════════════════════════════
-function selAP(m){apMode=m;}
-function selFreq(f){apFreq=f;}
+// ═══════════════════════════════════════════════════════
+// AUTOPILOT — new multi-mode system
+// ═══════════════════════════════════════════════════════
+
+// ── Curated color palettes for random mode ─────────────
+const AP_PALETTES = [
+  {id:'ocean',    name:'Ocean',    colors:['#0ea5e9','#38bdf8','#7dd3fc']},
+  {id:'sunset',   name:'Sunset',   colors:['#f97316','#ef4444','#fbbf24']},
+  {id:'forest',   name:'Forest',   colors:['#22c55e','#16a34a','#86efac']},
+  {id:'amethyst', name:'Amethyst', colors:['#a855f7','#7c3aed','#ec4899']},
+  {id:'fire',     name:'Fire',     colors:['#ef4444','#f97316','#fbbf24']},
+  {id:'cool',     name:'Cool White',colors:['#e0f2fe','#bae6fd','#f0f9ff']},
+  {id:'mint',     name:'Mint',     colors:['#6ee7b7','#34d399','#a7f3d0']},
+  {id:'tropical', name:'Tropical', colors:['#06b6d4','#22c55e','#fbbf24']},
+  {id:'rose',     name:'Rose',     colors:['#fb7185','#f43f5e','#fda4af']},
+  {id:'cosmic',   name:'Cosmic',   colors:['#8b5cf6','#6366f1','#3b82f6']},
+];
+
+// ── WLED effects that reliably look good on outdoor LEDs ─
+const AP_SAFE_EFFECTS = [
+  {id:2,  name:'Breathing',   sx:40,  ix:200},
+  {id:9,  name:'Rainbow',     sx:30,  ix:128},
+  {id:12, name:'Scan',        sx:80,  ix:128},
+  {id:17, name:'Twinkle',     sx:100, ix:220},
+  {id:28, name:'Chase',       sx:150, ix:128},
+  {id:45, name:'Running',     sx:120, ix:200},
+  {id:58, name:'ICU',         sx:50,  ix:180},
+  {id:65, name:'Fireworks',   sx:100, ix:200},
+  {id:66, name:'Rain',        sx:60,  ix:180},
+  {id:77, name:'Meteor',      sx:70,  ix:200},
+  {id:78, name:'Meteor Smooth',sx:70, ix:200},
+];
+
+function setAPMode(mode){
+  apMode=mode;
+  localStorage.setItem('wled_ap_mode',mode);
+  document.getElementById('ap-tab-holiday').classList.toggle('active',mode==='holiday');
+  document.getElementById('ap-tab-playlist').classList.toggle('active',mode==='playlist');
+  document.getElementById('ap-tab-random').classList.toggle('active',mode==='random');
+  document.getElementById('ap-panel-holiday').style.display=mode==='holiday'?'block':'none';
+  document.getElementById('ap-panel-playlist').style.display=mode==='playlist'?'block':'none';
+  document.getElementById('ap-panel-random').style.display=mode==='random'?'block':'none';
+  if(mode==='playlist') renderAPPlaylist();
+  if(mode==='random') renderAPPaletteGrid();
+}
+
+function saveAPFallback(){
+  apFallback=document.getElementById('ap-fallback-select').value;
+  localStorage.setItem('wled_ap_fallback',apFallback);
+}
+
+function renderAPPaletteGrid(){
+  const grid=document.getElementById('ap-palette-grid');
+  if(!grid) return;
+  grid.innerHTML=AP_PALETTES.map(p=>{
+    const grad=`linear-gradient(135deg,${p.colors.join(',')})`;
+    const sel=apSelectedPalette===p.id;
+    return`<div class="palette-swatch ${sel?'sel':''}" style="background:${grad}" title="${p.name}"
+      onclick="selectAPPalette('${p.id}')"></div>`;
+  }).join('')+
+  `<div class="palette-swatch ${apSelectedPalette===''?'sel':''}"
+    style="background:conic-gradient(#ef4444,#fbbf24,#22c55e,#3b82f6,#a855f7,#ef4444)" title="Any"
+    onclick="selectAPPalette('')"></div>`;
+}
+
+function selectAPPalette(id){
+  apSelectedPalette=id;
+  localStorage.setItem('wled_ap_palette',id);
+  renderAPPaletteGrid();
+}
+
+function generateRandomLook(apply=true){
+  // Pick palette
+  const palettes=apSelectedPalette?AP_PALETTES.filter(p=>p.id===apSelectedPalette):AP_PALETTES;
+  const pal=palettes[Math.floor(Math.random()*palettes.length)];
+  // Pick effect
+  const eff=AP_SAFE_EFFECTS[Math.floor(Math.random()*AP_SAFE_EFFECTS.length)];
+  // Slightly vary speed/intensity for variety
+  const sx=Math.max(20,Math.min(255,eff.sx+Math.floor((Math.random()-.5)*60)));
+  const ix=Math.max(100,Math.min(255,eff.ix+Math.floor((Math.random()-.5)*40)));
+  // Store it
+  _lastRandomLook={name:`${pal.name} ${eff.name}`, colors:pal.colors, palette:pal, effect:eff, sx, ix};
+  // Update preview strand
+  const total=getLEDCount();
+  const el=document.getElementById('ap-random-strand');
+  if(el) renderStrand('ap-random-strand',total,i=>pal.colors[i%pal.colors.length]);
+  // Show label + save button
+  const lbl=document.getElementById('ap-random-label');
+  if(lbl) lbl.textContent=_lastRandomLook.name;
+  const saveBtn=document.getElementById('ap-save-random-btn');
+  if(saveBtn) saveBtn.style.display='';
+  // Apply to lights if requested
+  if(apply) activateRandomLook(_lastRandomLook);
+  return _lastRandomLook;
+}
+
+function activateRandomLook(look){
+  if(!look) return;
+  const total=getLEDCount();
+  const toC=h=>{const r=hexToRgb(h);return r?[r[0],r[1],r[2],0]:[0,0,0,0];};
+  const cols=look.colors.map(toC);
+  while(cols.length<3) cols.push([0,0,0,0]);
+  const payload={on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:total,col:cols,fx:look.effect.id,sx:look.sx,ix:look.ix,pal:0,on:true}]};
+  if(typeof wledSend==='function') wledSend(payload);
+  updateNowPlaying(`🎲 ${look.name}`, look.colors, true);
+}
+
+function saveRandomAsPreset(){
+  if(!_lastRandomLook) return;
+  // Pre-fill quick-save with the random look's name
+  nowPlayingName=`🎲 ${_lastRandomLook.name}`;
+  nowPlayingColors=_lastRandomLook.colors;
+  openQuickSave();
+}
+
+function renderAPPlaylist(){
+  const el=document.getElementById('ap-playlist-content');
+  if(!el) return;
+  // Gather all starred patterns across holidays and seasons
+  const items=[];
+  Object.entries(favPatterns).forEach(([hid,set])=>{
+    const h=holidays.find(x=>x.id===hid); if(!h) return;
+    set.forEach(i=>{ if(h.patterns[i]) items.push({icon:h.icon,label:`${h.name} — ${h.patterns[i]}`,color:h.colors[0]||'#3b82f6'}); });
+  });
+  Object.entries(seasonFavPatterns).forEach(([sid,set])=>{
+    const s=seasons.find(x=>x.id===sid); if(!s) return;
+    set.forEach(i=>{ if(s.patterns[i]) items.push({icon:s.icon,label:`${s.name} — ${s.patterns[i]}`,color:s.colors[0]||'#3b82f6'}); });
+  });
+  if(!items.length){
+    el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-size:12px">No starred patterns yet.<br>Tap ⭐ on any pattern to add it.</div></div>`;
+    return;
+  }
+  el.innerHTML=items.map(it=>`<div class="ap-zone-row">
+    <span style="font-size:18px;flex-shrink:0">${it.icon}</span>
+    <span style="font-size:12px;flex:1">${it.label}</span>
+    <div style="width:10px;height:10px;border-radius:50%;background:${it.color};flex-shrink:0"></div>
+  </div>`).join('');
+}
+
+// ── Main autopilot trigger — called on controller connect / Autopilot on ────
+function applyAutopilotNow(){
+  if(!apOn) return;
+  if(apMode==='holiday'){
+    const h=getActiveHoliday();
+    if(h){
+      const def=defaultPatterns[h.id];
+      if(def){
+        const colors=payloadColors(def)||h.colors;
+        showToast(`🤖 ${h.icon} ${def}`);
+        activatePattern(def, colors);
+        return;
+      }
+    }
+    // Outside any holiday zone — use fallback
+    if(apFallback==='random') { const l=generateRandomLook(false); activateRandomLook(l); showToast(`🎲 ${l.name}`); }
+    else if(apFallback==='playlist') applyPlaylistRandom();
+    // 'off' → do nothing
+  } else if(apMode==='playlist'){
+    applyPlaylistRandom();
+  } else if(apMode==='random'){
+    const l=generateRandomLook(false); activateRandomLook(l); showToast(`🎲 ${l.name}`);
+  }
+}
+
+function applyPlaylistRandom(){
+  const items=[];
+  Object.entries(favPatterns).forEach(([hid,set])=>{
+    const h=holidays.find(x=>x.id===hid); if(!h) return;
+    set.forEach(i=>{ if(h.patterns[i]) items.push({name:h.patterns[i],colors:h.colors}); });
+  });
+  Object.entries(seasonFavPatterns).forEach(([sid,set])=>{
+    const s=seasons.find(x=>x.id===sid); if(!s) return;
+    set.forEach(i=>{ if(s.patterns[i]) items.push({name:s.patterns[i],colors:s.colors}); });
+  });
+  if(!items.length){ showToast('No playlist items — add ⭐ stars first'); return; }
+  const pick=items[Math.floor(Math.random()*items.length)];
+  showToast(`⭐ ${pick.name}`);
+  activatePattern(pick.name, pick.colors);
+}
+
+// ── Update home quick card sub-label ────────────────────
+function updateAPHomeSub(){
+  const el=document.getElementById('ap-home-sub');
+  if(!el) return;
+  if(!apOn){el.textContent='Off';return;}
+  if(apMode==='random'){el.textContent='On · Random looks';return;}
+  if(apMode==='playlist'){
+    const total=Object.values(favPatterns).reduce((a,s)=>a+s.size,0)+Object.values(seasonFavPatterns).reduce((a,s)=>a+s.size,0);
+    el.textContent=total?`On · ${total} starred`:'On · No stars yet';
+    return;
+  }
+  // holiday mode
+  const h=getActiveHoliday();
+  if(!h){el.textContent='On · Between seasons';return;}
+  const def=defaultPatterns[h.id];
+  el.textContent=def ? `${h.icon} ${def.split(' ').slice(0,3).join(' ')}…` : `${h.icon} No default set`;
+}
+
+// ── Render the Today panel ───────────────────────────────
+function renderAPToday(){
+  const mainT=document.getElementById('ap-main-toggle');
+  if(mainT) mainT.classList.toggle('on',apOn);
+  // Sync mode tabs
+  ['holiday','playlist','random'].forEach(m=>{
+    const t=document.getElementById(`ap-tab-${m}`);
+    if(t) t.classList.toggle('active',apMode===m);
+  });
+  // Show correct panel
+  const panels=['holiday','playlist','random'];
+  panels.forEach(m=>{
+    const p=document.getElementById(`ap-panel-${m}`);
+    if(p) p.style.display=apMode===m?'block':'none';
+  });
+  // Sync fallback select
+  const fs=document.getElementById('ap-fallback-select');
+  if(fs) fs.value=apFallback;
+  if(apMode==='playlist') renderAPPlaylist();
+  if(apMode==='random') renderAPPaletteGrid();
+  // Today content
+  const el=document.getElementById('ap-today-content');
+  if(!el) return;
+  const h=getActiveHoliday();
+  if(!h){
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:28px">📅</span>
+      <div><div style="font-size:13px;font-weight:500;color:var(--muted)">Between holiday zones</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">No holiday zone is active today</div></div>
+    </div>`;
+    renderAPUpcoming();
+    return;
+  }
+  const def=defaultPatterns[h.id];
+  const colors=def?(payloadColors(def)||h.colors):h.colors;
+  const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+  const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [sm,sd]=h.seasonStart,[em,ed]=h.seasonEnd;
+  const rangeStr=`${MONTHS_SHORT[sm]} ${sd} – ${MONTHS_SHORT[em]} ${ed}`;
+  el.innerHTML=`<div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:32px">${h.icon}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:600">${h.name} <span style="font-size:10px;color:var(--muted);font-weight:400">${rangeStr}</span></div>
+      ${def
+        ? `<div style="font-size:11px;color:var(--success);margin-top:3px">Will play: ${def}</div>`
+        : `<div style="font-size:11px;color:var(--warning);margin-top:3px">No default — tap 👑 on a pattern</div>`
+      }
+    </div>
+    <div class="color-dots" style="flex-shrink:0">${dots}</div>
+  </div>
+  ${def?`<button onclick="openHoliday('${h.id}');go('s-patterns')" style="margin-top:10px;width:100%;background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);border-radius:8px;padding:9px;font-size:12px;font-weight:500;cursor:pointer;-webkit-appearance:none">Open ${h.name} Patterns ›</button>`:''}`;
+  renderAPUpcoming();
+}
+
+// ── Upcoming zones list ──────────────────────────────────
+function renderAPUpcoming(){
+  const el=document.getElementById('ap-upcoming-list');
+  if(!el) return;
+  const now=new Date();
+  const thisYear=now.getFullYear();
+  const upcoming=holidays.filter(h=>h.seasonStart).map(h=>{
+    const [sm,sd]=h.seasonStart;
+    let dt=new Date(thisYear,sm,sd);
+    if(dt<=now) dt=new Date(thisYear+1,sm,sd);
+    return{...h,_dt:dt};
+  }).sort((a,b)=>a._dt-b._dt).slice(0,4);
+  const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  el.innerHTML=upcoming.map(h=>{
+    const def=defaultPatterns[h.id];
+    const colors=def?(payloadColors(def)||h.colors):h.colors;
+    const dots=colors.map(c=>`<div class="cdot" style="background:${c}"></div>`).join('');
+    const [sm,sd]=h.seasonStart;
+    const dateStr=`${MONTHS_SHORT[sm]} ${sd}`;
+    return`<div class="ap-zone-row" style="cursor:pointer" onclick="openHoliday('${h.id}');go('s-patterns')">
+      <span style="font-size:20px;flex-shrink:0">${h.icon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:500">${h.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">${def?def:'No default set'}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="color-dots">${dots}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">${dateStr}</div>
+      </div>
+    </div>`;
+  }).join('')+`<div style="padding-top:8px;font-size:11px;color:var(--muted);text-align:center">Tap any zone to set its default</div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// QUICK-SAVE FROM NOW PLAYING
+// ═══════════════════════════════════════════════════════
+let _qsCat='mypresets';
+
+function openQuickSave(){
+  if(!lightsOn){ showToast('Nothing playing to save'); return; }
+  const nameIn=document.getElementById('qs-name');
+  if(nameIn) nameIn.value=(nowPlayingName||'').replace(/^🎲\s*/,'');
+  setQSCat('mypresets');
+  document.getElementById('qs-overlay').classList.add('open');
+  setTimeout(()=>{ if(nameIn) nameIn.focus(); },150);
+}
+
+function closeQuickSave(){
+  document.getElementById('qs-overlay').classList.remove('open');
+}
+
+function setQSCat(cat){
+  _qsCat=cat;
+  document.querySelectorAll('.qs-cat-btn').forEach(b=>b.classList.remove('sel'));
+  const btn=document.querySelector(`.qs-cat-btn[onclick="setQSCat('${cat}')"]`);
+  if(btn) btn.classList.add('sel');
+  const subRow=document.getElementById('qs-sub-row');
+  const subSel=document.getElementById('qs-sub-select');
+  const subLbl=document.getElementById('qs-sub-label');
+  if(cat==='holidays'){
+    subLbl.textContent='Choose Holiday';
+    subSel.innerHTML=holidays.map(h=>`<option value="${h.id}">${h.icon} ${h.name}</option>`).join('');
+    subRow.style.display='block';
+  } else if(cat==='seasons'){
+    subLbl.textContent='Choose Season';
+    subSel.innerHTML=seasons.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+    subRow.style.display='block';
+  } else {
+    subRow.style.display='none';
+  }
+}
+
+function doQuickSave(){
+  const name=document.getElementById('qs-name').value.trim();
+  if(!name){ showToast('Enter a name first'); return; }
+  let tag='other';
+  let dest='My Presets';
+  if(_qsCat==='holidays'){
+    const v=document.getElementById('qs-sub-select').value;
+    tag=v;
+    const h=holidays.find(x=>x.id===v);
+    dest=h?`Holidays › ${h.name}`:'Holidays';
+  } else if(_qsCat==='seasons'){
+    const v=document.getElementById('qs-sub-select').value;
+    tag='seasons';
+    const s=seasons.find(x=>x.id===v);
+    dest=s?`Seasons › ${s.name}`:'Seasons';
+  }
+  const now=new Date();
+  const colors=nowPlayingColors||[];
+  presets.unshift({
+    id:presetNextId++, name, tag,
+    groups:colors.length?colors.map(c=>({name:'Zone',color:c})):[{name:'Zone',color:'#3b82f6'}],
+    notes:'', date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+  });
+  const mpc=document.getElementById('my-preset-count');
+  if(mpc) mpc.textContent=presets.length+' saved';
+  renderPresetFilterBar(); renderPresetList();
+  closeQuickSave();
+  showToast(`"${name}" saved to ${dest}!`);
+}
+
+// ── Show/hide the save button on Now Playing based on state ─
+function syncNPSaveBtn(){
+  const btn=document.getElementById('np-save-btn');
+  if(btn) btn.style.display=lightsOn?'flex':'none';
+}
 
 // ═══════════════════════════════
 // MY PRESETS
@@ -2585,11 +3009,11 @@ function renderPresetList(){
   const list=presetFilter==='all'?presets:presets.filter(p=>p.tag===presetFilter);
   const el=document.getElementById('preset-list');
   if(!list.length){el.innerHTML=`<div style="text-align:center;padding:32px;color:var(--muted)"><div style="font-size:32px;margin-bottom:10px">💾</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No presets here yet</div><div style="font-size:11px">Tap "Create Your Own" to get started</div></div>`;return;}
-  el.innerHTML=list.map(p=>{const tag=pHolidays.find(x=>x.id===p.tag)||pHolidays[6];return`<div class="preset-card"><div class="preset-thumb">${p.groups.map(g=>`<div class="thumb-seg" style="background:${g.color}"></div>`).join('')}</div><div style="font-size:12px;font-weight:600;margin-bottom:3px">${p.name}</div>${p.notes?`<div style="font-size:10px;color:var(--muted)">${p.notes}</div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><span style="font-size:9px;border-radius:20px;padding:3px 10px;font-weight:500;background:${tag.bg};border:0.5px solid ${tag.border};color:${tag.text}">${tag.icon} ${tag.name}</span><span style="font-size:10px;color:var(--muted)">${p.date}</span></div><div style="display:flex;gap:6px;margin-top:9px"><button style="flex:1;background:var(--accent);border:none;color:white;border-radius:8px;padding:8px;font-size:12px;font-weight:500;cursor:pointer;-webkit-appearance:none;" onclick="activatePreset(${p.id})">⚡ Activate</button><button style="background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;-webkit-appearance:none;" onclick="deletePreset(${p.id})">🗑</button></div></div>`;}).join('');
+  el.innerHTML=list.map(p=>{const tag=pHolidays.find(x=>x.id===p.tag)||pHolidays[6];return`<div class="preset-card"><div class="preset-thumb">${p.groups.map(g=>`<div class="thumb-seg" style="background:${g.color}"></div>`).join('')}</div><div style="font-size:13px;font-weight:600;margin-bottom:3px">${p.name}</div>${p.notes?`<div style="font-size:11px;color:var(--muted)">${p.notes}</div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><span style="font-size:10px;border-radius:20px;padding:3px 10px;font-weight:500;background:${tag.bg};border:0.5px solid ${tag.border};color:${tag.text}">${tag.icon} ${tag.name}</span><span style="font-size:11px;color:var(--muted)">${p.date}</span></div><div style="display:flex;gap:6px;margin-top:9px"><button style="flex:1;background:var(--accent);border:none;color:white;border-radius:8px;padding:8px;font-size:13px;font-weight:500;cursor:pointer;-webkit-appearance:none;" onclick="activatePreset(${p.id})">⚡ Activate</button><button style="background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;-webkit-appearance:none;" onclick="deletePreset(${p.id})">🗑</button></div></div>`;}).join('');
 }
 
 function activatePreset(id){const p=presets.find(x=>x.id===id);if(!p)return;p.groups.forEach((g,i)=>{if(zones[i]){zones[i].color=g.color;zones[i].on=true;}});renderGroupZones();renderCreatePreview();updateNowPlaying(p.name,p.groups.map(g=>g.color),true);showToast(p.name+' activated!');}
-function deletePreset(id){presets=presets.filter(x=>x.id!==id);renderPresetFilterBar();renderPresetList();document.getElementById('my-preset-count').textContent=presets.length+' saved';document.getElementById('home-preset-count').textContent=presets.length+' saved presets';showToast('Preset deleted');}
+function deletePreset(id){presets=presets.filter(x=>x.id!==id);renderPresetFilterBar();renderPresetList();const mpc=document.getElementById('my-preset-count');if(mpc)mpc.textContent=presets.length+' saved';const hpc=document.getElementById('home-preset-count');if(hpc)hpc.textContent=presets.length+' saved presets';showToast('Preset deleted');}
 
 // ═══════════════════════════════
 // UTILITIES
@@ -2744,14 +3168,24 @@ function renderSyncBadge() {
   const el = document.getElementById('home-sync-badge');
   if (!el) return;
   if (!bootDefault) { el.style.display = 'none'; return; }
+  const name = bootDefault.patternName || '';
   if (isBootDefaultDirty()) {
+    const connected = !!wled.active;
     el.style.display = 'flex';
-    el.innerHTML = `<span style="color:#f59e0b">⚠</span> Default not yet synced to controller
-      <button onclick="manualSyncDefault()" style="margin-left:auto;font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0">Sync now</button>`;
+    el.style.borderColor = 'rgba(245,158,11,0.3)';
+    el.style.background = 'rgba(245,158,11,0.06)';
+    if (connected) {
+      el.innerHTML = `<span style="color:#f59e0b">⏳</span> <span style="flex:1">"${name}" default pending sync</span>
+        <button onclick="manualSyncDefault()" style="font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;white-space:nowrap">Sync now</button>`;
+    } else {
+      el.innerHTML = `<span style="color:#f59e0b">📡</span> <span style="flex:1">"${name}" will sync when controller connects</span>`;
+    }
   } else {
     const when = bootDefault.syncedAt ? new Date(bootDefault.syncedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
     el.style.display = 'flex';
-    el.innerHTML = `<span style="color:#22c55e">✓</span> Controller in sync${when ? ' · '+when : ''}`;
+    el.style.borderColor = 'rgba(34,197,94,0.25)';
+    el.style.background = 'rgba(34,197,94,0.05)';
+    el.innerHTML = `<span style="color:#22c55e">✓</span> <span style="flex:1">Default synced to controller${when ? ' · '+when : ''}</span>`;
     // Auto-hide after 8 seconds once synced
     setTimeout(() => { if (el) el.style.display = 'none'; }, 8000);
   }
@@ -2787,12 +3221,19 @@ let _pendingSyncTimer = null;  // debounce handle for crown-button rapid taps
 async function syncBootDefaultToController(ip) {
   if (_syncInProgress) return false;     // skip if already syncing
   if (!bootDefault) return false;
-  const fn = CHRISTMAS_PAYLOADS[bootDefault.patternName];
-  if (!fn) return false;
   _syncInProgress = true;
   try {
     const total = getLEDCount();
-    const ok = await wledPost(ip, fn(total));            // 1. activate effect
+    // Build payload — team defaults use teamPatternPayload(), holiday/season use ALL_PAYLOADS
+    let payload;
+    if (bootDefault.teamKey) {
+      payload = teamPatternPayload(bootDefault.teamData, bootDefault.patternName, total);
+    } else {
+      const fn = ALL_PAYLOADS[bootDefault.patternName];
+      if (!fn) return false;
+      payload = fn(total);
+    }
+    const ok = await wledPost(ip, payload);              // 1. activate effect
     if (!ok) return false;
     await new Promise(r => setTimeout(r, 350));
     await wledPost(ip, { psave: 1, n: 'App Default' });  // 2. save as preset 1
@@ -2935,6 +3376,8 @@ function updateConnectionBadge(online) {
     const dot = online === false ? `<span style="color:var(--warning)">●</span>` : `<span style="color:var(--success)">●</span>`;
     badge.innerHTML = `${dot} ${wled.active.name} · ${wled.active.ledCount} LEDs · <span style="cursor:pointer;color:var(--accent)" onclick="go('s-wled')">Manage</span>`;
   }
+  // Re-render the sync badge so it shows "Sync now" vs "will sync when connected" correctly
+  renderSyncBadge();
 }
 
 // ── Inject Connection Screen into DOM ──
@@ -3312,28 +3755,8 @@ window.togglePower = function() {
   }
 };
 
-// Override activatePattern — sends color + solid effect
-const _origActivatePattern = activatePattern;
-window.activatePattern = function(name, colors) {
-  _origActivatePattern(name, colors);
-  if (wled.active && colors.length) {
-    // Convert hex to rgb
-    const rgb = colors.map(h => hexToRgb(h)).filter(Boolean);
-    wledSend({ on: true, seg: [{ col: rgb, fx: 0 }] });
-  }
-};
-
-// Override activateTeam — sends team colors
-const _origActivateTeam = activateTeam;
-window.activateTeam = function() {
-  _origActivateTeam();
-  if (wled.active && currentTeam) {
-    const rgb = currentTeam.c.map(h => hexToRgb(h)).filter(Boolean);
-    // 0=Chase(28), 1=Breathe(2), 2=Fade(12), 3=Twinkle(17)
-    const fxMap = { 0: 28, 1: 2, 2: 12, 3: 17 };
-    wledSend({ on: true, seg: [{ col: rgb, fx: fxMap[selectedTDPattern] ?? 28, sx: 150 }] });
-  }
-};
+// activatePattern and selectTDPattern now handle WLED directly via ALL_PAYLOADS / teamPatternPayload.
+// No override needed here.
 
 // Override activatePreset — pushes zone colors as segments
 const _origActivatePreset = activatePreset;
@@ -3641,17 +4064,6 @@ async function pollConnection() {
   }
 }
 
-// Apply today's active holiday default to the controller right now (Autopilot action)
-function applyAutopilotNow(){
-  const h=getActiveHoliday();
-  if(!h) return;
-  const def=defaultPatterns[h.id];
-  if(!def) return;
-  const colors=payloadColors(def)||h.colors;
-  showToast(`🤖 Autopilot: ${def}`);
-  activatePattern(def, colors);
-}
-
 // ── Init connection layer ──
 function initWLED() {
   injectWledScreens();
@@ -3878,6 +4290,7 @@ function updateGPIOField(id, field, value) {
   if (field === 'ledCount' || field === 'pin') value = parseInt(value) || 0;
   o[field] = value;
   o.status = 'unsaved';
+  saveGPIOLocal(); // auto-persist all field changes (including name) immediately
   updateGPIOSummary();
 }
 
