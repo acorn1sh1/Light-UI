@@ -1,12 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="40" fill="#0a0e1a"/>
-  <circle cx="96" cy="96" r="60" fill="none" stroke="url(#g)" stroke-width="6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="50%" stop-color="#8b5cf6"/>
-      <stop offset="100%" stop-color="#ec4899"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1628"/>
+      <stop offset="100%" stop-color="#080d1a"/>
     </linearGradient>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="50%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="42%" cy="36%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="45%" stop-color="#dbeafe" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.2"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="halo" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
   </defs>
-  <text x="96" y="115" text-anchor="middle" font-size="64" font-family="system-ui">✨</text>
+
+  <!-- App icon background -->
+  <rect width="192" height="192" rx="44" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="96" y1="0" x2="96" y2="192" stroke="white" stroke-width="0.4" opacity="0.04"/>
+  <line x1="0" y1="96" x2="192" y2="96" stroke="white" stroke-width="0.4" opacity="0.04"/>
+
+  <!-- Outer ambient ring -->
+  <circle cx="96" cy="86" r="64" fill="none" stroke="url(#grad)" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- Light rays -->
+  <g opacity="0.5" filter="url(#glow)">
+    <line x1="96" y1="86" x2="96" y2="20"  stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="143" y2="39" stroke="url(#grad)" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="166" y2="86" stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="143" y2="133"stroke="url(#grad)" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="96" y2="152" stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="49" y2="133" stroke="url(#grad)" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="26" y2="86"  stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="96" y1="86" x2="49" y2="39"  stroke="url(#grad)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Halo glow behind orb -->
+  <circle cx="96" cy="86" r="38" fill="url(#grad)" opacity="0.3" filter="url(#halo)"/>
+
+  <!-- Main orb body -->
+  <circle cx="96" cy="86" r="30" fill="url(#orb)" filter="url(#glow)"/>
+
+  <!-- Specular highlight -->
+  <ellipse cx="88" cy="77" rx="10" ry="7" fill="white" opacity="0.5" transform="rotate(-20 88 77)"/>
+  <circle cx="86" cy="75" r="4" fill="white" opacity="0.35"/>
+
+  <!-- Bottom wordmark -->
+  <text
+    x="96" y="174"
+    font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif"
+    font-size="15.5"
+    font-weight="700"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="0.5"
+    opacity="0.88">LUMA LIGHTS</text>
 </svg>

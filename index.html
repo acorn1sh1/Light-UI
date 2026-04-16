@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="LightControl"/>
+<meta name="apple-mobile-web-app-title" content="Luma Lights"/>
 <meta name="theme-color" content="#0a0e1a"/>
-<title>LightControl</title>
+<title>Luma Lights</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icon-192.svg"/>
 <style>
@@ -20,6 +20,15 @@
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bot:env(safe-area-inset-bottom,0px);
 }
+/* ── Light mode ── */
+.app.light{
+  --bg:#f0f4f8;--surface:#ffffff;--surface2:#e8edf3;--surface3:#d8e0ea;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.15);
+  --text:#0f172a;--muted:#64748b;--accent:#2563eb;--success:#16a34a;
+  --danger:#dc2626;--warning:#d97706;
+}
+/* ── Font sizes — zoom the scroll-view so all hardcoded px values scale together ── */
+.app.fs-xl  .scroll-view{zoom:1.13;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:system-ui,-apple-system,sans-serif;background:#000;display:flex;justify-content:center;align-items:center;}
 .app{background:var(--bg);color:var(--text);font-size:14px;width:100%;max-width:430px;height:100vh;height:100dvh;overflow:hidden;position:relative;display:flex;flex-direction:column;}
@@ -41,6 +50,9 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#000;display:flex
 .btn-primary{background:var(--accent);border-color:var(--accent);color:white;}
 .btn-sm{padding:5px 11px;font-size:11px;}
 .btn-ghost{background:transparent;color:var(--muted);}
+.vs-theme-btn,.vs-font-btn{background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;padding:6px 12px;cursor:pointer;-webkit-appearance:none;transition:all 0.15s;}
+.vs-theme-btn.active,.vs-font-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.vs-font-btn{min-width:44px;text-align:center;}
 .btn-row{display:flex;gap:8px;margin-top:12px;}
 .field-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
 .field-input{width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;margin-bottom:12px;-webkit-appearance:none;}
@@ -54,7 +66,14 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .section-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
 
 /* ── HOME ── */
-.home-header{text-align:center;padding:12px 0 16px;}
+.home-header{text-align:center;padding:0 0 16px;}
+.settings-btn{display:flex;align-items:center;gap:5px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:20px;color:var(--text);font-size:13px;font-weight:500;padding:6px 14px;cursor:pointer;-webkit-appearance:none;}
+.settings-btn:active{opacity:0.7;}
+.controller-chip{display:flex;align-items:center;gap:6px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:20px;color:var(--text);font-size:12px;font-weight:500;padding:5px 12px;cursor:pointer;-webkit-appearance:none;white-space:nowrap;overflow:hidden;max-width:150px;flex-shrink:1;}
+.controller-chip:active{opacity:0.7;}
+.controller-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
+.controller-chip-dot.online{background:var(--success);}
+#home-chip-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .logo-ring{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;}
 .home-title{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:3px;}
 .home-sub{font-size:13px;color:var(--muted);}
@@ -159,7 +178,8 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 /* SPORTS */
 .league-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .league-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:18px 12px;cursor:pointer;text-align:center;}
-.team-list-scroll{max-height:50vh;overflow-y:auto;display:flex;flex-direction:column;gap:5px;}
+.team-list-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:5px;padding-bottom:16px;}
+#s-sports-teams.active{display:flex;flex-direction:column;height:100dvh;padding:0 16px;padding-top:calc(14px + var(--safe-top));padding-bottom:calc(16px + var(--safe-bot));box-sizing:border-box;}
 .team-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1.5px solid transparent;}
 .tc{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:9px;padding:8px 12px;margin-bottom:10px;}
@@ -168,8 +188,8 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 
 /* ZONES */
 .strand-preview{background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
-.strand-strip{display:flex;gap:2px;flex-wrap:wrap;}
-.strand-dot{height:10px;border-radius:2px;flex-shrink:0;transition:background 0.3s;}
+.strand-strip{display:flex;gap:2px;flex-wrap:nowrap;overflow:hidden;}
+.strand-dot{height:10px;border-radius:2px;flex:0 0 5px;min-width:0;transition:background 0.15s;}
 .group-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border-radius:11px;margin-bottom:7px;cursor:pointer;border:1.5px solid transparent;}
 .group-row:hover{border-color:var(--border2);}
 .group-color-dot{width:32px;height:32px;border-radius:9px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.15);}
@@ -188,7 +208,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 /* EFFECT PICKER */
 .effect-search{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:9px;padding:8px 12px;margin-bottom:10px;}
 .effect-search input{background:transparent;border:none;color:var(--text);font-size:13px;outline:none;flex:1;}
-.effect-list{display:flex;flex-direction:column;gap:5px;max-height:35vh;overflow-y:auto;}
+.effect-list{display:flex;flex-direction:column;gap:5px;max-height:52vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .effect-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1.5px solid transparent;}
 .effect-row.sel{border-color:var(--accent);background:rgba(59,130,246,0.07);}
 .effect-cat{font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 8px;color:var(--muted);white-space:nowrap;}
@@ -349,8 +369,9 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .gpio-card { background:var(--surface2); border:1.5px solid var(--border); border-radius:13px; padding:14px 16px; margin-bottom:10px; }
 .gpio-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
 .gpio-num { width:36px; height:36px; border-radius:9px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--accent); flex-shrink:0; }
-.gpio-name-inp { background:transparent; border:none; color:var(--text); font-size:13px; font-weight:600; outline:none; flex:1; }
-.gpio-name-inp::placeholder { color:var(--muted); }
+.gpio-name-inp { background:var(--surface3); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:13px; font-weight:600; outline:none; flex:1; padding:5px 9px; }
+.gpio-name-inp:focus { border-color:var(--accent); background:var(--surface); }
+.gpio-name-inp::placeholder { color:var(--muted); font-weight:400; }
 .gpio-fields { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .gpio-field { display:flex; flex-direction:column; gap:4px; }
 .gpio-field-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; }
@@ -400,7 +421,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <!-- ══════════ LOCK SCREEN ══════════ -->
 <div class="lock-screen" id="lock-screen">
   <div class="lock-logo">✨</div>
-  <div class="lock-title">LightControl</div>
+  <div class="lock-title">Luma Lights</div>
   <div class="lock-sub">Enter your access password<br>to control your lights</div>
   <div class="lock-input-wrap">
     <input
@@ -416,16 +437,65 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <button class="lock-btn" onclick="attemptUnlock()">Unlock</button>
   <div class="lock-error" id="lock-error"></div>
   <!-- Hidden tap target: tap 5x quickly to open admin password reset -->
-  <div class="lock-hint" id="lock-hint" onclick="lockHintTap()">LightControl Pro</div>
+  <div class="lock-hint" id="lock-hint" onclick="lockHintTap()">Luma Lights Pro</div>
 </div>
 
 <div class="scroll-view" id="scroll-view">
 
 <!-- ══════════ HOME ══════════ -->
 <div class="screen active" id="s-home">
+  <div class="top-bar">
+    <button class="controller-chip" id="home-controller-chip" onclick="go('s-wled')">
+      <span class="controller-chip-dot" id="home-chip-dot"></span>
+      <span id="home-chip-name">No Controller</span>
+    </button>
+    <button class="settings-btn" style="margin-left:auto" onclick="go('s-admin')">⚙️ Settings</button>
+  </div>
   <div class="home-header">
-    <div class="logo-ring">✨</div>
-    <div class="home-title">LightControl</div>
+    <div class="logo-ring" style="background:none;padding:0;overflow:hidden;cursor:pointer" onclick="randomizeLights()" title="Surprise me!">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="56" height="56" style="display:block">
+        <defs>
+          <linearGradient id="ll-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f1628"/>
+            <stop offset="100%" stop-color="#080d1a"/>
+          </linearGradient>
+          <linearGradient id="ll-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="50%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#f472b6"/>
+          </linearGradient>
+          <radialGradient id="ll-orb" cx="42%" cy="36%" r="60%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="45%" stop-color="#dbeafe" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.2"/>
+          </radialGradient>
+          <filter id="ll-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="ll-halo" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="10"/>
+          </filter>
+        </defs>
+        <rect width="192" height="192" rx="44" fill="url(#ll-bg)"/>
+        <circle cx="96" cy="86" r="64" fill="none" stroke="url(#ll-g)" stroke-width="0.8" opacity="0.2"/>
+        <g opacity="0.5" filter="url(#ll-glow)">
+          <line x1="96" y1="86" x2="96" y2="20"  stroke="url(#ll-g)" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="143" y2="39" stroke="url(#ll-g)" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="166" y2="86" stroke="url(#ll-g)" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="143" y2="133" stroke="url(#ll-g)" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="96" y2="152" stroke="url(#ll-g)" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="49" y2="133" stroke="url(#ll-g)" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="26" y2="86"  stroke="url(#ll-g)" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="96" y1="86" x2="49" y2="39"  stroke="url(#ll-g)" stroke-width="1.4" stroke-linecap="round"/>
+        </g>
+        <circle cx="96" cy="86" r="38" fill="url(#ll-g)" opacity="0.3" filter="url(#ll-halo)"/>
+        <circle cx="96" cy="86" r="30" fill="url(#ll-orb)" filter="url(#ll-glow)"/>
+        <ellipse cx="88" cy="77" rx="10" ry="7" fill="white" opacity="0.5" transform="rotate(-20 88 77)"/>
+        <circle cx="86" cy="75" r="4" fill="white" opacity="0.35"/>
+      </svg>
+    </div>
+    <div class="home-title">Luma Lights</div>
     <div class="home-sub">Your home, lit up</div>
   </div>
 
@@ -461,9 +531,11 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
       <input class="field-input" id="qs-name" placeholder="e.g. My Favorite Look" style="margin-bottom:14px"/>
       <div class="field-label" style="margin-bottom:8px">Save To</div>
       <div class="qs-cat" id="qs-cat-row">
-        <button class="qs-cat-btn sel" onclick="setQSCat('mypresets')">💾 My Presets</button>
-        <button class="qs-cat-btn" onclick="setQSCat('holidays')">🎄 Holidays</button>
-        <button class="qs-cat-btn" onclick="setQSCat('seasons')">🍂 Seasons</button>
+        <button class="qs-cat-btn sel" id="qs-btn-mypresets" onclick="setQSCat('mypresets')">💾 My Presets</button>
+        <button class="qs-cat-btn" id="qs-btn-holidays" onclick="setQSCat('holidays')">🎄 Holidays</button>
+        <button class="qs-cat-btn" id="qs-btn-seasons" onclick="setQSCat('seasons')">🍂 Seasons</button>
+        <button class="qs-cat-btn" id="qs-btn-mygroups" onclick="setQSCat('mygroups')" style="display:none">🗂️ My Groups</button>
+        <button class="qs-cat-btn" id="qs-btn-downlighting" onclick="setQSCat('downlighting')" style="display:none">💡 Downlighting</button>
       </div>
       <div id="qs-sub-row" style="display:none;margin-bottom:14px">
         <div class="field-label" style="margin-bottom:6px" id="qs-sub-label">Choose Holiday</div>
@@ -471,16 +543,6 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
       </div>
       <button onclick="doQuickSave()" style="width:100%;background:var(--accent);border:none;color:white;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;margin-top:4px">Save Preset</button>
     </div>
-  </div>
-
-  <!-- LIGHT MODE -->
-  <div class="mode-seg">
-    <button class="seg-tab active" id="tab-all" onclick="setLightMode('all')">
-      <span class="st-icon">🏠</span>All Lights
-    </button>
-    <button class="seg-tab" id="tab-down" onclick="setLightMode('down')">
-      <span class="st-icon">💡</span>Down Lights
-    </button>
   </div>
 
   <!-- PRESETS -->
@@ -505,23 +567,15 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div id="home-defaults-list"></div>
   </div>
 
-  <!-- ROW: CREATE YOUR OWN + DOWN LIGHTS -->
-  <div class="quick-grid" style="margin-bottom:8px">
-    <div class="quick-card" onclick="go('s-create')">
-      <span class="qc-icon">✏️</span>
-      <div style="flex:1">
-        <div class="qc-label">Create Your Own</div>
-        <div class="qc-sub">Mix colors &amp; effects</div>
-      </div>
+  <!-- CREATE YOUR OWN — full width -->
+  <button class="create-own-btn" onclick="go('s-create')" style="margin-bottom:8px">
+    <div class="co-icon-wrap">✏️</div>
+    <div style="flex:1">
+      <div class="co-label">Create Your Own</div>
+      <div class="co-sub">Mix colors, effects &amp; control groups or downlights</div>
     </div>
-    <div class="quick-card" onclick="go('s-downlights')">
-      <span class="qc-icon">💡</span>
-      <div style="flex:1">
-        <div class="qc-label">Down Lights</div>
-        <div class="qc-sub">Color &amp; pixels</div>
-      </div>
-    </div>
-  </div>
+    <span style="color:var(--muted);font-size:18px">›</span>
+  </button>
 
   <!-- ROW: AUTOPILOT + SCHEDULE -->
   <div class="quick-grid">
@@ -536,10 +590,6 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
   </div>
 
-  <div class="status-bar" style="margin-top:10px">
-    <div class="status-dot"></div>
-    <span>Connected · 100 LEDs · Ready</span>
-  </div>
 </div>
 
 <!-- ══════════ CREATE YOUR OWN ══════════ -->
@@ -571,7 +621,10 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
       <span class="st-icon">🏠</span>All Lights
     </button>
     <button class="seg-tab" id="cr-mode-group" onclick="setCreateMode('group')">
-      <span class="st-icon">🗂️</span>Group Mode
+      <span class="st-icon">🗂️</span>Groups
+    </button>
+    <button class="seg-tab" id="cr-mode-down" onclick="setCreateMode('downlight')">
+      <span class="st-icon">💡</span>Downlights
     </button>
   </div>
 
@@ -621,6 +674,36 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
       Tap any group to set its color. Each group runs the same effect at its chosen color.
     </div>
     <div id="group-zone-rows"></div>
+  </div>
+
+  <!-- DOWNLIGHTS PANEL -->
+  <div id="cr-panel-down" style="display:none">
+    <div id="cr-dl-no-config" style="display:none;text-align:center;padding:24px 16px;color:var(--muted);background:var(--surface);border-radius:14px;border:0.5px solid var(--border);margin-bottom:12px">
+      <div style="font-size:28px;margin-bottom:8px">💡</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:5px">No downlights configured</div>
+      <div style="font-size:11px;margin-bottom:12px;line-height:1.5">Set up your downlight pixel positions first.</div>
+      <button class="btn btn-primary btn-sm" onclick="go('s-downlights')">Configure Downlights</button>
+    </div>
+    <div id="cr-dl-picker">
+      <div class="card">
+        <div class="section-label">Quick Colors</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:8px" id="cr-dl-preset-btns"></div>
+        <div class="hex-row" style="margin-top:8px">
+          <span style="font-size:11px;color:var(--muted)">Hex</span>
+          <input class="hex-inp" id="cr-dl-hex" maxlength="7" oninput="crDlHexTyped()"/>
+          <button class="apply-btn" onclick="crDlApply()">Apply</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-label" style="margin-bottom:10px">Custom Color</div>
+        <div class="slider-row"><span>Hue</span><span id="cr-dl-hue-val">36°</span></div>
+        <div class="hue-track" id="cr-dl-hue"><div class="slider-thumb" id="cr-dl-hue-thumb" style="left:10%"></div></div>
+        <div class="slider-row"><span>Saturation</span><span id="cr-dl-sat-val">90%</span></div>
+        <div class="sat-track" id="cr-dl-sat"><div class="slider-thumb" id="cr-dl-sat-thumb" style="left:90%"></div></div>
+        <div class="slider-row"><span>Brightness</span><span id="cr-dl-bri-val">90%</span></div>
+        <div class="bri-track" id="cr-dl-bri"><div class="slider-thumb" id="cr-dl-bri-thumb" style="left:90%"></div></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -674,12 +757,27 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div class="field-label">Notes (optional)</div>
     <textarea class="field-input" id="save-notes" rows="2" placeholder="Describe this preset…"></textarea>
   </div>
-  <div class="section-label" style="margin-bottom:10px">Choose a Category</div>
-  <div class="save-cat-grid">
-    <div class="save-cat-card" id="cat-holidays" onclick="selectSaveCat('holidays')"><span class="scc-icon">🎄</span><div class="scc-label">Holidays</div><div class="scc-sub">Christmas, Halloween…</div></div>
-    <div class="save-cat-card" id="cat-sports" onclick="selectSaveCat('sports')"><span class="scc-icon">🏆</span><div class="scc-label">Sports</div><div class="scc-sub">NFL, NBA, College…</div></div>
-    <div class="save-cat-card" id="cat-seasons" onclick="selectSaveCat('seasons')"><span class="scc-icon">🍂</span><div class="scc-label">Seasons</div><div class="scc-sub">Spring, Summer…</div></div>
-    <div class="save-cat-card" id="cat-mypresets" onclick="selectSaveCat('mypresets')"><span class="scc-icon">💾</span><div class="scc-label">My Presets</div><div class="scc-sub">No category needed</div></div>
+  <div class="section-label" style="margin-bottom:10px" id="save-cat-label">Choose a Category</div>
+  <!-- All Lights cats -->
+  <div id="save-cats-all">
+    <div class="save-cat-grid">
+      <div class="save-cat-card" id="cat-holidays" onclick="selectSaveCat('holidays')"><span class="scc-icon">🎄</span><div class="scc-label">Holidays</div><div class="scc-sub">Christmas, Halloween…</div></div>
+      <div class="save-cat-card" id="cat-sports" onclick="selectSaveCat('sports')"><span class="scc-icon">🏆</span><div class="scc-label">Sports</div><div class="scc-sub">NFL, NBA, College…</div></div>
+      <div class="save-cat-card" id="cat-seasons" onclick="selectSaveCat('seasons')"><span class="scc-icon">🍂</span><div class="scc-label">Seasons</div><div class="scc-sub">Spring, Summer…</div></div>
+      <div class="save-cat-card" id="cat-mypresets" onclick="selectSaveCat('mypresets')"><span class="scc-icon">💾</span><div class="scc-label">My Presets</div><div class="scc-sub">No category needed</div></div>
+    </div>
+  </div>
+  <!-- Group Mode cats (auto-saves to My Groups) -->
+  <div id="save-cats-group" style="display:none">
+    <div style="font-size:12px;color:var(--muted);padding:10px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent);margin-bottom:14px">
+      Group presets save directly to <strong style="color:var(--text)">My Groups</strong>. Activate them from the Presets menu.
+    </div>
+  </div>
+  <!-- Downlight cats (auto-saves to Downlighting) -->
+  <div id="save-cats-down" style="display:none">
+    <div style="font-size:12px;color:var(--muted);padding:10px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent);margin-bottom:14px">
+      Downlight presets save directly to <strong style="color:var(--text)">Downlighting</strong>. Activate them from the Presets menu.
+    </div>
   </div>
   <div id="save-step3" style="display:none;margin-top:4px">
     <div class="breadcrumb" id="save-bc"></div>
@@ -705,11 +803,34 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-preset-menu">
   <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Presets</span></div>
   <div class="preset-menu-grid">
-    <div class="preset-menu-card" onclick="go('s-holidays')"><span class="pmc-icon">🎄</span><div style="flex:1"><div class="pmc-label">Holidays</div><div class="pmc-sub">Christmas, Halloween, 4th of July and more</div></div><span class="pmc-count">9</span></div>
+    <div class="preset-menu-card" onclick="go('s-downlighting')"><span class="pmc-icon">💡</span><div style="flex:1"><div class="pmc-label">Downlighting</div><div class="pmc-sub">Solid colors for your downlight LEDs</div></div><span class="pmc-count" id="dl-preset-count">10</span></div>
+    <div class="preset-menu-card" onclick="go('s-my-groups')"><span class="pmc-icon">🗂️</span><div style="flex:1"><div class="pmc-label">My Groups</div><div class="pmc-sub">Your saved group color combos</div></div><span class="pmc-count" id="my-groups-count">0 saved</span></div>
+    <div class="preset-menu-card" onclick="go('s-holidays')"><span class="pmc-icon">🎄</span><div style="flex:1"><div class="pmc-label">Holidays</div><div class="pmc-sub">Christmas, Halloween, July 4th and more</div></div><span class="pmc-count">12</span></div>
     <div class="preset-menu-card" onclick="go('s-sports-leagues')"><span class="pmc-icon">🏆</span><div style="flex:1"><div class="pmc-label">Sports Teams</div><div class="pmc-sub">NFL, NBA, MLB, NHL and 100 college programs</div></div><span class="pmc-count">5 leagues</span></div>
     <div class="preset-menu-card" onclick="go('s-seasons')"><span class="pmc-icon">🍂</span><div style="flex:1"><div class="pmc-label">Seasons</div><div class="pmc-sub">Spring, Summer, Fall and Winter themes</div></div><span class="pmc-count">4 seasons</span></div>
-    <div class="preset-menu-card" onclick="go('s-my-presets')"><span class="pmc-icon">💾</span><div style="flex:1"><div class="pmc-label">My Presets</div><div class="pmc-sub">Your saved zone color combinations</div></div><span class="pmc-count" id="my-preset-count">4 saved</span></div>
+    <div class="preset-menu-card" onclick="go('s-my-presets')"><span class="pmc-icon">💾</span><div style="flex:1"><div class="pmc-label">My Presets</div><div class="pmc-sub">Your saved all-lights combinations</div></div><span class="pmc-count" id="my-preset-count">4 saved</span></div>
   </div>
+</div>
+
+<!-- ══════════ DOWNLIGHTING ══════════ -->
+<div class="screen" id="s-downlighting">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-preset-menu')">← Presets</button>
+    <span class="screen-title">Downlighting</span>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:16px;padding:10px 12px;background:var(--surface2);border-radius:8px;border-left:2px solid var(--accent)">
+    Colors target your configured downlight pixels only. Configure pixel positions in Settings → Downlights.
+  </div>
+  <div id="dl-preset-list"></div>
+</div>
+
+<!-- ══════════ MY GROUPS ══════════ -->
+<div class="screen" id="s-my-groups">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-preset-menu')">← Presets</button>
+    <span class="screen-title">My Groups</span>
+  </div>
+  <div id="my-groups-list"></div>
 </div>
 
 <!-- ══════════ HOLIDAYS ══════════ -->
@@ -776,7 +897,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div class="league-card" onclick="openLeague('NHL')"><span style="font-size:28px;display:block;margin-bottom:7px">🏒</span><div style="font-size:14px;font-weight:600">NHL</div><div style="font-size:11px;color:var(--muted)">32 teams</div></div>
   </div>
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-top:10px" onclick="openLeague('College')">
-    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:14px;font-weight:600">College</div><div style="font-size:11px;color:var(--muted)">100 programs · SLU Billikens included</div></div><span style="color:var(--muted)">›</span>
+    <span style="font-size:24px">🎓</span><div style="flex:1"><div style="font-size:14px;font-weight:600">College</div><div style="font-size:11px;color:var(--muted)">100 colleges</div></div><span style="color:var(--muted)">›</span>
   </div>
 </div>
 <div class="screen" id="s-sports-teams">
@@ -806,9 +927,9 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   </div>
 </div>
 
-<!-- ══════════ DOWN LIGHTS ══════════ -->
+<!-- ══════════ DOWN LIGHTS CONFIG ══════════ -->
 <div class="screen" id="s-downlights">
-  <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Down Lights</span></div>
+  <div class="top-bar"><button class="back-btn" onclick="go('s-admin')">← Settings</button><span class="screen-title">Downlights Setup</span></div>
 
   <!-- LIVE PREVIEW -->
   <div class="card">
@@ -823,7 +944,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <!-- active colour indicator -->
     <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
       <div style="width:28px;height:28px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0" id="dl-swatch"></div>
-      <div><div style="font-size:12px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:10px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
+      <div><div style="font-size:12px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:11px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
     </div>
   </div>
 
@@ -862,8 +983,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
   </div>
 
-  <!-- hidden strand used by renderDL -->
-  <div style="display:none"><div class="dl-strand" id="dl-strand"></div></div>
+
 </div>
 
 <!-- ══════════ AUTOPILOT ══════════ -->
@@ -1021,13 +1141,44 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 
   <div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(99,102,241,0.15));border:0.5px solid rgba(99,102,241,0.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
     <span style="font-size:28px">⚡</span>
-    <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">LightControl Admin</div><div style="font-size:11px;color:var(--muted)">Install configuration tools</div></div>
+    <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Luma Lights Admin</div><div style="font-size:11px;color:var(--muted)">Configure your lights</div></div>
+  </div>
+
+  <!-- VIEW SETTINGS -->
+  <div class="card" style="margin-bottom:16px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:14px">🎨 View Settings</div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Theme</div>
+      <div style="display:flex;gap:8px">
+        <button class="vs-theme-btn" data-theme="dark"  onclick="applyTheme('dark')" style="flex:1">🌙 Dark</button>
+        <button class="vs-theme-btn" data-theme="light" onclick="applyTheme('light')" style="flex:1">☀️ Light</button>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Font Size</div>
+      <div style="display:flex;gap:6px">
+        <button class="vs-font-btn" data-fs="fs-lg"  onclick="applyFontSize('fs-lg')"  title="Regular" style="font-size:15px">A</button>
+        <button class="vs-font-btn" data-fs="fs-xl"  onclick="applyFontSize('fs-xl')"  title="Large"   style="font-size:18px">A</button>
+      </div>
+    </div>
   </div>
 
   <div style="display:flex;flex-direction:column;gap:8px">
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-admin-gpio')">
       <span style="font-size:24px">🔌</span>
       <div style="flex:1"><div style="font-size:13px;font-weight:600">LED Setup</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Configure LED strips &amp; push to WLED</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-groups')">
+      <span style="font-size:24px">🗂️</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Groups</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Define named zones that map to WLED segments</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-downlights')">
+      <span style="font-size:24px">💡</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Downlights</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Set which LED pixels are downlights</div></div>
       <span style="color:var(--muted)">›</span>
     </div>
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-wled')">
@@ -1062,7 +1213,40 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
   </div>
 
-  <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--surface3)">LightControl Admin · v1.0</div>
+  <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--surface3)">Luma Lights Admin · v1.0</div>
+</div>
+
+<!-- ══════════ GROUPS ══════════ -->
+<div class="screen" id="s-groups">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-admin')">← Settings</button>
+    <span class="screen-title">Groups</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="pushGroupSegments()">📡 Push</button>
+  </div>
+
+  <div style="font-size:11px;color:var(--muted);line-height:1.6;background:var(--surface2);border-radius:10px;padding:10px 13px;margin-bottom:14px">
+    Groups define named zones on your LED strip. Each group maps to a WLED segment for independent color control in Group Mode.
+  </div>
+
+  <div id="groups-list"></div>
+
+  <button style="width:100%;background:var(--surface);border:1.5px dashed rgba(255,255,255,0.15);border-radius:13px;padding:14px;color:var(--muted);font-size:13px;cursor:pointer;-webkit-appearance:none;margin-bottom:14px" onclick="addGroup()">+ Add Group</button>
+
+  <div class="card" id="groups-push-status" style="display:none">
+    <div style="font-size:12px;font-weight:500;margin-bottom:8px" id="groups-push-title">Pushing segments…</div>
+    <div class="coverage-track"><div class="coverage-fill" id="groups-push-bar" style="width:0%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px" id="groups-push-msg"></div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;font-weight:500;margin-bottom:6px">💡 How Groups Work</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.6">
+      • Each group maps to one WLED segment using start/stop LED indices<br>
+      • Groups appear in Create Your Own → Group Mode for per-zone color control<br>
+      • Start/stop indices are positions on your total LED strip (e.g. Output 1 = 0–49, Output 2 = 50–99)<br>
+      • Tap <b>Push</b> to apply segment layout to your WLED controller
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1070,6 +1254,51 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 </div><!-- end app -->
 
 <script>
+// ═══════════════════════════════
+// VIEW SETTINGS (theme + font size)
+// ═══════════════════════════════
+const FONT_SIZES = ['fs-lg','fs-xl'];
+const FONT_LABELS = ['Regular','Large'];
+const DEFAULT_FONT = 'fs-lg';
+
+function applyTheme(theme) {
+  const app = document.querySelector('.app');
+  app.classList.toggle('light', theme === 'light');
+  localStorage.setItem('lc_theme', theme);
+  // Update meta theme-color for browser chrome
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = theme === 'light' ? '#f0f4f8' : '#0a0e1a';
+  // Refresh active-state buttons if the admin panel is open
+  renderViewSettingsState();
+}
+
+function applyFontSize(sizeKey) {
+  const app = document.querySelector('.app');
+  FONT_SIZES.forEach(c => app.classList.remove(c));
+  if (sizeKey) app.classList.add(sizeKey);
+  localStorage.setItem('lc_font_size', sizeKey || '');
+  renderViewSettingsState();
+}
+
+function renderViewSettingsState() {
+  const theme = localStorage.getItem('lc_theme') || 'dark';
+  document.querySelectorAll('.vs-theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === theme);
+  });
+  const fs = localStorage.getItem('lc_font_size') || DEFAULT_FONT;
+  document.querySelectorAll('.vs-font-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.fs === fs);
+  });
+}
+
+// Apply saved settings immediately on load
+(function initViewSettings() {
+  const theme = localStorage.getItem('lc_theme') || 'dark';
+  const fs    = localStorage.getItem('lc_font_size') || DEFAULT_FONT;
+  if (theme === 'light') document.querySelector('.app').classList.add('light');
+  document.querySelector('.app').classList.add(fs);
+})();
+
 // ═══════════════════════════════
 // STATE
 // ═══════════════════════════════
@@ -1096,6 +1325,13 @@ let filteredSaveTeams=[];
 // Create Your Own state
 let createMode='all';
 let alColor='#3b82f6',alH=217,alS=100,alB=100;
+// Downlight color state for Create page
+let crDlColor='#fff5e0',crDlH=36,crDlS=90,crDlB=90;
+// My Groups + My DL Presets storage
+let myGroups=JSON.parse(localStorage.getItem('wled_my_groups')||'[]');
+let myGroupsNextId=myGroups.reduce((m,g)=>Math.max(m,g.id||0),0)+1;
+let myDLPresets=JSON.parse(localStorage.getItem('wled_dl_presets')||'[]');
+let myDLPresetsNextId=myDLPresets.reduce((m,p)=>Math.max(m,p.id||0),0)+1;
 let selectedEffect=0,effectSpeed=128,effectIntensity=128;
 let editingZoneIdx=null,zpH=0,zpS=100,zpB=100;
 
@@ -1136,10 +1372,13 @@ const holidays=[
   {id:'easter',name:'Easter',icon:'🐰',bg:'linear-gradient(135deg,#1a1a3a,#2d1a4a)',colors:['#a855f7','#f9a8d4','#86efac'],
    seasonStart:[2,20],seasonEnd:[3,20],  // Mar 20 – Apr 20 (approximate)
    patterns:['Pastel Drift','Spring Sparkle','Bunny Hop','Easter Glow']},
+  {id:'mothersday',name:"Mother's Day",icon:'🌸',bg:'linear-gradient(135deg,#3a0a2a,#5a1a4a)',colors:['#ec4899','#f9a8d4','#ffffff'],
+   seasonStart:[4,8],seasonEnd:[4,14],   // May 8–14 (covers all possible 2nd Sundays of May)
+   patterns:["Rose Drift","Petal Shimmer","Garden Chase","Love Bloom"]},
   {id:'memorial',name:'Memorial Day',icon:'🇺🇸',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
    seasonStart:[4,24],seasonEnd:[4,31],  // May 24 – May 31
    patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
-  {id:'july4',name:'USA Holidays',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
+  {id:'july4',name:'July 4th',icon:'🎆',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
    seasonStart:[5,27],seasonEnd:[6,11],  // Jun 27 – Jul 11 (week before and after)
    patterns:['Fireworks Burst','Patriot Chase','Stars & Stripes','Liberty Sparkle']},
   {id:'laborday',name:'Labor Day',icon:'🇺🇸',bg:'linear-gradient(135deg,#1a1a3a,#2a2a6a)',colors:['#ef4444','#ffffff','#3b82f6'],
@@ -1402,9 +1641,13 @@ const sportsTeams={
 };
 
 const calHolidays=[
+  {month:1,day:14,name:"Valentine's Day",icon:'💖',color:'#ec4899',link:'valentines'},
+  {month:2,day:17,name:"St. Patrick's Day",icon:'🍀',color:'#22c55e',link:'stpats'},
   {month:3,day:7,name:'Easter',icon:'🐰',color:'#a855f7',link:'easter'},
-  {month:4,day:10,name:"Mother's Day",icon:'🌸',color:'#ec4899',link:null},
-  {month:6,day:4,name:'4th of July',icon:'🎆',color:'#ef4444',link:'july4'},
+  {month:4,day:10,name:"Mother's Day",icon:'🌸',color:'#ec4899',link:'mothersday'},
+  {month:4,day:26,name:'Memorial Day',icon:'🇺🇸',color:'#3b82f6',link:'memorial'},
+  {month:6,day:4,name:'July 4th',icon:'🎆',color:'#ef4444',link:'july4'},
+  {month:8,day:1,name:'Labor Day',icon:'🇺🇸',color:'#3b82f6',link:'laborday'},
   {month:9,day:31,name:'Halloween',icon:'🎃',color:'#f97316',link:'halloween'},
   {month:10,day:27,name:'Thanksgiving',icon:'🦃',color:'#f59e0b',link:'thanksgiving'},
   {month:11,day:25,name:'Christmas',icon:'🎄',color:'#22c55e',link:'christmas'},
@@ -1413,7 +1656,8 @@ const calHolidays=[
 const pHolidays=[
   {id:'christmas',name:'Christmas',icon:'🎄',bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',text:'#22c55e'},
   {id:'halloween',name:'Halloween',icon:'🎃',bg:'rgba(249,115,22,0.12)',border:'rgba(249,115,22,0.3)',text:'#f97316'},
-  {id:'july4',name:'USA Holidays',icon:'🎆',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
+  {id:'july4',name:'July 4th',icon:'🎆',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
+  {id:'mothersday',name:"Mother's Day",icon:'🌸',bg:'rgba(236,72,153,0.12)',border:'rgba(236,72,153,0.3)',text:'#ec4899'},
   {id:'memorial',name:'Memorial Day',icon:'🇺🇸',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
   {id:'laborday',name:'Labor Day',icon:'🇺🇸',bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',text:'#3b82f6'},
   {id:'sports',name:'Sports',icon:'🏆',bg:'rgba(245,158,11,0.12)',border:'rgba(245,158,11,0.3)',text:'#f59e0b'},
@@ -1551,8 +1795,8 @@ const wledEffects=[
 
 const saveHolidays=[
   {id:'christmas',name:'Christmas',icon:'🎄'},{id:'halloween',name:'Halloween',icon:'🎃'},
-  {id:'july4',name:'USA Holidays',icon:'🎆'},{id:'memorial',name:'Memorial Day',icon:'🇺🇸'},{id:'laborday',name:'Labor Day',icon:'🇺🇸'},
-  {id:'valentines',name:"Valentine's",icon:'💖'},
+  {id:'july4',name:'July 4th',icon:'🎆'},{id:'memorial',name:'Memorial Day',icon:'🇺🇸'},{id:'laborday',name:'Labor Day',icon:'🇺🇸'},
+  {id:'valentines',name:"Valentine's",icon:'💖'},{id:'mothersday',name:"Mother's Day",icon:'🌸'},
   {id:'stpats',name:"St. Patrick's",icon:'🍀'},{id:'easter',name:'Easter',icon:'🐰'},
   {id:'thanksgiving',name:'Thanksgiving',icon:'🦃'},{id:'newyear',name:"New Year's",icon:'🥂'},
   {id:'hanukkah',name:'Hanukkah',icon:'🕎'},
@@ -1585,9 +1829,22 @@ function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.getElementById('scroll-view').scrollTop=0;
-  if(id==='s-wled') renderSavedControllers();
+  if(id==='s-wled') { renderSavedControllers(); checkConnectionEnvironment(); }
+  if(id==='s-downlighting') renderDLPresets();
   if(id==='s-downlights') dlInitPixelUI();
+  if(id==='s-my-groups') renderMyGroups();
   if(id==='s-autopilot') renderAPToday();
+  if(id==='s-admin') renderViewSettingsState();
+  if(id==='s-groups') renderGroupsList();
+  if(id==='s-create') {
+    const searchEl = document.getElementById('effect-search');
+    if(searchEl) searchEl.value = '';
+    filterEffects();
+    renderCreatePreview(); // rebuild dots at correct size before anim
+    startCreateAnim();
+  } else {
+    stopCreateAnim();
+  }
 }
 
 // ═══════════════════════════════
@@ -1614,9 +1871,6 @@ function togglePower(){
 
 function setLightMode(m){
   lightMode=m;
-  document.getElementById('tab-all').classList.toggle('active',m==='all');
-  document.getElementById('tab-down').classList.toggle('active',m==='down');
-  showToast(m==='all'?'Controlling all lights':'Controlling down lights only');
 }
 
 function toggleAP(){
@@ -1635,11 +1889,34 @@ function toggleAP(){
 // ═══════════════════════════════
 function setCreateMode(m){
   createMode=m;
+
+  // Always start fresh — clear now-playing state
+  updateNowPlaying('Off',[],false);
+
+  if(m==='all'){
+    resetToSingleSegment();
+  }
+
+  if(m==='group'){
+    zones.forEach(z=>{ z.on=false; });
+    saveZoneColors();
+    pushZonesToWLED();
+    renderGroupZones();
+  }
+
+  if(m==='downlight'){
+    resetToSingleSegment();
+    crDlInitPicker();
+  }
+
   document.getElementById('cr-mode-all').classList.toggle('active',m==='all');
   document.getElementById('cr-mode-group').classList.toggle('active',m==='group');
+  document.getElementById('cr-mode-down').classList.toggle('active',m==='downlight');
   document.getElementById('cr-panel-all').style.display=m==='all'?'block':'none';
   document.getElementById('cr-panel-group').style.display=m==='group'?'block':'none';
-  document.getElementById('create-mode-badge').textContent=m==='all'?'All Lights':'Group Mode';
+  document.getElementById('cr-panel-down').style.display=m==='downlight'?'block':'none';
+  const badges={all:'All Lights',group:'Group Mode',downlight:'Downlights'};
+  document.getElementById('create-mode-badge').textContent=badges[m]||'All Lights';
   renderCreatePreview();
 }
 
@@ -1663,16 +1940,39 @@ function getLEDCount() {
 // Render a strand of totalLEDs dots into an element.
 // getColor(i) → hex string for LED at 0-based index i.
 // Dark/off LEDs should return '#1c2333'.
+// Fixed dot size = 5px wide, 2px gap → 7px per dot.
+// Sample totalLEDs evenly into however many dots fit.
+const STRAND_DOT_W = 5, STRAND_GAP = 2;
+
 function renderStrand(elementId, totalLEDs, getColor) {
   const el = document.getElementById(elementId);
   if (!el) return;
-  const containerW = el.clientWidth || el.parentElement?.clientWidth || 320;
-  const dotW = Math.max(3, Math.floor((containerW - totalLEDs * 2) / totalLEDs));
-  el.innerHTML = Array.from({ length: totalLEDs }, (_, i) => {
-    const c = getColor(i) || '#1c2333';
+  const containerW = (el.clientWidth || el.parentElement?.clientWidth || 320) - 4;
+  const maxDots = Math.max(8, Math.floor(containerW / (STRAND_DOT_W + STRAND_GAP)));
+  const dots = Math.min(totalLEDs, maxDots);
+  const step = totalLEDs / dots;
+  el.innerHTML = Array.from({ length: dots }, (_, i) => {
+    const srcIdx = Math.floor(i * step);
+    const c = getColor(srcIdx) || '#1c2333';
     const dark = c === '#1c2333' || c === '#000000' || c === '#000';
-    return `<div class="strand-dot" style="background:${c};width:${dotW}px${dark ? '' : `;box-shadow:0 0 4px ${c}55`}"></div>`;
+    return `<div class="strand-dot" style="background:${c};width:${STRAND_DOT_W}px${dark ? '' : `;box-shadow:0 0 3px ${c}88`}"></div>`;
   }).join('');
+}
+
+// Update dot colors in-place (no DOM rebuild) for animation frames
+function updateStrandColors(elementId, totalLEDs, getColor) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const dots = el.children;
+  if (!dots.length) { renderStrand(elementId, totalLEDs, getColor); return; }
+  const step = totalLEDs / dots.length;
+  for (let i = 0; i < dots.length; i++) {
+    const srcIdx = Math.floor(i * step);
+    const c = getColor(srcIdx) || '#1c2333';
+    const dark = c === '#1c2333' || c === '#000000' || c === '#000';
+    dots[i].style.background = c;
+    dots[i].style.boxShadow = dark ? '' : `0 0 3px ${c}88`;
+  }
 }
 
 // ══════════════════════════════════════════════════
@@ -1681,18 +1981,335 @@ function renderCreatePreview(){
   const total = getLEDCount();
   if(createMode==='all'){
     renderStrand('create-strand', total, () => alColor);
+  } else if(createMode==='downlight'){
+    // Highlight downlight pixels with crDlColor, rest dark
+    const dlPixels = new Set(parsePixelString(dlPixelString||''));
+    renderStrand('create-strand', total, i => dlPixels.has(i+1) ? crDlColor : '#1c2333');
   } else {
-    // Build a flat color-per-pixel array from zones
     const pixelColors = [];
     zones.forEach(z => {
       for(let i = 0; i < z.leds; i++) pixelColors.push(z.on ? z.color : '#1c2333');
     });
     renderStrand('create-strand', total, i => pixelColors[i] || '#1c2333');
   }
-  document.getElementById('cr-color-dot').style.background=createMode==='all'?alColor:zones[0].color;
-  document.getElementById('cr-color-name').textContent=createMode==='all'?alColor.toUpperCase():'(per group)';
+  const dotColor = createMode==='all' ? alColor : createMode==='downlight' ? crDlColor : zones[0].color;
+  const nameText = createMode==='all' ? alColor.toUpperCase() : createMode==='downlight' ? crDlColor.toUpperCase() : '(per group)';
+  document.getElementById('cr-color-dot').style.background=dotColor;
+  document.getElementById('cr-color-name').textContent=nameText;
   document.getElementById('cr-effect-name').textContent=wledEffects.find(e=>e.id===selectedEffect)?.name||'Solid';
   document.getElementById('cr-speed-val').textContent=effectSpeed;
+}
+
+// ══════════════════════════════════════════════════
+// CREATE PREVIEW ANIMATION ENGINE
+// ══════════════════════════════════════════════════
+
+// Map WLED effect IDs → animation type
+const EFFECT_ANIM = (()=>{
+  const m = {};
+  const set = (type, ids) => ids.forEach(id => m[id] = type);
+  set('solid',   [0,51,65,83,84,96,106]);
+  set('blink',   [1,26,38,48,49,98,99,100]);
+  set('strobe',  [23,24,25]);
+  set('breathe', [2,12,56,68]);
+  set('wipe',    [3,4,36,47,97,102,105]);
+  set('scan',    [10,11,27,40,41,58,60]);
+  set('chase',   [13,15,16,28,29,30,31,32,37,50,52,54,55,61,62,85,86,93,94,107,109,112]);
+  set('rainbow', [8,9,14,33,63,67,116]);
+  set('running', [6,39,78,115]);
+  set('twinkle', [17,18,19,20,21,22,42,44,57,74,80,81,82,87,89,90,91,95]);
+  set('fire',    [45,66,88,108]);
+  set('noise',   [7,34,64,69,70,71,72,73,75,79,90,92,110,111,113,114]);
+  set('meteor',  [43,59,76,77]);
+  set('police',  [48,49,98,99]);
+  set('fade',    [46,53]);
+  return m;
+})();
+
+function getEffectAnim(id){ return EFFECT_ANIM[id] || 'solid'; }
+
+// Parse hex color to [r,g,b]
+function hexRGB(hex){ const n=parseInt(hex.replace('#',''),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+function rgbHex(r,g,b){ return '#'+[r,g,b].map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join(''); }
+function mixHex(a,b,t){ const ca=hexRGB(a),cb=hexRGB(b); return rgbHex(ca[0]+(cb[0]-ca[0])*t,ca[1]+(cb[1]-ca[1])*t,ca[2]+(cb[2]-ca[2])*t); }
+function dimHex(hex,factor){ const [r,g,b]=hexRGB(hex); return rgbHex(r*factor,g*factor,b*factor); }
+function hsvHex(h,s,v){ // h 0-360, s/v 0-1
+  const i=Math.floor(h/60)%6, f=h/60-Math.floor(h/60);
+  const p=v*(1-s), q=v*(1-f*s), t=v*(1-(1-f)*s);
+  const vals=[[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i]||[v,v,v];
+  return rgbHex(vals[0]*255,vals[1]*255,vals[2]*255);
+}
+
+let _animRAF = null;
+let _animTick = 0;
+let _animLastTime = 0;
+const ANIM_FPS = 30; // target
+
+function startCreateAnim() {
+  stopCreateAnim();
+  _animTick = 0;
+  function frame(ts) {
+    if (ts - _animLastTime < 1000 / ANIM_FPS) { _animRAF = requestAnimationFrame(frame); return; }
+    _animLastTime = ts;
+    _animTick++;
+    tickCreateAnim();
+    _animRAF = requestAnimationFrame(frame);
+  }
+  _animRAF = requestAnimationFrame(frame);
+}
+
+function stopCreateAnim() {
+  if (_animRAF) { cancelAnimationFrame(_animRAF); _animRAF = null; }
+}
+
+function tickCreateAnim() {
+  if (createMode !== 'all') return; // groups/downlights = static
+  const total = getLEDCount();
+  const anim = getEffectAnim(selectedEffect);
+  if (anim === 'solid') return; // no tick needed
+
+  // speed: effectSpeed 0-255 → tick divisor (fast=small, slow=large)
+  // speed 255 = fastest, 0 = slowest
+  const spd = effectSpeed / 255; // 0..1 (higher = faster)
+  const period = Math.max(1, Math.round(lerp(60, 4, spd))); // ticks per cycle
+  const t = _animTick % period / period; // 0..1 phase
+
+  const color = alColor;
+  const dark = '#1c2333';
+
+  let getColor;
+
+  switch(anim){
+    case 'blink':
+      { const on = (_animTick % Math.max(2, Math.round(lerp(30,4,spd)))) < Math.max(1, Math.round(lerp(15,2,spd)));
+        getColor = () => on ? color : dark; }
+      break;
+
+    case 'strobe':
+      { const on = (_animTick % Math.max(4, Math.round(lerp(20,4,spd)))) === 0;
+        getColor = () => on ? color : dark; }
+      break;
+
+    case 'breathe':
+      { const bri = (Math.sin(_animTick / period * Math.PI * 2) + 1) / 2;
+        const dimmed = dimHex(color, 0.05 + bri * 0.95);
+        getColor = () => dimmed; }
+      break;
+
+    case 'wipe':
+      { const lit = Math.floor(t * total);
+        getColor = i => i < lit ? color : dark; }
+      break;
+
+    case 'scan':
+      { const half = Math.round(total * 0.06);
+        const pingpong = Math.floor((_animTick % (period * 2)) / period) === 0 ? t : 1 - t;
+        const pos = Math.floor(pingpong * (total - 1));
+        getColor = i => Math.abs(i - pos) <= half ? dimHex(color, 1 - Math.abs(i - pos) / half * 0.6) : dark; }
+      break;
+
+    case 'chase':
+      { const segLen = Math.max(3, Math.floor(total * 0.15));
+        const head = Math.floor(t * total);
+        getColor = i => {
+          const dist = (i - head + total) % total;
+          if (dist < segLen) return dimHex(color, 1 - dist / segLen * 0.8);
+          return dark;
+        }; }
+      break;
+
+    case 'rainbow':
+      { const offset = _animTick / period * 360;
+        getColor = i => hsvHex((i / total * 360 + offset) % 360, 1, 1); }
+      break;
+
+    case 'running':
+      { const offset = Math.floor(t * total);
+        const [r,g,b] = hexRGB(color);
+        getColor = i => {
+          const x = (i + offset) % total;
+          const wave = (Math.sin(x / total * Math.PI * 6) + 1) / 2;
+          return dimHex(color, 0.1 + wave * 0.9);
+        }; }
+      break;
+
+    case 'twinkle':
+      { // Deterministic pseudo-random per dot per time window
+        const win = Math.floor(_animTick / Math.max(2, Math.round(lerp(8,2,spd))));
+        getColor = i => {
+          const rnd = Math.sin(i * 127.1 + win * 311.7) * 43758.5453;
+          const v = (rnd - Math.floor(rnd));
+          return v > 0.7 ? dimHex(color, v) : dark;
+        }; }
+      break;
+
+    case 'fire':
+      { getColor = i => {
+          const rnd = Math.sin(i * 79.3 + _animTick * 13.1) * 43758.5;
+          const v = (rnd - Math.floor(rnd));
+          const flicker = Math.sin(i * 3.7 + _animTick * 0.7) * 0.2 + 0.8;
+          const heat = Math.max(0, 1 - i / total * 0.7) * flicker * (0.5 + v * 0.5);
+          return rgbHex(heat * 255, heat * heat * 160, heat * heat * heat * 40);
+        }; }
+      break;
+
+    case 'meteor':
+      { const tailLen = Math.max(4, Math.floor(total * 0.2));
+        const head2 = Math.floor(t * total);
+        getColor = i => {
+          const dist = (head2 - i + total) % total;
+          if (dist < tailLen) return dimHex(color, 1 - dist / tailLen * 0.9);
+          return dark;
+        }; }
+      break;
+
+    case 'police':
+      { const half = total >> 1;
+        const blueOn = (_animTick % Math.max(3, Math.round(lerp(20,4,spd)))) < Math.max(2, Math.round(lerp(10,2,spd)));
+        getColor = i => i < half ? (blueOn ? '#3b82f6' : dark) : (!blueOn ? '#ef4444' : dark); }
+      break;
+
+    case 'noise':
+      { getColor = i => {
+          const v = (Math.sin(i * 0.3 + _animTick * 0.15) + 1) / 2;
+          return dimHex(color, 0.2 + v * 0.8);
+        }; }
+      break;
+
+    default:
+      getColor = () => color;
+  }
+
+  updateStrandColors('create-strand', total, getColor);
+}
+
+function lerp(a, b, t){ return a + (b - a) * Math.max(0, Math.min(1, t)); }
+
+// ── CREATE PAGE: DOWNLIGHTS PANEL ──
+function crDlInitPicker(){
+  const hasDL = !!dlPixelString;
+  document.getElementById('cr-dl-no-config').style.display = hasDL ? 'none' : 'block';
+  document.getElementById('cr-dl-picker').style.display = hasDL ? 'block' : 'none';
+  if(!hasDL) return;
+  // Quick color buttons from DL_PRESETS
+  const btns = document.getElementById('cr-dl-preset-btns');
+  if(btns) btns.innerHTML = DL_PRESETS.slice(0,8).map(p => {
+    const c = p.swatch;
+    const active = crDlColor.toLowerCase() === c.toLowerCase();
+    return `<div style="height:36px;border-radius:9px;background:${c};cursor:pointer;border:2px solid ${active?'white':'transparent'};box-shadow:${active?`0 0 0 2px var(--accent)`:''}" title="${p.name}" onclick="crDlSetColor('${p.color||c}')"></div>`;
+  }).join('');
+  // Sync hex input
+  const hexInp = document.getElementById('cr-dl-hex');
+  if(hexInp) hexInp.value = crDlColor;
+  crDlUpdateTracks();
+  renderCreatePreview();
+}
+
+function crDlSetColor(hex){
+  if(!hex) hex='#fff5e0';
+  crDlColor=hex;
+  try{[crDlH,crDlS,crDlB]=hexToHSV(hex);}catch(e){}
+  const hexInp=document.getElementById('cr-dl-hex');
+  if(hexInp) hexInp.value=hex;
+  crDlUpdateTracks();
+  renderCreatePreview();
+  if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(isWhiteChannel(hex)?null:hex));
+}
+
+function crDlUpdateTracks(){
+  const hEl=document.getElementById('cr-dl-hue-thumb');
+  const sEl=document.getElementById('cr-dl-sat-thumb');
+  const bEl=document.getElementById('cr-dl-bri-thumb');
+  if(hEl) hEl.style.left=(crDlH/360*100)+'%';
+  if(sEl) sEl.style.left=crDlS+'%';
+  if(bEl) bEl.style.left=crDlB+'%';
+  const hv=document.getElementById('cr-dl-hue-val');
+  const sv=document.getElementById('cr-dl-sat-val');
+  const bv=document.getElementById('cr-dl-bri-val');
+  if(hv) hv.textContent=Math.round(crDlH)+'°';
+  if(sv) sv.textContent=Math.round(crDlS)+'%';
+  if(bv) bv.textContent=Math.round(crDlB)+'%';
+  const satEl=document.getElementById('cr-dl-sat');
+  const briEl=document.getElementById('cr-dl-bri');
+  if(satEl) satEl.style.background=`linear-gradient(to right,white,${hsvToHex(crDlH,100,Math.max(crDlB,40))})`;
+  if(briEl) briEl.style.background=`linear-gradient(to right,#000,${hsvToHex(crDlH,crDlS,100)})`;
+}
+
+function crDlApply(){crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlInitPicker();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));}
+function crDlHexTyped(){const h=document.getElementById('cr-dl-hex').value;if(/^#[0-9a-fA-F]{6}$/.test(h))crDlSetColor(h);}
+
+setupSlider('cr-dl-hue',v=>{crDlH=Math.round(v*360);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+setupSlider('cr-dl-sat',v=>{crDlS=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+setupSlider('cr-dl-bri',v=>{crDlB=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+
+// ── MY GROUPS ──
+function saveMyGroups(){
+  localStorage.setItem('wled_my_groups', JSON.stringify(myGroups));
+  const el = document.getElementById('my-groups-count');
+  if(el) el.textContent = myGroups.length + ' saved';
+}
+
+function renderMyGroups(){
+  const el = document.getElementById('my-groups-list');
+  if(!el) return;
+  if(!myGroups.length){
+    el.innerHTML=`<div style="text-align:center;padding:32px 16px;color:var(--muted);background:var(--surface);border-radius:14px;border:0.5px solid var(--border)">
+      <div style="font-size:32px;margin-bottom:10px">🗂️</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No group presets yet</div>
+      <div style="font-size:11px;line-height:1.5;margin-bottom:14px">Create a group setup on the Create page, then save it.</div>
+      <button class="btn btn-primary btn-sm" onclick="go('s-create')">Go to Create</button>
+    </div>`;
+    return;
+  }
+  el.innerHTML = myGroups.map(g => `
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="activateMyGroup(${g.id})">
+      <div style="display:flex;gap:4px;flex-shrink:0">${g.zones.slice(0,5).map(z=>`<div style="width:14px;height:14px;border-radius:4px;background:${z.color}"></div>`).join('')}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;margin-bottom:2px">${g.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${g.zones.length} groups · ${g.date||''}</div>
+      </div>
+      <button onclick="event.stopPropagation();deleteMyGroup(${g.id})" style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;-webkit-appearance:none">✕</button>
+    </div>`).join('');
+}
+
+function activateMyGroup(id){
+  const g = myGroups.find(x=>x.id===id);
+  if(!g) return;
+  // Restore zone colors
+  g.zones.forEach((gz,i)=>{ if(zones[i]){ zones[i].color=gz.color; zones[i].on=gz.on!==false; } });
+  saveZoneColors();
+  if(typeof pushZonesToWLED==='function') pushZonesToWLED();
+  updateNowPlaying(g.name, g.zones.map(z=>z.color), true);
+  showToast('🗂️ '+g.name);
+}
+
+function deleteMyGroup(id){
+  myGroups = myGroups.filter(g=>g.id!==id);
+  saveMyGroups();
+  renderMyGroups();
+}
+
+// ── MY DL PRESETS ──
+function saveMyDLPresets(){
+  localStorage.setItem('wled_dl_presets', JSON.stringify(myDLPresets));
+}
+
+function activateMyDLPreset(id){
+  const p = myDLPresets.find(x=>x.id===id);
+  if(!p) return;
+  if(typeof buildDownlightPayload==='function') {
+    const payload = buildDownlightPayload(isWhiteChannel(p.color)?null:p.color);
+    if(typeof wledSendDL==='function') wledSendDL(payload);
+  }
+  updateNowPlaying(p.name, [p.color], true);
+  showToast('💡 '+p.name);
+  renderDLPresets();
+}
+
+function deleteMyDLPreset(id){
+  myDLPresets = myDLPresets.filter(p=>p.id!==id);
+  saveMyDLPresets();
+  renderDLPresets();
 }
 
 // ALL LIGHTS COLOR
@@ -1739,7 +2356,16 @@ function filterEffects(){
   buildEffectList(q?wledEffects.filter(e=>e.name.toLowerCase().includes(q)||e.cat.toLowerCase().includes(q)):wledEffects);
 }
 
-function selectEffect(id){selectedEffect=id;filterEffects();renderCreatePreview();showToast(wledEffects.find(e=>e.id===id)?.name+' selected');}
+function selectEffect(id){
+  selectedEffect=id;
+  filterEffects();
+  renderCreatePreview(); // rebuild with correct base colors
+  _animTick=0; // reset phase so new effect starts clean
+  const anim=getEffectAnim(id);
+  if(anim==='solid'){ stopCreateAnim(); }
+  else { startCreateAnim(); }
+  showToast(wledEffects.find(e=>e.id===id)?.name+' selected');
+}
 
 function updateParams(){
   effectSpeed=parseInt(document.getElementById('param-speed').value);
@@ -1750,12 +2376,30 @@ function updateParams(){
 }
 
 // GROUP MODE
+function saveZoneColors() {
+  const map = {};
+  zones.forEach((z, i) => {
+    map[z.name] = { color: z.color, on: z.on };
+    map[String(i)]  = { color: z.color, on: z.on }; // index fallback for unnamed
+  });
+  localStorage.setItem('lc_zone_colors', JSON.stringify(map));
+}
+
+function toggleZone(i) {
+  zones[i].on = !zones[i].on;
+  saveZoneColors();
+  renderGroupZones();
+  renderCreatePreview();
+  // Push updated segment state to WLED so the light reflects the toggle instantly
+  pushZonesToWLED();
+}
+
 function renderGroupZones(){
   document.getElementById('group-zone-rows').innerHTML=zones.map((z,i)=>`
     <div class="group-row" onclick="openZonePicker(${i})">
       <div class="group-color-dot" style="background:${z.on?z.color:'#1c2333'}"></div>
-      <div style="flex:1"><div style="font-size:12px;font-weight:500">${z.name}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${z.leds} LEDs · ${z.on?z.color.toUpperCase():'Off'}</div></div>
-      <div class="mini-toggle ${z.on?'on':''}" onclick="event.stopPropagation();zones[${i}].on=!zones[${i}].on;renderGroupZones();renderCreatePreview()"></div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${z.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${z.leds} LEDs · ${z.on?z.color.toUpperCase():'Off'}</div></div>
+      <div class="mini-toggle ${z.on?'on':''}" onclick="event.stopPropagation();toggleZone(${i})"></div>
       <span style="color:var(--muted);font-size:14px;margin-left:6px">›</span>
     </div>`).join('');
 }
@@ -1776,7 +2420,7 @@ function zpUpdateColor(hex){
   document.getElementById('zp-hex-inp').value=hex;
   try{[zpH,zpS,zpB]=hexToHSV(hex);}catch(e){}
   zpUpdateTracks();
-  if(editingZoneIdx!==null){zones[editingZoneIdx].color=hex;renderGroupZones();renderCreatePreview();}
+  if(editingZoneIdx!==null){zones[editingZoneIdx].color=hex;saveZoneColors();renderGroupZones();renderCreatePreview();}
 }
 
 function buildZPSwatches(){
@@ -1815,12 +2459,34 @@ function openSaveFlow(){
   document.getElementById('save-step3').style.display='none';
   document.getElementById('save-step4').style.display='none';
   document.getElementById('save-cta').style.display='none';
+
+  // Show/hide cat panels based on current createMode
+  document.getElementById('save-cats-all').style.display = createMode==='all' ? 'block' : 'none';
+  document.getElementById('save-cats-group').style.display = createMode==='group' ? 'block' : 'none';
+  document.getElementById('save-cats-down').style.display = createMode==='downlight' ? 'block' : 'none';
+
+  // Auto-route for group/downlight modes
+  if(createMode==='group'){
+    selectedSaveCat='mygroups';
+    document.getElementById('save-cat-label').textContent='Saving to My Groups';
+    document.getElementById('save-cta').style.display='block';
+    document.getElementById('save-cta-label').textContent='My Groups';
+    document.getElementById('save-summary').innerHTML=buildSaveSummary();
+  } else if(createMode==='downlight'){
+    selectedSaveCat='downlighting';
+    document.getElementById('save-cat-label').textContent='Saving to Downlighting';
+    document.getElementById('save-cta').style.display='block';
+    document.getElementById('save-cta-label').textContent='Downlighting';
+    document.getElementById('save-summary').innerHTML=buildSaveSummary();
+  } else {
+    document.getElementById('save-cat-label').textContent='Choose a Category';
+  }
   go('s-save');
 }
 
 function selectSaveCat(cat){
   selectedSaveCat=cat;selectedSaveSubCat=null;selectedSaveSubSubCat=null;
-  ['holidays','sports','seasons','mypresets'].forEach(c=>document.getElementById('cat-'+c).classList.toggle('sel',c===cat));
+  ['holidays','sports','seasons','mypresets'].forEach(c=>{const el=document.getElementById('cat-'+c);if(el)el.classList.toggle('sel',c===cat);});
   document.getElementById('save-step4').style.display='none';
   document.getElementById('save-cta').style.display='none';
 
@@ -1900,9 +2566,15 @@ function selectSaveTeam(name,city,colors){
 
 function buildSaveSummary(){
   const effect=wledEffects.find(e=>e.id===selectedEffect);
-  const modeStr=createMode==='all'?`All Lights · ${alColor.toUpperCase()} · ${effect?.name||'Solid'}`:`Group Mode · ${zones.length} zones`;
+  let modeStr;
+  if(createMode==='all') modeStr=`All Lights · ${alColor.toUpperCase()} · ${effect?.name||'Solid'}`;
+  else if(createMode==='group') modeStr=`Group Mode · ${zones.length} zones`;
+  else if(createMode==='downlight') modeStr=`Downlights · ${crDlColor.toUpperCase()}`;
+  else modeStr='';
   let dest='My Presets';
-  if(selectedSaveCat==='holidays'&&selectedSaveSubCat)dest=`Holidays › ${selectedSaveSubCat.name}`;
+  if(selectedSaveCat==='mygroups') dest='My Groups';
+  else if(selectedSaveCat==='downlighting') dest='Downlighting';
+  else if(selectedSaveCat==='holidays'&&selectedSaveSubCat)dest=`Holidays › ${selectedSaveSubCat.name}`;
   else if(selectedSaveCat==='seasons'&&selectedSaveSubCat)dest=`Seasons › ${selectedSaveSubCat.name}`;
   else if(selectedSaveCat==='sports'&&selectedSaveSubSubCat)dest=`Sports › ${selectedSaveSubCat.name} › ${selectedSaveSubSubCat.city} ${selectedSaveSubSubCat.name}`;
   return`<div style="font-size:10px;color:var(--muted);margin-bottom:6px">SAVING TO</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">${dest}</div><div style="font-size:11px;color:var(--muted)">${modeStr}</div>`;
@@ -1911,17 +2583,41 @@ function buildSaveSummary(){
 function doSave(){
   const name=document.getElementById('save-name').value.trim();
   if(!name){showToast('Enter a preset name first');return;}
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+  // My Groups
+  if(selectedSaveCat==='mygroups'){
+    myGroups.unshift({id:myGroupsNextId++,name,zones:zones.map(z=>({name:z.name,color:z.color,on:z.on})),date:dateStr});
+    saveMyGroups();
+    renderMyGroups();
+    showToast('"'+name+'" saved to My Groups!');
+    setTimeout(()=>go('s-home'),1500);
+    return;
+  }
+
+  // Downlighting
+  if(selectedSaveCat==='downlighting'){
+    myDLPresets.unshift({id:myDLPresetsNextId++,name,color:crDlColor,date:dateStr});
+    saveMyDLPresets();
+    renderDLPresets();
+    // Update dl preset count badge
+    const cnt=document.getElementById('dl-preset-count');
+    if(cnt) cnt.textContent=(DL_PRESETS.length+myDLPresets.length)+' total';
+    showToast('"'+name+'" saved to Downlighting!');
+    setTimeout(()=>go('s-home'),1500);
+    return;
+  }
+
+  // All Lights categories
   let dest='My Presets',tag='other';
   if(selectedSaveCat==='holidays'&&selectedSaveSubCat){dest=`Holidays › ${selectedSaveSubCat.name}`;tag=selectedSaveSubCat.id;}
   else if(selectedSaveCat==='seasons'&&selectedSaveSubCat){dest=`Seasons › ${selectedSaveSubCat.name}`;tag='seasons';}
   else if(selectedSaveCat==='sports'&&selectedSaveSubSubCat){dest=`Sports › ${selectedSaveSubCat.name} › ${selectedSaveSubSubCat.city} ${selectedSaveSubSubCat.name}`;tag='sports';}
-  const now=new Date();
-  presets.unshift({id:presetNextId++,name,tag,groups:zones.map(z=>({name:z.name,color:z.color})),notes:document.getElementById('save-notes').value.trim(),date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  presets.unshift({id:presetNextId++,name,tag,groups:zones.map(z=>({name:z.name,color:z.color})),notes:document.getElementById('save-notes').value.trim(),date:dateStr});
   updateNowPlaying(name,zones.map(z=>z.color),true);
   const myPresetCount=document.getElementById('my-preset-count');
   if(myPresetCount) myPresetCount.textContent=presets.length+' saved';
-  const homePresetCount=document.getElementById('home-preset-count');
-  if(homePresetCount) homePresetCount.textContent=presets.length+' saved presets';
   renderPresetFilterBar();renderPresetList();
   showToast('"'+name+'" saved to '+dest+'!');
   setTimeout(()=>go('s-home'),1500);
@@ -1991,6 +2687,13 @@ function selectHolidayPattern(i){
   activatePattern(name, colors);
 }
 
+function clearAllDefaults(){
+  defaultPatterns={};
+  teamDefaultPatterns={};
+  localStorage.setItem('defaultPatterns','{}');
+  localStorage.setItem('teamDefaultPatterns','{}');
+}
+
 function setDefaultPattern(i){
   const h=currentHoliday; if(!h) return;
   const name=h.patterns[i];
@@ -2003,6 +2706,7 @@ function setDefaultPattern(i){
     }
     showToast('Default cleared');
   } else {
+    clearAllDefaults();
     defaultPatterns[h.id]=name;
     // Record as the controller boot default, stamped with change time
     bootDefault={holidayId:h.id, patternName:name, changedAt:Date.now(), syncedAt:null};
@@ -2044,7 +2748,7 @@ function renderPatterns(){
       <div class="color-dots">${dots}</div>
       <div style="flex:1">
         <div style="font-size:12px;font-weight:500">${p}${badge}</div>
-        <div style="font-size:10px;color:var(--muted)">${sub}</div>
+        <div style="font-size:11px;color:var(--muted)">${sub}</div>
       </div>
       <button class="crown-btn ${isDefault?'active':''}" onclick="event.stopPropagation();setDefaultPattern(${i})" title="${isDefault?'Clear default':'Set as default'}">👑</button>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFavPat(${i},'holiday')">⭐</button>
@@ -2101,7 +2805,7 @@ const HALLOWEEN_PAYLOADS = {
   'Ghost Drift':     n=>({on:true,bri:160,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[120,0,180,0],[0,0,0,0]],fx:77,sx:60,ix:200,pal:0,on:true}]}),
   'Blood Moon':      n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:20,ix:255,pal:0,on:true}]}),
 };
-// ── 4th of July ───────────────────────────────────────────────────────────────
+// ── USA Holidays (July 4th · Memorial Day · Labor Day) ───────────────────────
 const JULY4_PAYLOADS = {
   'Fireworks Burst': n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:89,sx:180,ix:220,pal:0,on:true}]}),
   'Patriot Chase':   n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
@@ -2127,6 +2831,13 @@ const EASTER_PAYLOADS = {
   'Spring Sparkle': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,180,220,0],[150,220,150,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
   'Bunny Hop':      n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
   'Easter Glow':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,220,150,0],[150,220,180,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
+};
+// ── Mother's Day ──────────────────────────────────────────────────────────────
+const MOTHERSDAY_PAYLOADS = {
+  'Rose Drift':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Petal Shimmer': n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[249,168,212,0],[255,255,255,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
+  'Garden Chase':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[219,39,119,0],[249,168,212,0],[255,255,255,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Love Bloom':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[249,168,212,0],[196,181,253,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
 };
 // ── Thanksgiving ──────────────────────────────────────────────────────────────
 const THANKSGIVING_PAYLOADS = {
@@ -2191,6 +2902,7 @@ const ALL_PAYLOADS = {
   ...VALENTINES_PAYLOADS,
   ...STPATS_PAYLOADS,
   ...EASTER_PAYLOADS,
+  ...MOTHERSDAY_PAYLOADS,
   ...THANKSGIVING_PAYLOADS,
   ...NEWYEAR_PAYLOADS,
   ...HANUKKAH_PAYLOADS,
@@ -2362,6 +3074,7 @@ function setSeasonDefault(patternName){
     }
     showToast('Default cleared');
   } else {
+    clearAllDefaults();
     defaultPatterns[s.id]=patternName;
     bootDefault={holidayId:s.id, patternName, changedAt:Date.now(), syncedAt:null};
     localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
@@ -2480,7 +3193,7 @@ function renderTDPatterns(){
       <div class="color-dots">${dots}</div>
       <div style="flex:1">
         <div style="font-size:12px;font-weight:500">${p.icon} ${p.name}${badge}</div>
-        <div style="font-size:10px;color:var(--muted)">${p.desc}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.desc}</div>
       </div>
       <button class="crown-btn ${isDef?'active':''}" onclick="event.stopPropagation();setTeamDefault('${p.name}')" title="${isDef?'Clear default':'Set as default'}">👑</button>
       <button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleTeamFavPat('${p.name}')">⭐</button>
@@ -2510,6 +3223,7 @@ function setTeamDefault(patternName){
     }
     showToast('Default cleared');
   } else {
+    clearAllDefaults();
     teamDefaultPatterns[key]=patternName;
     bootDefault={teamKey:key,patternName,teamData:{c:t.c,city:t.city,name:t.name},changedAt:Date.now(),syncedAt:null};
     localStorage.setItem('wled_boot_default',JSON.stringify(bootDefault));
@@ -2925,7 +3639,16 @@ function openQuickSave(){
   if(!lightsOn){ showToast('Nothing playing to save'); return; }
   const nameIn=document.getElementById('qs-name');
   if(nameIn) nameIn.value=(nowPlayingName||'').replace(/^🎲\s*/,'');
-  setQSCat('mypresets');
+  // Show right buttons based on createMode
+  const allBtns=['mypresets','holidays','seasons'];
+  const groupBtns=['mygroups'];
+  const downBtns=['downlighting'];
+  allBtns.forEach(c=>{const el=document.getElementById('qs-btn-'+c);if(el)el.style.display=createMode==='all'?'':'none';});
+  groupBtns.forEach(c=>{const el=document.getElementById('qs-btn-'+c);if(el)el.style.display=createMode==='group'?'':'none';});
+  downBtns.forEach(c=>{const el=document.getElementById('qs-btn-'+c);if(el)el.style.display=createMode==='downlight'?'':'none';});
+  if(createMode==='group') setQSCat('mygroups');
+  else if(createMode==='downlight') setQSCat('downlighting');
+  else setQSCat('mypresets');
   document.getElementById('qs-overlay').classList.add('open');
   setTimeout(()=>{ if(nameIn) nameIn.focus(); },150);
 }
@@ -2958,6 +3681,26 @@ function setQSCat(cat){
 function doQuickSave(){
   const name=document.getElementById('qs-name').value.trim();
   if(!name){ showToast('Enter a name first'); return; }
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const colors=nowPlayingColors||[];
+
+  if(_qsCat==='mygroups'){
+    myGroups.unshift({id:myGroupsNextId++,name,zones:zones.map(z=>({name:z.name,color:z.color,on:z.on})),date:dateStr});
+    saveMyGroups();
+    closeQuickSave();
+    showToast(`"${name}" saved to My Groups!`);
+    return;
+  }
+  if(_qsCat==='downlighting'){
+    myDLPresets.unshift({id:myDLPresetsNextId++,name,color:crDlColor,date:dateStr});
+    saveMyDLPresets();
+    renderDLPresets();
+    closeQuickSave();
+    showToast(`"${name}" saved to Downlighting!`);
+    return;
+  }
+
   let tag='other';
   let dest='My Presets';
   if(_qsCat==='holidays'){
@@ -2971,12 +3714,10 @@ function doQuickSave(){
     const s=seasons.find(x=>x.id===v);
     dest=s?`Seasons › ${s.name}`:'Seasons';
   }
-  const now=new Date();
-  const colors=nowPlayingColors||[];
   presets.unshift({
     id:presetNextId++, name, tag,
     groups:colors.length?colors.map(c=>({name:'Zone',color:c})):[{name:'Zone',color:'#3b82f6'}],
-    notes:'', date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+    notes:'', date:dateStr
   });
   const mpc=document.getElementById('my-preset-count');
   if(mpc) mpc.textContent=presets.length+' saved';
@@ -2997,7 +3738,7 @@ function syncNPSaveBtn(){
 function renderPresetFilterBar(){
   const used=['all',...new Set(presets.map(p=>p.tag))];
   document.getElementById('preset-filter-bar').innerHTML=used.map(id=>{
-    const h=id==='all'?{name:'All',icon:'📋',bg:'rgba(59,130,246,0.15)',border:'rgba(59,130,246,0.4)',text:'#60a5fa'}:(pHolidays.find(x=>x.id===id)||pHolidays[6]);
+    const h=id==='all'?{name:'All',icon:'📋',bg:'rgba(59,130,246,0.15)',border:'rgba(59,130,246,0.4)',text:'#60a5fa'}:(pHolidays.find(x=>x.id===id)||pHolidays.find(x=>x.id==='other'));
     const active=presetFilter===id;
     return`<div class="ftab ${active?'active':''}" style="${active?`background:${h.bg};border-color:${h.border};color:${h.text}`:''}" onclick="setPresetFilter('${id}')">${h.icon} ${h.name} <span style="opacity:0.6">${id==='all'?presets.length:presets.filter(p=>p.tag===id).length}</span></div>`;
   }).join('');
@@ -3009,11 +3750,11 @@ function renderPresetList(){
   const list=presetFilter==='all'?presets:presets.filter(p=>p.tag===presetFilter);
   const el=document.getElementById('preset-list');
   if(!list.length){el.innerHTML=`<div style="text-align:center;padding:32px;color:var(--muted)"><div style="font-size:32px;margin-bottom:10px">💾</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No presets here yet</div><div style="font-size:11px">Tap "Create Your Own" to get started</div></div>`;return;}
-  el.innerHTML=list.map(p=>{const tag=pHolidays.find(x=>x.id===p.tag)||pHolidays[6];return`<div class="preset-card"><div class="preset-thumb">${p.groups.map(g=>`<div class="thumb-seg" style="background:${g.color}"></div>`).join('')}</div><div style="font-size:13px;font-weight:600;margin-bottom:3px">${p.name}</div>${p.notes?`<div style="font-size:11px;color:var(--muted)">${p.notes}</div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><span style="font-size:10px;border-radius:20px;padding:3px 10px;font-weight:500;background:${tag.bg};border:0.5px solid ${tag.border};color:${tag.text}">${tag.icon} ${tag.name}</span><span style="font-size:11px;color:var(--muted)">${p.date}</span></div><div style="display:flex;gap:6px;margin-top:9px"><button style="flex:1;background:var(--accent);border:none;color:white;border-radius:8px;padding:8px;font-size:13px;font-weight:500;cursor:pointer;-webkit-appearance:none;" onclick="activatePreset(${p.id})">⚡ Activate</button><button style="background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;-webkit-appearance:none;" onclick="deletePreset(${p.id})">🗑</button></div></div>`;}).join('');
+  el.innerHTML=list.map(p=>{const tag=pHolidays.find(x=>x.id===p.tag)||pHolidays.find(x=>x.id==='other');return`<div class="preset-card"><div class="preset-thumb">${p.groups.map(g=>`<div class="thumb-seg" style="background:${g.color}"></div>`).join('')}</div><div style="font-size:13px;font-weight:600;margin-bottom:3px">${p.name}</div>${p.notes?`<div style="font-size:11px;color:var(--muted)">${p.notes}</div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><span style="font-size:10px;border-radius:20px;padding:3px 10px;font-weight:500;background:${tag.bg};border:0.5px solid ${tag.border};color:${tag.text}">${tag.icon} ${tag.name}</span><span style="font-size:11px;color:var(--muted)">${p.date}</span></div><div style="display:flex;gap:6px;margin-top:9px"><button style="flex:1;background:var(--accent);border:none;color:white;border-radius:8px;padding:8px;font-size:13px;font-weight:500;cursor:pointer;-webkit-appearance:none;" onclick="activatePreset(${p.id})">⚡ Activate</button><button style="background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;-webkit-appearance:none;" onclick="deletePreset(${p.id})">🗑</button></div></div>`;}).join('');
 }
 
-function activatePreset(id){const p=presets.find(x=>x.id===id);if(!p)return;p.groups.forEach((g,i)=>{if(zones[i]){zones[i].color=g.color;zones[i].on=true;}});renderGroupZones();renderCreatePreview();updateNowPlaying(p.name,p.groups.map(g=>g.color),true);showToast(p.name+' activated!');}
-function deletePreset(id){presets=presets.filter(x=>x.id!==id);renderPresetFilterBar();renderPresetList();const mpc=document.getElementById('my-preset-count');if(mpc)mpc.textContent=presets.length+' saved';const hpc=document.getElementById('home-preset-count');if(hpc)hpc.textContent=presets.length+' saved presets';showToast('Preset deleted');}
+function activatePreset(id){const p=presets.find(x=>x.id===id);if(!p)return;p.groups.forEach((g,i)=>{if(zones[i]){zones[i].color=g.color;zones[i].on=true;}});renderGroupZones();renderCreatePreview();updateNowPlaying(p.name,p.groups.map(g=>g.color),true);if(wled.active) pushZonesToWLED();showToast(p.name+' activated!');}
+function deletePreset(id){presets=presets.filter(x=>x.id!==id);renderPresetFilterBar();renderPresetList();const mpc=document.getElementById('my-preset-count');if(mpc)mpc.textContent=presets.length+' saved';showToast('Preset deleted');}
 
 // ═══════════════════════════════
 // UTILITIES
@@ -3059,6 +3800,15 @@ renderCalendar();
 renderPresetFilterBar();
 renderPresetList();
 updateNowPlaying('Off',[],false);
+// Init group/DL preset counts
+(function initPresetCounts(){
+  const mgc=document.getElementById('my-groups-count');
+  if(mgc) mgc.textContent=myGroups.length+' saved';
+  const dlc=document.getElementById('dl-preset-count');
+  if(dlc) dlc.textContent=(typeof DL_PRESETS!=='undefined'?DL_PRESETS.length:11)+myDLPresets.length+' total';
+  const mpc=document.getElementById('my-preset-count');
+  if(mpc) mpc.textContent=presets.length+' saved';
+})();
 </script>
 </body>
 </html>
@@ -3078,9 +3828,10 @@ const wled = {
   scanning: false,
   lastPayload: null,  // last lights-on WLED command — replayed when powering back on
   lastConfig: null,   // {name, colors} — used to restore the now-playing display
-  // Pre-seeded IP — tries this first before scanning
-  lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || '"192.168.0.154"'),
+  lastSeen: JSON.parse(localStorage.getItem('wled_last_ip') || 'null'),
 };
+
+let editingControllerIp = null;
 
 function saveControllers() {
   localStorage.setItem('wled_controllers', JSON.stringify(wled.controllers));
@@ -3106,31 +3857,52 @@ function fetchWithTimeout(url, opts = {}, timeout = 2000) {
   return Promise.race([fetch(url, opts), timer]);
 }
 
-async function wledGet(ip, path, timeout = 2000) {
+// Strip any accidental protocol / path the user may have typed, e.g. "http://192.168.0.1/"
+function sanitizeIP(raw) {
+  return raw.trim()
+    .replace(/^https?:\/\//i, '')  // strip protocol
+    .replace(/\/.*$/, '')           // strip path
+    .trim();
+}
+
+async function wledGet(ip, path, timeout = 3000) {
   try {
-    const r = await fetchWithTimeout(`http://${ip}${path}`, {}, timeout);
+    const r = await fetchWithTimeout(`http://${ip}${path}`, { mode: 'cors' }, timeout);
     return r.ok ? r.json() : null;
   } catch { return null; }
 }
 
-// Diagnostic probe — returns {ok, reason} for user-facing error messages
+// Diagnostic probe — returns {ok, reason, info} for user-facing error messages
 async function diagProbe(ip) {
-  // Check 1: is the page served over HTTPS? (mixed-content will silently block HTTP)
+  // Check 1: HTTPS context blocks HTTP requests (mixed-content)
   if (location.protocol === 'https:') {
-    return { ok: false, reason: 'mixed-content', msg: 'This app is loaded over HTTPS, but WLED uses plain HTTP. Browsers block this. Open the app via http:// instead (e.g. save the file locally and open it directly).' };
+    return { ok: false, reason: 'mixed-content', msg: 'This app is loaded over HTTPS, but WLED uses plain HTTP. Browsers block this. Save the file and open it directly from your computer via http://.' };
   }
+  // Check 2: file:// in Chrome blocks cross-origin fetches
+  if (location.protocol === 'file:' && navigator.userAgent.includes('Chrome') && !navigator.userAgent.includes('Firefox')) {
+    return { ok: false, reason: 'file-cors', msg: 'Chrome blocks network requests from local files. Serve the app over HTTP instead — run: npx serve . and open http://localhost:3000' };
+  }
+
   try {
-    const r = await fetchWithTimeout(`http://${ip}/json/info`, {}, 3000);
-    if (!r.ok) return { ok: false, reason: 'http-error', msg: `Device responded but returned HTTP ${r.status}. Try opening http://${ip} in your browser.` };
+    const r = await fetchWithTimeout(`http://${ip}/json/info`, { mode: 'cors' }, 4000);
+    if (!r.ok) return { ok: false, reason: 'http-error', msg: `Device at ${ip} responded with HTTP ${r.status}. Try opening http://${ip} in a new tab.` };
     const info = await r.json();
-    if (!info.ver) return { ok: false, reason: 'not-wled', msg: `Something answered at ${ip} but it doesn't look like WLED. Check the IP is correct.` };
+    if (!info || !info.ver) return { ok: false, reason: 'not-wled', msg: `Something answered at ${ip} but it doesn't look like WLED. Check the IP is correct.` };
     return { ok: true, info };
   } catch(e) {
-    if (e.message === 'timeout') return { ok: false, reason: 'timeout', msg: `No response from ${ip} after 3 seconds. Make sure your phone and the WLED device are on the same WiFi network.` };
-    if (e.message && (e.message.toLowerCase().includes('network') || e.message.toLowerCase().includes('failed to fetch'))) {
-      return { ok: false, reason: 'network', msg: `Could not reach ${ip}. Check that: (1) your device is on the same WiFi as the WLED controller, (2) the WLED controller is powered on, and (3) the app is opened via http:// not https://.` };
+    const msg = (e.message || '').toLowerCase();
+    if (msg === 'timeout') {
+      return { ok: false, reason: 'timeout', msg: `No response from ${ip} after 4 seconds. Is the controller powered on and on the same WiFi?` };
     }
-    return { ok: false, reason: 'unknown', msg: `Could not connect: ${e.message}` };
+    if (msg.includes('failed to fetch') || msg.includes('network') || msg.includes('cors')) {
+      // Distinguish CORS block vs genuine network failure
+      const isFileCors = location.protocol === 'file:';
+      if (isFileCors) {
+        return { ok: false, reason: 'file-cors', msg: `Browser blocked the request from a local file. Serve the app via HTTP instead — run: npx serve . in the app folder.` };
+      }
+      return { ok: false, reason: 'network', msg: `Could not reach ${ip}. If you can open http://${ip} in a browser tab but not here, check that this app is served via http:// (not https:// or file://).` };
+    }
+    return { ok: false, reason: 'unknown', msg: `Could not connect: ${e.message || 'Unknown error'}` };
   }
 }
 
@@ -3261,9 +4033,66 @@ async function wledSend(data) {
 
 // ── Discovery ──
 async function probeIP(ip) {
-  const info = await wledGet(ip, '/json/info', 1500);
+  const info = await wledGet(ip, '/json/info', 2500);
   if (info && info.ver) {
-    return { ip, name: info.name || `WLED @ ${ip}`, ledCount: info.leds?.count || 0, info };
+    return { ip, mac: info.mac || null, name: info.name || `WLED @ ${ip}`, ledCount: info.leds?.count || 0, info };
+  }
+  return null;
+}
+
+// Reconcile a freshly-probed device against saved controllers.
+// Matches by MAC first (stable across IP changes), then name, then IP.
+// Silently updates the stored IP if the device moved.
+function mergeFoundController(found) {
+  let idx = -1;
+  if (found.mac) idx = wled.controllers.findIndex(c => c.mac && c.mac === found.mac);
+  if (idx < 0)   idx = wled.controllers.findIndex(c => c.name === found.name);
+  if (idx < 0)   idx = wled.controllers.findIndex(c => c.ip === found.ip);
+
+  if (idx >= 0) {
+    const old = wled.controllers[idx];
+    const ipChanged = old.ip !== found.ip;
+    wled.controllers[idx] = { ...old, ...found }; // refresh IP, ledCount, info
+    saveControllers();
+    if (ipChanged) {
+      console.log(`[WLED] ${found.name} moved: ${old.ip} → ${found.ip}`);
+      // Seamlessly update active reference if this was the active controller
+      if (wled.active && (wled.active.ip === old.ip || (found.mac && wled.active.mac === found.mac))) {
+        wled.active = wled.controllers[idx];
+        localStorage.setItem('wled_last_ip', JSON.stringify(found.ip));
+        updateConnectionBadge(true);
+        showToast('📡 Reconnected to ' + found.name);
+      }
+    }
+    return wled.controllers[idx];
+  } else {
+    wled.controllers.push(found);
+    saveControllers();
+    return found;
+  }
+}
+
+// Try to find a known controller that isn't responding at its saved IP.
+// Attempts mDNS using the device name, then gives up (caller can trigger full scan).
+async function findControllerAtNewIP(savedController) {
+  // Try mDNS: WLED advertises as "<name>.local" by default
+  const mdnsName = (savedController.name || '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.local';
+  if (mdnsName !== '.local') {
+    const found = await probeIP(mdnsName);
+    if (found && (
+      (found.mac && found.mac === savedController.mac) ||
+      found.name === savedController.name
+    )) return found;
+  }
+  // Also try common WLED mDNS names
+  const fallbackNames = ['wled.local','wled-1.local','wled-2.local','wled-3.local'];
+  for (const host of fallbackNames) {
+    const found = await probeIP(host);
+    if (found && (
+      (found.mac && found.mac === savedController.mac) ||
+      found.name === savedController.name
+    )) return found;
   }
   return null;
 }
@@ -3322,8 +4151,8 @@ async function discoverWLED(onFound, onDone) {
   updateLabel('Detecting your network…');
   const detectedSubnets = await getLocalSubnet();
 
-  // Fallback subnets if WebRTC detection fails
-  const fallbackSubnets = ['192.168.1','192.168.0','192.168.2','192.168.10','192.168.50','10.0.0','10.0.1','10.1.1','172.16.0'];
+  // Fallback subnets — 192.168.0 and 192.168.1 are the two most common home networks
+  const fallbackSubnets = ['192.168.0','192.168.1','192.168.2','192.168.10','192.168.50','10.0.0','10.0.1','10.1.1','172.16.0'];
 
   // Put detected subnets first, then fallbacks (deduplicated)
   const allSubnets = detectedSubnets
@@ -3368,13 +4197,17 @@ async function discoverWLED(onFound, onDone) {
 
 // ── Connection Badge on Home Screen ──
 function updateConnectionBadge(online) {
-  const badge = document.getElementById('wled-badge');
-  if (!badge) return;
-  if (!wled.active) {
-    badge.innerHTML = `<span style="color:var(--danger)">●</span> No controller — <span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="go('s-wled')">Connect</span>`;
-  } else {
-    const dot = online === false ? `<span style="color:var(--warning)">●</span>` : `<span style="color:var(--success)">●</span>`;
-    badge.innerHTML = `${dot} ${wled.active.name} · ${wled.active.ledCount} LEDs · <span style="cursor:pointer;color:var(--accent)" onclick="go('s-wled')">Manage</span>`;
+  // Update top-bar controller chip
+  const chipName = document.getElementById('home-chip-name');
+  const chipDot  = document.getElementById('home-chip-dot');
+  if (chipName && chipDot) {
+    if (!wled.active) {
+      chipName.textContent = 'No Controller';
+      chipDot.classList.remove('online');
+    } else {
+      chipName.textContent = wled.active.name;
+      chipDot.classList.toggle('online', online !== false);
+    }
   }
   // Re-render the sync badge so it shows "Sync now" vs "will sync when connected" correctly
   renderSyncBadge();
@@ -3411,27 +4244,164 @@ function injectWledScreens() {
 
   <!-- MANUAL ENTRY -->
   <div class="card" style="margin-top:8px">
-    <div style="font-size:12px;font-weight:500;margin-bottom:10px">Add by IP Address</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Enter your WLED device's IP address. Find it in your router's device list or in the WLED app under Info.</div>
+    <div style="font-size:12px;font-weight:500;margin-bottom:6px">Add by IP Address</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Paste the full address or just the IP — the app handles both.</div>
     <div style="display:flex;gap:8px">
-      <input class="field-input" id="manual-ip" placeholder="192.168.0.154" style="flex:1;margin-bottom:0" />
-      <button class="btn btn-primary btn-sm" onclick="addManualIP()">Add</button>
+      <input class="field-input" id="manual-ip" placeholder="192.168.0.151" style="flex:1;margin-bottom:0" inputmode="decimal" />
+      <button class="btn btn-primary btn-sm" onclick="addManualIP()">Connect</button>
     </div>
     <div id="connect-error-area"></div>
   </div>
 
-  <div class="card" style="margin-top:4px">
-    <div style="font-size:12px;font-weight:500;margin-bottom:8px">💡 Tips</div>
-    <div style="font-size:11px;color:var(--muted);line-height:1.6">
-      • Phone must be on the same WiFi as the lights<br>
-      • WLED device must be powered on<br>
-      • Open <span style="color:var(--accent)">http://&lt;ip&gt;</span> in your browser to confirm the device is reachable<br>
-      • App must be opened via <b>http://</b> (not https://) to reach local devices
+  <!-- DIAGNOSTICS -->
+  <div class="card" style="margin-top:8px">
+    <div style="font-size:12px;font-weight:500;margin-bottom:8px">🔬 Connection Diagnostics</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Enter an IP and run the test to see exactly what's blocking the connection.</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input class="field-input" id="diag-ip" placeholder="192.168.0.151" style="flex:1;margin-bottom:0" inputmode="decimal" />
+      <button class="btn btn-ghost btn-sm" onclick="runDiagnostics()">Test</button>
     </div>
+    <div id="diag-output" style="font-size:11px;line-height:1.9;font-family:monospace;color:var(--muted)"></div>
   </div>
+
+  <!-- CONNECTION HELP -->
+  <div id="connection-env-warning" style="display:none;margin-top:8px"></div>
 </div>`;
   scrollView.appendChild(div.firstElementChild);
   renderSavedControllers();
+  checkConnectionEnvironment();
+
+  // Keep diag IP in sync with manual IP field
+  const manualInput = document.getElementById('manual-ip');
+  const diagInput   = document.getElementById('diag-ip');
+  if (manualInput && diagInput) {
+    manualInput.addEventListener('input', () => { diagInput.value = manualInput.value; });
+    diagInput.addEventListener('input', () => { manualInput.value = diagInput.value; });
+  }
+}
+
+// Step-by-step visible diagnostics so we can see exactly what's failing
+async function runDiagnostics() {
+  const raw = document.getElementById('diag-ip')?.value || document.getElementById('manual-ip')?.value || '';
+  const ip = sanitizeIP(raw);
+  const out = document.getElementById('diag-output');
+  if (!out) return;
+
+  const log = (icon, msg, color) => {
+    out.innerHTML += `<div style="color:${color||'var(--muted)'}"><span style="margin-right:6px">${icon}</span>${msg}</div>`;
+  };
+
+  out.innerHTML = '';
+  log('🔍', `Target: <b>http://${ip || '(no IP entered)'}/json/info</b>`, 'var(--text)');
+  log('📄', `App origin: <b>${location.protocol}//${location.host || 'file'}</b>`, 'var(--text)');
+
+  if (!ip) { log('❌', 'Enter an IP address first', 'var(--danger)'); return; }
+
+  // Check 1: protocol
+  if (location.protocol === 'https:') {
+    log('❌', 'HTTPS context — browser will block all HTTP requests. Open app via http:// instead.', 'var(--danger)'); return;
+  }
+  if (location.protocol === 'file:') {
+    log('⚠️', 'Opened as a local file. Chrome blocks this; Firefox allows it.', 'var(--warning)');
+  } else {
+    log('✅', 'Protocol ok (http)', 'var(--success)');
+  }
+
+  // Check 2: fetch available
+  if (typeof fetch === 'undefined') {
+    log('❌', 'fetch() not available in this browser', 'var(--danger)'); return;
+  }
+  log('✅', 'fetch() available', 'var(--success)');
+
+  // Check 3: raw fetch attempt — catches CORS, network, timeout
+  log('⏳', `Fetching http://${ip}/json/info …`, 'var(--muted)');
+  const url = `http://${ip}/json/info`;
+  let fetchErr = null, resp = null;
+  try {
+    resp = await Promise.race([
+      fetch(url, { mode: 'cors' }),
+      new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 5000))
+    ]);
+  } catch(e) { fetchErr = e; }
+
+  if (fetchErr) {
+    const m = fetchErr.message || '';
+    if (m === 'timeout') {
+      log('❌', `Timed out after 5s — device not responding at ${ip}`, 'var(--danger)');
+      log('💡', 'Check: device powered on? Same WiFi network?', 'var(--muted)');
+    } else if (m.toLowerCase().includes('cors') || m.toLowerCase().includes('blocked')) {
+      log('❌', `CORS blocked: ${m}`, 'var(--danger)');
+      log('💡', 'Serve app via http:// (not file:// or https://)', 'var(--muted)');
+    } else {
+      log('❌', `Fetch failed: ${m}`, 'var(--danger)');
+      log('💡', `Can you open <a href="http://${ip}" target="_blank" style="color:var(--accent)">http://${ip}</a> in a browser tab?`, 'var(--muted)');
+    }
+    return;
+  }
+
+  log('✅', `Got HTTP ${resp.status} from device`, 'var(--success)');
+
+  if (!resp.ok) {
+    log('❌', `HTTP error ${resp.status}`, 'var(--danger)'); return;
+  }
+
+  // Check 4: parse JSON
+  let info = null;
+  try { info = await resp.json(); } catch(e) { log('❌', `JSON parse error: ${e.message}`, 'var(--danger)'); return; }
+
+  if (!info || !info.ver) {
+    log('⚠️', `Device answered but doesn't look like WLED. Got: ${JSON.stringify(info).slice(0,80)}`, 'var(--warning)'); return;
+  }
+
+  log('✅', `WLED v${info.ver} — "${info.name}" — ${info.leds?.count} LEDs`, 'var(--success)');
+  log('🎉', 'Everything looks good! Connecting…', 'var(--success)');
+
+  // Auto-connect
+  const controller = { ip, mac: info.mac || null, name: info.name || `WLED @ ${ip}`, ledCount: info.leds?.count || 0, info };
+  const merged = mergeFoundController(controller);
+  setActiveController(merged.ip);
+  updateConnectionBadge(true);
+  renderSavedControllers();
+  showToast('✅ Connected to ' + merged.name);
+}
+
+// Warn the user immediately if the app is in a context where connections will fail
+function checkConnectionEnvironment() {
+  const el = document.getElementById('connection-env-warning');
+  if (!el) return;
+
+  let html = '';
+  if (location.protocol === 'https:') {
+    html = `<div style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.6">
+      <div style="font-weight:600;color:var(--danger);margin-bottom:4px">⚠️ HTTPS blocks local connections</div>
+      <div style="color:var(--muted)">This app is open via <b>https://</b>. Browsers block HTTP requests to local devices from HTTPS pages. Save the file and open it directly via <b>http://</b> to connect to WLED.</div>
+    </div>`;
+  } else if (location.protocol === 'file:') {
+    const isChrome = navigator.userAgent.includes('Chrome') && !navigator.userAgent.includes('Firefox');
+    if (isChrome) {
+      html = `<div style="background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.3);border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.6">
+        <div style="font-weight:600;color:var(--warning);margin-bottom:4px">⚠️ Chrome blocks requests from local files</div>
+        <div style="color:var(--muted)">Open a terminal in this folder and run: <code style="background:var(--surface3);padding:2px 6px;border-radius:4px">npx serve .</code> then open <b>http://localhost:3000</b> instead.</div>
+      </div>`;
+    }
+  }
+
+  if (html) {
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+
+  // Update the test link with the current manual IP if filled in
+  const ipInput = document.getElementById('manual-ip');
+  const testLink = document.getElementById('test-link-placeholder');
+  if (ipInput && testLink) {
+    ipInput.addEventListener('input', () => {
+      const ip = sanitizeIP(ipInput.value);
+      if (ip) {
+        testLink.outerHTML = `<a href="http://${ip}" target="_blank" style="color:var(--accent)" id="test-link-placeholder">open http://${ip} in a new tab ↗</a>`;
+      }
+    });
+  }
 }
 
 // ── Scan UI ──
@@ -3447,14 +4417,13 @@ function startScan() {
   discoverWLED(
     (controller) => {
       found.set(controller.ip, controller);
-      // Save or update in persistent list
-      const idx = wled.controllers.findIndex(c => c.ip === controller.ip);
-      if (idx >= 0) wled.controllers[idx] = controller;
-      else wled.controllers.push(controller);
-      saveControllers();
+      const merged = mergeFoundController(controller);
       renderSavedControllers();
-      // Auto-connect to first found if none active
-      if (!wled.active) { setActiveController(controller.ip); updateConnectionBadge(); showToast('✅ Connected to ' + controller.name); }
+      if (!wled.active) {
+        setActiveController(merged.ip);
+        updateConnectionBadge(true);
+        showToast('✅ Connected to ' + merged.name);
+      }
     },
     () => {
       const label = found.size > 0
@@ -3489,24 +4458,35 @@ function renderSavedControllers() {
   }
   el.innerHTML = wled.controllers.map(c => {
     const isActive = wled.active?.ip === c.ip;
+    const isEditing = editingControllerIp === c.ip;
+    const safeId = c.ip.replace(/\./g, '_');
+    const nameRow = isEditing
+      ? `<div style="display:flex;gap:8px;align-items:center;margin-bottom:2px">
+           <input id="rename-input-${safeId}" class="field-input" value="${c.name.replace(/"/g,'&quot;')}" style="flex:1;margin:0;font-size:14px;font-weight:600" onkeydown="if(event.key==='Enter')saveRenameController('${c.ip}');else if(event.key==='Escape')cancelRenameController()"/>
+           <button class="btn btn-primary btn-sm" onclick="saveRenameController('${c.ip}')">Save</button>
+           <button class="btn btn-ghost btn-sm" onclick="cancelRenameController()">✕</button>
+         </div>`
+      : `<div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>`;
     return `
       <div style="background:var(--surface);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:14px;padding:14px 16px;margin-bottom:10px">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:40px;height:40px;border-radius:12px;background:${isActive ? 'rgba(34,197,94,0.15)' : 'var(--surface2)'};border:1px solid ${isActive ? 'rgba(34,197,94,0.3)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💡</div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.ip}${c.ledCount ? ' · ' + c.ledCount + ' LEDs' : ''}</div>
+            ${nameRow}
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.ledCount ? c.ledCount + ' LEDs' : 'Unknown LED count'}<span style="opacity:0.45"> · ${c.ip}</span></div>
           </div>
-          ${isActive
+          ${!isEditing ? (isActive
             ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:4px 12px;flex-shrink:0;font-weight:500">● Active</span>`
             : `<button class="btn btn-primary btn-sm" style="flex-shrink:0" onclick="switchToController('${c.ip}')">Use</button>`
-          }
+          ) : ''}
         </div>
+        ${!isEditing ? `
         <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border)">
           <a href="http://${c.ip}" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;text-align:center;text-decoration:none">🌐 Open WLED</a>
           <button class="btn btn-ghost btn-sm" style="flex:1" onclick="pingController('${c.ip}')">🔄 Ping</button>
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="startRenameController('${c.ip}')">✏️ Rename</button>
           ${!isActive ? `<button class="btn btn-ghost btn-sm" style="flex:1;color:var(--danger)" onclick="removeController('${c.ip}')">🗑 Remove</button>` : ''}
-        </div>
+        </div>` : ''}
       </div>`;
   }).join('');
 }
@@ -3554,22 +4534,63 @@ async function pingController(ip) {
   }
 }
 
+function startRenameController(ip) {
+  editingControllerIp = ip;
+  renderSavedControllers();
+  setTimeout(() => {
+    const safeId = ip.replace(/\./g, '_');
+    const input = document.getElementById('rename-input-' + safeId);
+    if (input) { input.focus(); input.select(); }
+  }, 50);
+}
+
+function cancelRenameController() {
+  editingControllerIp = null;
+  renderSavedControllers();
+}
+
+async function saveRenameController(ip) {
+  const safeId = ip.replace(/\./g, '_');
+  const input = document.getElementById('rename-input-' + safeId);
+  const newName = input?.value?.trim();
+  if (!newName) { showToast('Name cannot be empty'); return; }
+
+  // Update locally
+  const idx = wled.controllers.findIndex(c => c.ip === ip);
+  if (idx >= 0) {
+    wled.controllers[idx].name = newName;
+    saveControllers();
+    if (wled.active?.ip === ip) {
+      wled.active.name = newName;
+      updateConnectionBadge();
+    }
+  }
+
+  editingControllerIp = null;
+  renderSavedControllers();
+
+  // Push new name to the WLED device
+  const ok = await wledCfgPost(ip, { id: { name: newName } });
+  if (ok) showToast('✓ Renamed to "' + newName + '"');
+  else    showToast('✓ Saved locally — controller not reached');
+}
+
 async function addManualIP() {
-  const ip = document.getElementById('manual-ip').value.trim();
+  const raw = document.getElementById('manual-ip').value;
+  const ip = sanitizeIP(raw);
   if (!ip) return;
+  document.getElementById('manual-ip').value = ip; // show cleaned value
+  document.getElementById('connect-error-area').innerHTML = '';
   showToast('Checking ' + ip + '…');
 
   const diag = await diagProbe(ip);
   if (diag.ok) {
-    const controller = { ip, name: diag.info.name || `WLED @ ${ip}`, ledCount: diag.info.leds?.count || 0, info: diag.info };
-    const idx = wled.controllers.findIndex(c => c.ip === ip);
-    if (idx >= 0) wled.controllers[idx] = controller;
-    else wled.controllers.push(controller);
-    saveControllers();
-    if (!wled.active) { setActiveController(ip); updateConnectionBadge(); }
+    const controller = { ip, mac: diag.info.mac || null, name: diag.info.name || `WLED @ ${ip}`, ledCount: diag.info.leds?.count || 0, info: diag.info };
+    const merged = mergeFoundController(controller);
+    if (!wled.active) { setActiveController(merged.ip); updateConnectionBadge(true); }
     renderSavedControllers();
     document.getElementById('connect-error-area').innerHTML = '';
-    showToast('✅ Added: ' + controller.name);
+    showToast('✅ Added: ' + merged.name);
   } else {
     showConnectError(ip, diag.msg, diag.reason);
   }
@@ -3680,6 +4701,11 @@ function dlInitPixelUI() {
     input.value = dlPixelString;
     dlPixelInputChanged();
   }
+  // Always show pixel panel — this is a config screen now
+  const body = document.getElementById('dl-pixel-body');
+  const icon = document.getElementById('dl-pixel-toggle-icon');
+  if (body) body.style.display = 'block';
+  if (icon) icon.textContent = '−';
 }
 
 function dlPixelInputChanged() {
@@ -3758,6 +4784,51 @@ window.togglePower = function() {
 // activatePattern and selectTDPattern now handle WLED directly via ALL_PAYLOADS / teamPatternPayload.
 // No override needed here.
 
+// ── Logo tap: randomize lights ──
+function randomizeLights() {
+  const n = getLEDCount();
+
+  // Skip boring effects (Solid=0) and palette-only ones; pick from visually interesting range
+  const skip = new Set([0, 22, 23, 24, 25, 26, 27]); // solid + palette effects
+  const pool = wledEffects.filter(e => !skip.has(e.id));
+  const fx   = pool[Math.floor(Math.random() * pool.length)];
+
+  // Generate 1–3 random vivid colors
+  const numColors = Math.floor(Math.random() * 3) + 1;
+  const cols = [];
+  for (let i = 0; i < numColors; i++) {
+    const h = Math.floor(Math.random() * 360);
+    const s = 80 + Math.floor(Math.random() * 20);   // 80–100% saturation
+    const b = 70 + Math.floor(Math.random() * 30);   // 70–100% brightness
+    cols.push(hexToRgb(hsvToHex(h, s, b)));
+  }
+  while (cols.length < 3) cols.push([0, 0, 0]); // WLED expects 3 color slots
+
+  const sx = 80 + Math.floor(Math.random() * 140);  // speed 80–220
+  const ix = 80 + Math.floor(Math.random() * 140);  // intensity 80–220
+
+  const hexColors = cols.slice(0, numColors).map(rgb =>
+    '#' + rgb.map(v => v.toString(16).padStart(2,'0')).join('')
+  );
+
+  wledSend({ on: true, bri: 200, seg: [{ id: 0, start: 0, stop: n, col: cols, fx: fx.id, sx, ix, on: true }] });
+  updateNowPlaying('✨ ' + fx.name, hexColors, true);
+
+  // Animate logo with a quick spin
+  const logo = document.querySelector('.logo-ring');
+  if (logo) {
+    logo.style.transition = 'transform 0.5s cubic-bezier(.36,2,.5,1)';
+    logo.style.transform  = 'rotate(360deg) scale(1.15)';
+    setTimeout(() => {
+      logo.style.transition = 'transform 0.4s ease';
+      logo.style.transform  = 'rotate(360deg) scale(1)';
+    }, 500);
+    setTimeout(() => { logo.style.transform = ''; logo.style.transition = ''; }, 900);
+  }
+
+  showToast('✨ ' + fx.name);
+}
+
 // Override activatePreset — pushes zone colors as segments
 const _origActivatePreset = activatePreset;
 window.activatePreset = function(id) {
@@ -3827,6 +4898,84 @@ function pixelsToRanges(pixels, totalLEDs) {
 // Colours that should use the dedicated W channel instead of RGB mixing
 const W_CHANNEL_COLORS = new Set(['#ffffff','#fff5e0']);
 function isWhiteChannel(hex) { return W_CHANNEL_COLORS.has((hex||'').toLowerCase()); }
+
+// ── Downlighting presets ──
+const DL_PRESETS = [
+  { name: 'Warm White',  color: null,      swatch: '#fff5e0', desc: 'Dedicated white channel — warmest, most natural' },
+  { name: 'Cool White',  color: '#dff0ff', swatch: '#dff0ff', desc: 'Crisp daylight white' },
+  { name: 'Red',         color: '#ff1a1a', swatch: '#ff1a1a', desc: 'Bold solid red' },
+  { name: 'Blue',        color: '#1a6fff', swatch: '#1a6fff', desc: 'Deep sky blue' },
+  { name: 'Green',       color: '#00cc44', swatch: '#00cc44', desc: 'Fresh emerald green' },
+  { name: 'Pink',        color: '#ff3d8f', swatch: '#ff3d8f', desc: 'Vivid hot pink' },
+  { name: 'Purple',      color: '#8800ee', swatch: '#8800ee', desc: 'Rich deep purple' },
+  { name: 'Orange',      color: '#ff6600', swatch: '#ff6600', desc: 'Warm amber orange' },
+  { name: 'Teal',        color: '#00ccbb', swatch: '#00ccbb', desc: 'Cool cyan teal' },
+  { name: 'Yellow',      color: '#ffcc00', swatch: '#ffcc00', desc: 'Bright sunny yellow' },
+  { name: 'Lavender',    color: '#bb88ff', swatch: '#bb88ff', desc: 'Soft pastel lavender' },
+];
+
+let activeDLPreset = null;
+
+function renderDLPresets() {
+  const el = document.getElementById('dl-preset-list');
+  if (!el) return;
+  const hasDL = !!dlPixelString;
+  if (!hasDL) {
+    el.innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--muted);background:var(--surface);border-radius:14px;border:0.5px solid var(--border)">
+      <div style="font-size:32px;margin-bottom:10px">💡</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No downlights configured</div>
+      <div style="font-size:11px;line-height:1.5;margin-bottom:14px">Set up your downlight pixel positions first.</div>
+      <button class="btn btn-primary btn-sm" onclick="go('s-downlights')">Configure Downlights</button>
+    </div>`;
+    return;
+  }
+  let html = '';
+  // User-saved DL presets first
+  if(myDLPresets.length){
+    html += `<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:4px">My Downlight Presets</div>`;
+    html += myDLPresets.map(p => {
+      const isActive = activeDLPreset === 'custom:'+p.id;
+      const swatch = p.color || '#fff5e0';
+      return `<div style="background:var(--surface);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="activateMyDLPreset(${p.id})">
+        <div style="width:44px;height:44px;border-radius:12px;background:${swatch};flex-shrink:0;box-shadow:0 0 12px ${swatch}55"></div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;margin-bottom:2px">${p.name}</div>
+          <div style="font-size:11px;color:var(--muted)">${swatch.toUpperCase()}</div>
+        </div>
+        ${isActive ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:4px 10px;font-weight:500">● On</span>` : ''}
+        <button onclick="event.stopPropagation();deleteMyDLPreset(${p.id})" style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;-webkit-appearance:none;flex-shrink:0">✕</button>
+      </div>`;
+    }).join('');
+    html += `<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:4px">Built-In Presets</div>`;
+  }
+  // Built-in presets
+  html += DL_PRESETS.map(p => {
+    const isActive = activeDLPreset === p.name;
+    return `<div style="background:var(--surface);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="activateDLPreset('${p.name}')">
+      <div style="width:44px;height:44px;border-radius:12px;background:${p.swatch};flex-shrink:0;box-shadow:0 0 12px ${p.swatch}55"></div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;margin-bottom:2px">${p.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.desc}</div>
+      </div>
+      ${isActive ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:4px 12px;font-weight:500">● On</span>` : ''}
+    </div>`;
+  }).join('');
+  el.innerHTML = html;
+  // Update count badge
+  const cnt = document.getElementById('dl-preset-count');
+  if(cnt) cnt.textContent = (DL_PRESETS.length + myDLPresets.length) + ' total';
+}
+
+function activateDLPreset(name) {
+  const p = DL_PRESETS.find(x => x.name === name);
+  if (!p) return;
+  activeDLPreset = name;
+  const payload = buildDownlightPayload(p.color);
+  wledSendDL(payload);
+  updateNowPlaying(name, [p.swatch], true);
+  renderDLPresets();
+  showToast('💡 ' + name);
+}
 
 // Build WLED payload: segment 0 = full strip black, segments 1-N = each downlight range lit
 // For warm white we use the dedicated W channel [0,0,0,255]; colour picker sends RGB
@@ -3968,17 +5117,30 @@ window.doSave = function() {
 // ── Zone push helper ──
 function pushZonesToWLED(colorOverride) {
   if (!wled.active) return;
-  const colors = colorOverride || zones.filter(z => z.on).map(z => z.color);
   const segments = [];
+  const useGroups = groups && groups.length > 0;
   let cursor = 0;
   zones.forEach((z, i) => {
     const rgb = hexToRgb(colorOverride ? colorOverride[i] : z.color);
+    const start = useGroups && groups[i] ? (groups[i].startLed || 0) : cursor;
+    const stop  = useGroups && groups[i] ? start + (groups[i].ledCount || z.leds) : cursor + z.leds;
     if (rgb && z.on) {
-      segments.push({ id: i, start: cursor, stop: cursor + z.leds, col: [rgb], fx: selectedEffect, sx: effectSpeed });
+      segments.push({ id: i, start, stop, col: [rgb], fx: selectedEffect, sx: effectSpeed, on: true });
     }
     cursor += z.leds;
   });
   if (segments.length) wledSend({ on: true, seg: segments });
+}
+
+// Reset WLED back to a single full-strip segment — wipes out any group segments.
+// Call this whenever leaving Group Mode so All Lights has clean control.
+async function resetToSingleSegment() {
+  if (!wled.active) return;
+  const n = getLEDCount();
+  // Segment 0 = full strip. Segments 1–15: stop:0 tells WLED to delete them.
+  const seg = [{ id: 0, start: 0, stop: n, on: false }];
+  for (let i = 1; i <= 15; i++) seg.push({ id: i, stop: 0 });
+  await wledPost(wled.active.ip, { on: false, seg });
 }
 
 // ── Helpers ──
@@ -4012,39 +5174,33 @@ function renderNPPreview() {
   renderStrand('np-strand', total, i => colors[i % colors.length]);
 }
 
-// PATCH HOME SCREEN — Add connection badge + nav
+// PATCH HOME SCREEN — Add connection badge
 // ═══════════════════════════════════════════════════
 function patchHomeScreen() {
-  const statusBar = document.querySelector('.status-bar');
-  if (statusBar) {
-    // Replace static status with live connection badge
-    statusBar.innerHTML = `
-      <div class="status-dot" id="status-dot-indicator"></div>
-      <span id="wled-badge">No controller — <span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="go('s-wled')">Connect</span></span>
-    `;
-  }
-
-  // Add controller nav to top of home
-  const homeHeader = document.querySelector('#s-home .home-header');
-  if (homeHeader) {
-    const navBar = document.createElement('div');
-    navBar.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:8px;';
-    navBar.innerHTML = `<button class="btn btn-ghost btn-sm" onclick="go('s-wled')" style="font-size:11px">📡 Controllers</button>`;
-    homeHeader.parentNode.insertBefore(navBar, homeHeader);
-  }
+  // Connection badge is now handled entirely by the top-bar controller chip
+  // and updateConnectionBadge(). Nothing to inject here.
 }
 
 // ── Poll connection status every 15s ──
 async function pollConnection() {
-  if (!wled.active) return;
+  if (!wled.active) {
+    // No active controller — try to find one quietly
+    if (wled.controllers.length > 0 && !wled.scanning) backgroundReconnectOffline();
+    return;
+  }
   const state = await wledGet(wled.active.ip, '/json/state', 2000);
   const online = !!state;
-  const wasOnline = wled.active._online ?? null; // null = first poll, don't treat as transition
+  const wasOnline = wled.active._online ?? null;
   wled.active._online = online;
 
   const dot = document.getElementById('status-dot-indicator');
   if (dot) dot.style.background = online ? 'var(--success)' : 'var(--danger)';
   updateConnectionBadge(online);
+
+  // Controller just went offline — start background search for it at a new IP
+  if (!online && wasOnline !== false && !wled.scanning) {
+    backgroundReconnectOffline();
+  }
 
   // Controller just came back online (smart switch turned on, power restored, etc.)
   if (online && wasOnline === false) {
@@ -4068,46 +5224,95 @@ async function pollConnection() {
 function initWLED() {
   injectWledScreens();
   patchHomeScreen();
+  updateConnectionBadge();
 
-  // Auto-connect to last known controller
-  if (wled.lastSeen) {
-    probeIP(wled.lastSeen).then(c => {
-      if (c) {
-        const idx = wled.controllers.findIndex(x => x.ip === wled.lastSeen);
-        if (idx >= 0) wled.controllers[idx] = c;
-        else wled.controllers.push(c);
-        saveControllers();
-        setActiveController(wled.lastSeen);
-        wled.active._online = true; // mark as online so first poll doesn't double-sync
-        showToast('Reconnected to ' + c.name);
-        // If the default changed while the controller was off, push it now
-        if (isBootDefaultDirty()) {
-          syncBootDefaultToController(wled.lastSeen).then(ok => {
-            if (ok) {
-              showToast('⚡ Updated default synced to controller');
+  // Probe all saved controllers simultaneously — instant reconnect regardless of which
+  // one was "last used". Uses MAC matching so a changed IP is handled transparently.
+  if (wled.controllers.length > 0) {
+    const lastIp = wled.lastSeen;
+    // Collect all IPs to try: last-seen first (de-duped), then the rest
+    const ipsToTry = [...new Set([
+      lastIp,
+      ...wled.controllers.map(c => c.ip)
+    ].filter(Boolean))];
+
+    Promise.all(ipsToTry.map(ip => probeIP(ip))).then(results => {
+      let connected = false;
+      results.forEach(found => {
+        if (!found) return;
+        const merged = mergeFoundController(found);
+        // Connect to the preferred controller (last used or first found)
+        if (!connected && (found.ip === lastIp || !wled.active)) {
+          setActiveController(merged.ip);
+          wled.active._online = true;
+          connected = true;
+          if (isBootDefaultDirty()) {
+            syncBootDefaultToController(merged.ip).then(ok => {
+              if (ok) showToast('⚡ Synced default to ' + merged.name);
               if (apOn) setTimeout(applyAutopilotNow, 400);
-            }
-          });
-        } else if (apOn) {
-          // Default is clean — Autopilot applies today's holiday pattern via app
-          setTimeout(applyAutopilotNow, 800);
+            });
+          } else if (apOn) {
+            setTimeout(applyAutopilotNow, 800);
+          }
         }
-        // If autopilot is off and clean, trust WLED Preset 1 — no extra requests.
+      });
+
+      if (connected) {
+        updateConnectionBadge(true);
+        // Background: look for any saved controllers that didn't respond
+        backgroundReconnectOffline();
       } else {
         updateConnectionBadge(false);
+        // Nothing responded — silently search for devices in the background
+        backgroundReconnectOffline();
       }
+      renderSavedControllers();
     });
   }
 
-  // Render any previously saved controllers
-  if (wled.controllers.length > 0) {
-    const found = new Map(wled.controllers.map(c => [c.ip, c]));
-    setTimeout(() => renderFoundList(found), 100);
+  // Poll every 15 seconds to detect disconnect / IP changes
+  setInterval(pollConnection, 15000);
+}
+
+// Silently search for any saved controller that isn't responding at its stored IP.
+// First tries mDNS by device name, then falls back to a subnet scan.
+// Runs in the background without blocking the UI.
+async function backgroundReconnectOffline() {
+  const offlineControllers = wled.controllers.filter(c => {
+    // Consider offline if it's either the active controller that failed, or any saved controller
+    return !wled.active || wled.active.ip !== c.ip;
+  });
+  if (offlineControllers.length === 0 && wled.active) return;
+
+  const targets = offlineControllers.length > 0 ? offlineControllers : wled.controllers;
+  for (const saved of targets) {
+    const found = await findControllerAtNewIP(saved);
+    if (found) {
+      mergeFoundController(found);
+      if (!wled.active || wled.active.ip === saved.ip || (saved.mac && wled.active.mac === saved.mac)) {
+        setActiveController(found.ip);
+        updateConnectionBadge(true);
+      }
+      renderSavedControllers();
+      return; // Found at least one — stop here, user can manually reconnect others
+    }
   }
 
-  // Poll every 15 seconds
-  setInterval(pollConnection, 15000);
-  updateConnectionBadge();
+  // mDNS failed — if active controller is missing, kick off a quiet subnet scan
+  if (!wled.active || !wled.active._online) {
+    discoverWLED(
+      found => {
+        mergeFoundController(found);
+        if (!wled.active) {
+          setActiveController(found.ip);
+          updateConnectionBadge(true);
+          showToast('📡 Found ' + found.name);
+        }
+        renderSavedControllers();
+      },
+      () => { renderSavedControllers(); }
+    );
+  }
 }
 
 // Run after DOM is ready
@@ -4174,7 +5379,7 @@ function toggleLockPW() {
   else { inp.type = 'password'; btn.textContent = '👁'; }
 }
 
-// Hidden admin tap — tap "LightControl Pro" 5x quickly to open admin PW change
+// Hidden admin tap — tap "Luma Lights Pro" 5x quickly to open admin PW change
 let lockHintTaps = 0, lockHintTimer = null;
 function lockHintTap() {
   lockHintTaps++;
@@ -4413,6 +5618,7 @@ async function saveGPIOConfig() {
   const ins = gpioOutputs.map(o => {
     const ledType = LED_TYPES.find(t => t.label === o.ledType) || LED_TYPES[0];
     const entry = {
+      n:     o.name || ('Output ' + (idx + 1)),
       pin:   [parseInt(o.pin)],
       type:  ledType.code,
       count: parseInt(o.ledCount) || 1,
@@ -4518,22 +5724,157 @@ function doAdminPasswordChange() {
   }
 }
 
-// ── Add admin button to home screen ──
-function addAdminButton() {
-  const homeStatusBar = document.querySelector('#s-home .status-bar');
-  if (homeStatusBar) {
-    const adminBtn = document.createElement('button');
-    adminBtn.style.cssText = 'margin-left:auto;background:transparent;border:none;color:var(--surface3);font-size:11px;cursor:pointer;-webkit-appearance:none;padding:0;';
-    adminBtn.textContent = '⚙️';
-    adminBtn.title = 'Admin';
-    adminBtn.onclick = () => go('s-admin');
-    homeStatusBar.appendChild(adminBtn);
+// ── addAdminButton: retired — Settings button is now in the home header ──
+function addAdminButton() {}
+
+// ═══════════════════════════════════════════════════
+// GROUPS — named zones that map to WLED segments
+// Each group: { id, name, startLed, ledCount, color, on }
+// ═══════════════════════════════════════════════════
+let groups = JSON.parse(localStorage.getItem('lc_groups') || '[]');
+let groupNextId = Math.max(...groups.map(g => g.id), 0) + 1;
+
+function saveGroups() {
+  localStorage.setItem('lc_groups', JSON.stringify(groups));
+}
+
+function addGroup() {
+  // Default: start after the last group's end
+  const lastEnd = groups.reduce((max, g) => Math.max(max, (g.startLed || 0) + (g.ledCount || 0)), 0);
+  groups.push({ id: groupNextId++, name: 'Group ' + groups.length, startLed: lastEnd, ledCount: 25, color: '#3b82f6', on: true });
+  saveGroups();
+  syncZonesFromGroups();
+  renderGroupsList();
+}
+
+function removeGroup(id) {
+  groups = groups.filter(g => g.id !== id);
+  saveGroups();
+  syncZonesFromGroups();
+  renderGroupsList();
+}
+
+function updateGroupField(id, field, value) {
+  const g = groups.find(x => x.id === id);
+  if (!g) return;
+  if (field === 'startLed' || field === 'ledCount') value = Math.max(0, parseInt(value) || 0);
+  g[field] = value;
+  saveGroups();
+  syncZonesFromGroups();
+  // Name changes: save silently — don't re-render or the input loses focus mid-type
+  if (field !== 'name') renderGroupsList();
+}
+
+// Rebuild zones[] (used by Group Mode in Create Your Own) from groups
+function syncZonesFromGroups() {
+  if (groups.length === 0) {
+    zones = defaultZones.map(z => ({ ...z }));
+  } else {
+    const saved = JSON.parse(localStorage.getItem('lc_zone_colors') || '{}');
+    zones = groups.map((g, i) => {
+      const prev = saved[g.name] || saved[String(i)];
+      return {
+        name:  g.name,
+        leds:  g.ledCount || 1,
+        color: prev?.color || g.color || '#3b82f6',
+        on:    prev?.on !== undefined ? prev.on : g.on,
+        startLed: g.startLed || 0,
+      };
+    });
+  }
+  renderGroupZones();
+  renderCreatePreview();
+}
+
+function renderGroupsList() {
+  const el = document.getElementById('groups-list');
+  if (!el) return;
+  if (groups.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:28px 16px;color:var(--muted);background:var(--surface);border-radius:14px;border:0.5px solid var(--border);margin-bottom:12px">
+      <div style="font-size:32px;margin-bottom:10px">🗂️</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No groups yet</div>
+      <div style="font-size:11px;line-height:1.5">Tap + Add Group to create named zones on your LED strip.</div>
+    </div>`;
+    return;
+  }
+  const totalLeds = getLEDCount();
+  el.innerHTML = groups.map((g, idx) => {
+    const end = (g.startLed || 0) + (g.ledCount || 0);
+    const pctStart = totalLeds > 0 ? Math.min(100, ((g.startLed || 0) / totalLeds) * 100) : 0;
+    const pctWidth = totalLeds > 0 ? Math.min(100 - pctStart, ((g.ledCount || 0) / totalLeds) * 100) : 0;
+    return `
+    <div class="gpio-card">
+      <div class="gpio-header">
+        <div class="gpio-num">${idx + 1}</div>
+        <input class="gpio-name-inp" value="${g.name}" placeholder="e.g. Roofline, Garage"
+          oninput="updateGroupField(${g.id},'name',this.value)"
+          onblur="renderGroupsList()" />
+        <button class="gpio-del-btn" onclick="removeGroup(${g.id})">✕</button>
+      </div>
+      <!-- Strip position visualiser -->
+      <div style="background:var(--surface3);border-radius:4px;height:8px;margin-bottom:12px;position:relative;overflow:hidden">
+        <div style="position:absolute;left:${pctStart.toFixed(1)}%;width:${pctWidth.toFixed(1)}%;height:100%;background:${g.color};border-radius:4px;min-width:3px"></div>
+      </div>
+      <div class="gpio-fields">
+        <div class="gpio-field">
+          <span class="gpio-field-label">Start LED</span>
+          <input class="gpio-field-input" type="number" min="0" max="1500"
+            value="${g.startLed || 0}"
+            onchange="updateGroupField(${g.id},'startLed',this.value)"
+            onblur="updateGroupField(${g.id},'startLed',this.value)" />
+        </div>
+        <div class="gpio-field">
+          <span class="gpio-field-label">LED Count</span>
+          <input class="gpio-field-input" type="number" min="1" max="1500"
+            value="${g.ledCount || 25}"
+            onchange="updateGroupField(${g.id},'ledCount',this.value)"
+            onblur="updateGroupField(${g.id},'ledCount',this.value)" />
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border)">
+        LEDs ${g.startLed || 0} – ${end - 1} &nbsp;·&nbsp; ${g.ledCount || 0} LEDs total
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function pushGroupSegments() {
+  if (!wled.active) { showToast('No controller connected'); return; }
+  if (groups.length === 0) { showToast('No groups defined'); return; }
+
+  const statusCard = document.getElementById('groups-push-status');
+  statusCard.style.display = 'block';
+  document.getElementById('groups-push-title').textContent = 'Pushing segments to WLED…';
+  document.getElementById('groups-push-bar').style.width = '40%';
+  document.getElementById('groups-push-msg').textContent = 'Sending segment layout…';
+
+  // Build segment payload — each group becomes one WLED segment
+  const seg = groups.map((g, i) => ({
+    id:    i,
+    start: g.startLed || 0,
+    stop:  (g.startLed || 0) + (g.ledCount || 0),
+    n:     g.name,
+    on:    g.on !== false,
+  }));
+
+  const ok = await wledPost(wled.active.ip, { seg });
+  document.getElementById('groups-push-bar').style.width = '100%';
+  if (ok) {
+    document.getElementById('groups-push-title').textContent = '✓ Segments pushed successfully';
+    document.getElementById('groups-push-msg').textContent = 'Group layout is now active on your controller.';
+    showToast('Segments pushed to WLED!');
+  } else {
+    document.getElementById('groups-push-title').textContent = '⚠️ Push failed';
+    document.getElementById('groups-push-msg').textContent = 'Could not reach controller. Check connection.';
+    showToast('Could not reach controller');
   }
 }
 
 // ── Init GPIO ──
 function initGPIO() {
   renderGPIOList();
+  renderGroupsList();
+  syncZonesFromGroups();
   addAdminButton();
 }
 
@@ -4560,9 +5901,8 @@ initGPIO();
   // ── DOM elements ──
   const domIds = [
     'scroll-view','s-home','s-wled','s-create','s-downlights',
-    's-sports-leagues','s-sports-teams','s-team-detail',
+    's-sports-leagues','s-sports-teams','s-team-detail','s-my-groups',
     'np-name','np-sub','np-indicator','power-btn','np-bg','np-colors',
-    'tab-all','tab-down',
     'dl-strand','dl-swatch','dl-hex-label','dl-hex-inp','dl-presets',
     'dl-pixel-input','dl-pixel-preview','dl-pixel-count','dl-push-btn',
     'saved-controllers-list','manual-ip','scan-btn',
@@ -4601,7 +5941,7 @@ initGPIO();
 
   // ── Report ──
   const status = fail === 0 ? '✅ ALL PASSED' : `⚠️ ${fail} FAILED, ${pass} passed`;
-  console.log('=== LightControl Smoke Test — ' + status + ' ===');
+  console.log('=== Luma Lights Smoke Test — ' + status + ' ===');
   results.forEach(r => console.log(r));
   if (fail > 0) console.warn('Smoke test: ' + fail + ' failure(s) detected — see above');
 })();
