@@ -83,7 +83,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .np-bg{position:absolute;inset:0;opacity:0.09;transition:background 0.5s;pointer-events:none;}
 .np-inner{position:relative;display:flex;align-items:center;gap:12px;}
 .np-dots{display:flex;gap:3px;flex-shrink:0;}
-.np-dot{width:10px;height:10px;border-radius:50%;}
+.np-dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,0.25),0 0 0 1.5px rgba(255,255,255,0.1);}
 .np-info{flex:1;min-width:0;}
 .np-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
 .np-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -153,7 +153,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .pattern-row.favorited{border-color:rgba(59,130,246,0.4);}
 .pattern-row.is-default{border-left:3px solid #fbbf24;}
 .color-dots{display:flex;gap:3px;flex-shrink:0;}
-.cdot{width:9px;height:9px;border-radius:50%;}
+.cdot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,0.25),0 0 0 1.5px rgba(255,255,255,0.08);}
 .fav-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;-webkit-appearance:none;}
 .fav-btn.active{background:rgba(59,130,246,0.15);border-color:var(--accent);color:var(--accent);}
 .crown-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;-webkit-appearance:none;opacity:0.45;transition:opacity .15s;}
@@ -192,15 +192,15 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 .strand-dot{height:10px;border-radius:2px;flex:0 0 5px;min-width:0;transition:background 0.15s;}
 .group-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border-radius:11px;margin-bottom:7px;cursor:pointer;border:1.5px solid transparent;}
 .group-row:hover{border-color:var(--border2);}
-.group-color-dot{width:32px;height:32px;border-radius:9px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.15);}
+.group-color-dot{width:32px;height:32px;border-radius:9px;flex-shrink:0;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,0.2),inset 0 0 0 1.5px rgba(255,255,255,0.1);}
 
 /* SLIDERS */
 .hue-track{width:100%;height:24px;border-radius:8px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);cursor:pointer;position:relative;border:0.5px solid var(--border2);margin-bottom:12px;}
 .sat-track,.bri-track{width:100%;height:24px;border-radius:8px;cursor:pointer;position:relative;border:0.5px solid var(--border2);margin-bottom:12px;}
 .slider-thumb{position:absolute;top:-3px;width:14px;height:30px;border-radius:5px;border:2.5px solid white;background:transparent;pointer-events:none;transform:translateX(-50%);box-shadow:0 2px 6px rgba(0,0,0,0.5);}
 .slider-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
-.swatch-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-.sw{width:30px;height:30px;border-radius:8px;cursor:pointer;border:2px solid transparent;}
+.swatch-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px;}
+.sw{aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18),inset 0 0 0 1px rgba(255,255,255,0.12);}
 .sw.sel{border-color:white;}
 .hex-row{display:flex;align-items:center;gap:8px;margin-top:4px;}
 .hex-inp{background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;width:95px;outline:none;}
@@ -504,7 +504,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div class="np-bg" id="np-bg"></div>
     <div class="np-inner">
       <div class="np-dots" id="np-colors"></div>
-      <div class="np-info">
+      <div class="np-info" id="np-info">
         <div class="np-label">Now Playing</div>
         <div class="np-name" id="np-name">Off</div>
         <div class="np-sub" id="np-sub">Tap Presets or Create Your Own</div>
@@ -555,6 +555,16 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <span style="color:rgba(255,255,255,0.5);font-size:16px">›</span>
   </button>
 
+  <!-- CREATE YOUR OWN — full width -->
+  <button class="create-own-btn" onclick="go('s-create')" style="margin-bottom:8px">
+    <div class="co-icon-wrap">✏️</div>
+    <div style="flex:1">
+      <div class="co-label">Create Your Own</div>
+      <div class="co-sub">Mix colors, effects &amp; control groups or downlights</div>
+    </div>
+    <span style="color:var(--muted);font-size:18px">›</span>
+  </button>
+
   <!-- SYNC STATUS BADGE -->
   <div id="home-sync-badge" style="display:none;align-items:center;gap:8px;font-size:12px;color:var(--muted);background:var(--surface);border-radius:10px;padding:9px 13px;margin-bottom:10px;border:0.5px solid var(--border);transition:all 0.3s"></div>
 
@@ -566,16 +576,6 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
     <div id="home-defaults-list"></div>
   </div>
-
-  <!-- CREATE YOUR OWN — full width -->
-  <button class="create-own-btn" onclick="go('s-create')" style="margin-bottom:8px">
-    <div class="co-icon-wrap">✏️</div>
-    <div style="flex:1">
-      <div class="co-label">Create Your Own</div>
-      <div class="co-sub">Mix colors, effects &amp; control groups or downlights</div>
-    </div>
-    <span style="color:var(--muted);font-size:18px">›</span>
-  </button>
 
   <!-- ROW: AUTOPILOT + SCHEDULE -->
   <div class="quick-grid">
@@ -631,27 +631,54 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <!-- ALL LIGHTS PANEL -->
   <div id="cr-panel-all">
     <div class="card">
-      <div class="section-label">Color</div>
+      <!-- COLOR SLOT TABS — hidden when effect uses only 1 color -->
+      <div id="al-color-slots" style="display:none;gap:6px;margin-bottom:10px">
+        <button id="al-slot-1" onclick="alSetSlot(1)" style="display:flex;align-items:center;gap:5px;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--accent);background:rgba(59,130,246,0.12);color:var(--accent);-webkit-appearance:none">
+          <span id="al-slot-1-dot" style="width:10px;height:10px;border-radius:50%;background:#3b82f6;flex-shrink:0"></span>Color 1
+        </button>
+        <button id="al-slot-2" onclick="alSetSlot(2)" style="display:flex;align-items:center;gap:5px;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--border2);background:transparent;color:var(--muted);-webkit-appearance:none">
+          <span id="al-slot-2-dot" style="width:10px;height:10px;border-radius:50%;background:#ef4444;flex-shrink:0"></span>Color 2
+        </button>
+        <button id="al-slot-3" onclick="alSetSlot(3)" style="display:none;align-items:center;gap:5px;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--border2);background:transparent;color:var(--muted);-webkit-appearance:none">
+          <span id="al-slot-3-dot" style="width:10px;height:10px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>Color 3
+        </button>
+      </div>
+      <div class="field-label" style="margin-bottom:8px">Quick Colors</div>
       <div class="swatch-row" id="al-swatches"></div>
-      <div class="slider-row"><span>Hue</span><span id="al-hue-val">217°</span></div>
-      <div class="hue-track" id="al-hue"><div class="slider-thumb" id="al-hue-thumb" style="left:60%"></div></div>
-      <div class="slider-row"><span>Saturation</span><span id="al-sat-val">100%</span></div>
-      <div class="sat-track" id="al-sat"><div class="slider-thumb" id="al-sat-thumb" style="left:100%"></div></div>
-      <div class="slider-row"><span>Brightness</span><span id="al-bri-val">100%</span></div>
-      <div class="bri-track" id="al-bri"><div class="slider-thumb" id="al-bri-thumb" style="left:100%"></div></div>
-      <div class="hex-row">
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span class="field-label" style="margin-bottom:0">Custom Color</span>
+        <div style="display:flex;background:var(--surface2);border-radius:8px;padding:2px;gap:2px;border:0.5px solid var(--border)">
+          <button id="al-toggle-sliders" onclick="alSetPickerMode('sliders')" style="border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;cursor:pointer;background:var(--accent);color:#fff;-webkit-appearance:none">Sliders</button>
+          <button id="al-toggle-wheel" onclick="alSetPickerMode('wheel')" style="border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);-webkit-appearance:none">Wheel</button>
+        </div>
+      </div>
+      <!-- SLIDERS -->
+      <div id="al-picker-sliders">
+        <div class="slider-row"><span>Hue</span><span id="al-hue-val">217°</span></div>
+        <div class="hue-track" id="al-hue"><div class="slider-thumb" id="al-hue-thumb" style="left:60%"></div></div>
+        <div class="slider-row"><span>Saturation</span><span id="al-sat-val">100%</span></div>
+        <div class="sat-track" id="al-sat"><div class="slider-thumb" id="al-sat-thumb" style="left:100%"></div></div>
+        <div class="slider-row"><span>Brightness</span><span id="al-bri-val">100%</span></div>
+        <div class="bri-track" id="al-bri"><div class="slider-thumb" id="al-bri-thumb" style="left:100%"></div></div>
+      </div>
+      <!-- COLOR WHEEL -->
+      <div id="al-picker-wheel" style="display:none;flex-direction:column;align-items:center;gap:10px">
+        <div style="position:relative;width:220px;height:220px;flex-shrink:0">
+          <canvas id="al-wheel-canvas" width="220" height="220" style="border-radius:50%;cursor:crosshair;touch-action:none"></canvas>
+          <div id="al-wheel-cursor" style="position:absolute;width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.5),0 2px 6px rgba(0,0,0,0.4);pointer-events:none;transform:translate(-50%,-50%);top:50%;left:50%"></div>
+        </div>
+        <div style="width:100%">
+          <div class="slider-row"><span>Brightness</span><span id="al-wheel-bri-val">100%</span></div>
+          <div class="bri-track" id="al-wheel-bri"><div class="slider-thumb" id="al-wheel-bri-thumb" style="left:100%"></div></div>
+        </div>
+      </div>
+      <div class="hex-row" style="margin-top:4px">
         <span style="font-size:11px;color:var(--muted)">Hex</span>
         <input class="hex-inp" id="al-hex" value="#3b82f6" maxlength="7" oninput="alHexTyped()"/>
         <button class="apply-btn" onclick="alApplyCustom()">Apply</button>
       </div>
-    </div>
-    <div class="card">
-      <div class="section-label" style="margin-bottom:10px">Effect — all 117 WLED effects</div>
-      <div class="effect-search">
-        <span style="color:var(--muted)">🔍</span>
-        <input type="text" id="effect-search" placeholder="Search effects..." oninput="filterEffects()"/>
-      </div>
-      <div class="effect-list" id="effect-list"></div>
     </div>
     <div class="card">
       <div class="section-label" style="margin-bottom:12px">Effect Parameters</div>
@@ -665,6 +692,14 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
         <input type="range" class="param-slider" min="0" max="255" value="128" id="param-intensity" oninput="updateParams()">
         <span class="param-val" id="intensity-val">128</span>
       </div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:10px">Effect — all 117 WLED effects</div>
+      <div class="effect-search">
+        <span style="color:var(--muted)">🔍</span>
+        <input type="text" id="effect-search" placeholder="Search effects..." oninput="filterEffects()"/>
+      </div>
+      <div class="effect-list" id="effect-list"></div>
     </div>
   </div>
 
@@ -686,22 +721,40 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
     <div id="cr-dl-picker">
       <div class="card">
-        <div class="section-label">Quick Colors</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:8px" id="cr-dl-preset-btns"></div>
-        <div class="hex-row" style="margin-top:8px">
+        <div class="field-label" style="margin-bottom:8px">Quick Colors</div>
+        <div class="swatch-row" id="cr-dl-swatches"></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="field-label" style="margin-bottom:0">Custom Color</span>
+          <div style="display:flex;background:var(--surface2);border-radius:8px;padding:2px;gap:2px;border:0.5px solid var(--border)">
+            <button id="crdl-toggle-sliders" onclick="crDlSetPickerMode('sliders')" style="border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;cursor:pointer;background:var(--accent);color:#fff;-webkit-appearance:none">Sliders</button>
+            <button id="crdl-toggle-wheel" onclick="crDlSetPickerMode('wheel')" style="border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);-webkit-appearance:none">Wheel</button>
+          </div>
+        </div>
+        <div id="cr-dl-picker-sliders">
+          <div class="slider-row"><span>Hue</span><span id="cr-dl-hue-val">36°</span></div>
+          <div class="hue-track" id="cr-dl-hue"><div class="slider-thumb" id="cr-dl-hue-thumb" style="left:10%"></div></div>
+          <div class="slider-row"><span>Saturation</span><span id="cr-dl-sat-val">90%</span></div>
+          <div class="sat-track" id="cr-dl-sat"><div class="slider-thumb" id="cr-dl-sat-thumb" style="left:90%"></div></div>
+          <div class="slider-row"><span>Brightness</span><span id="cr-dl-bri-val">90%</span></div>
+          <div class="bri-track" id="cr-dl-bri"><div class="slider-thumb" id="cr-dl-bri-thumb" style="left:90%"></div></div>
+        </div>
+        <div id="cr-dl-picker-wheel" style="display:none;flex-direction:column;align-items:center;gap:10px">
+          <div style="position:relative;width:220px;height:220px;flex-shrink:0">
+            <canvas id="crdl-wheel-canvas" width="220" height="220" style="border-radius:50%;cursor:crosshair;touch-action:none"></canvas>
+            <div id="crdl-wheel-cursor" style="position:absolute;width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.5),0 2px 6px rgba(0,0,0,0.4);pointer-events:none;transform:translate(-50%,-50%);top:50%;left:50%"></div>
+          </div>
+          <div style="width:100%">
+            <div class="slider-row"><span>Brightness</span><span id="crdl-wheel-bri-val">90%</span></div>
+            <div class="bri-track" id="crdl-wheel-bri"><div class="slider-thumb" id="crdl-wheel-bri-thumb" style="left:90%"></div></div>
+          </div>
+        </div>
+        <div class="hex-row" style="margin-top:4px">
           <span style="font-size:11px;color:var(--muted)">Hex</span>
           <input class="hex-inp" id="cr-dl-hex" maxlength="7" oninput="crDlHexTyped()"/>
           <button class="apply-btn" onclick="crDlApply()">Apply</button>
         </div>
-      </div>
-      <div class="card">
-        <div class="section-label" style="margin-bottom:10px">Custom Color</div>
-        <div class="slider-row"><span>Hue</span><span id="cr-dl-hue-val">36°</span></div>
-        <div class="hue-track" id="cr-dl-hue"><div class="slider-thumb" id="cr-dl-hue-thumb" style="left:10%"></div></div>
-        <div class="slider-row"><span>Saturation</span><span id="cr-dl-sat-val">90%</span></div>
-        <div class="sat-track" id="cr-dl-sat"><div class="slider-thumb" id="cr-dl-sat-thumb" style="left:90%"></div></div>
-        <div class="slider-row"><span>Brightness</span><span id="cr-dl-bri-val">90%</span></div>
-        <div class="bri-track" id="cr-dl-bri"><div class="slider-thumb" id="cr-dl-bri-thumb" style="left:90%"></div></div>
       </div>
     </div>
   </div>
@@ -724,20 +777,34 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   <div class="card">
     <div class="field-label" style="margin-bottom:8px">Quick Colors</div>
     <div class="swatch-row" id="zp-swatches"></div>
-    <div style="border-top:0.5px solid var(--border);padding-top:12px">
-      <div class="field-label" style="margin-bottom:8px">Holiday Colors</div>
-      <div class="swatch-row" id="zp-holiday-swatches"></div>
-    </div>
   </div>
   <div class="card">
-    <div class="field-label" style="margin-bottom:10px">Custom Color</div>
-    <div class="slider-row"><span>Hue</span><span id="zp-hue-val">0°</span></div>
-    <div class="hue-track" id="zp-hue"><div class="slider-thumb" id="zp-hue-thumb" style="left:0%"></div></div>
-    <div class="slider-row"><span>Saturation</span><span id="zp-sat-val">100%</span></div>
-    <div class="sat-track" id="zp-sat"><div class="slider-thumb" id="zp-sat-thumb" style="left:100%"></div></div>
-    <div class="slider-row"><span>Brightness</span><span id="zp-bri-val">100%</span></div>
-    <div class="bri-track" id="zp-bri"><div class="slider-thumb" id="zp-bri-thumb" style="left:100%"></div></div>
-    <div class="hex-row">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span class="field-label" style="margin-bottom:0">Custom Color</span>
+      <div style="display:flex;background:var(--surface2);border-radius:8px;padding:2px;gap:2px;border:0.5px solid var(--border)">
+        <button id="zp-toggle-sliders" onclick="zpSetPickerMode('sliders')" style="border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;cursor:pointer;background:var(--accent);color:#fff;-webkit-appearance:none">Sliders</button>
+        <button id="zp-toggle-wheel" onclick="zpSetPickerMode('wheel')" style="border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);-webkit-appearance:none">Wheel</button>
+      </div>
+    </div>
+    <div id="zp-picker-sliders">
+      <div class="slider-row"><span>Hue</span><span id="zp-hue-val">0°</span></div>
+      <div class="hue-track" id="zp-hue"><div class="slider-thumb" id="zp-hue-thumb" style="left:0%"></div></div>
+      <div class="slider-row"><span>Saturation</span><span id="zp-sat-val">100%</span></div>
+      <div class="sat-track" id="zp-sat"><div class="slider-thumb" id="zp-sat-thumb" style="left:100%"></div></div>
+      <div class="slider-row"><span>Brightness</span><span id="zp-bri-val">100%</span></div>
+      <div class="bri-track" id="zp-bri"><div class="slider-thumb" id="zp-bri-thumb" style="left:100%"></div></div>
+    </div>
+    <div id="zp-picker-wheel" style="display:none;flex-direction:column;align-items:center;gap:10px">
+      <div style="position:relative;width:220px;height:220px;flex-shrink:0">
+        <canvas id="zp-wheel-canvas" width="220" height="220" style="border-radius:50%;cursor:crosshair;touch-action:none"></canvas>
+        <div id="zp-wheel-cursor" style="position:absolute;width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.5),0 2px 6px rgba(0,0,0,0.4);pointer-events:none;transform:translate(-50%,-50%);top:50%;left:50%"></div>
+      </div>
+      <div style="width:100%">
+        <div class="slider-row"><span>Brightness</span><span id="zp-wheel-bri-val">100%</span></div>
+        <div class="bri-track" id="zp-wheel-bri"><div class="slider-thumb" id="zp-wheel-bri-thumb" style="left:100%"></div></div>
+      </div>
+    </div>
+    <div class="hex-row" style="margin-top:4px">
       <span style="font-size:11px;color:var(--muted)">Hex</span>
       <input class="hex-inp" id="zp-hex-inp" value="#ffffff" maxlength="7" oninput="zpHexTyped()"/>
       <button class="apply-btn" onclick="zpApplyCustom()">Apply</button>
@@ -803,11 +870,11 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-preset-menu">
   <div class="top-bar"><button class="back-btn" onclick="go('s-home')">← Home</button><span class="screen-title">Presets</span></div>
   <div class="preset-menu-grid">
-    <div class="preset-menu-card" onclick="go('s-downlighting')"><span class="pmc-icon">💡</span><div style="flex:1"><div class="pmc-label">Downlighting</div><div class="pmc-sub">Solid colors for your downlight LEDs</div></div><span class="pmc-count" id="dl-preset-count">10</span></div>
-    <div class="preset-menu-card" onclick="go('s-my-groups')"><span class="pmc-icon">🗂️</span><div style="flex:1"><div class="pmc-label">My Groups</div><div class="pmc-sub">Your saved group color combos</div></div><span class="pmc-count" id="my-groups-count">0 saved</span></div>
     <div class="preset-menu-card" onclick="go('s-holidays')"><span class="pmc-icon">🎄</span><div style="flex:1"><div class="pmc-label">Holidays</div><div class="pmc-sub">Christmas, Halloween, July 4th and more</div></div><span class="pmc-count">12</span></div>
-    <div class="preset-menu-card" onclick="go('s-sports-leagues')"><span class="pmc-icon">🏆</span><div style="flex:1"><div class="pmc-label">Sports Teams</div><div class="pmc-sub">NFL, NBA, MLB, NHL and 100 college programs</div></div><span class="pmc-count">5 leagues</span></div>
+    <div class="preset-menu-card" onclick="go('s-downlighting')"><span class="pmc-icon">💡</span><div style="flex:1"><div class="pmc-label">Downlighting</div><div class="pmc-sub">Solid colors for your downlight LEDs</div></div><span class="pmc-count" id="dl-preset-count">10</span></div>
     <div class="preset-menu-card" onclick="go('s-seasons')"><span class="pmc-icon">🍂</span><div style="flex:1"><div class="pmc-label">Seasons</div><div class="pmc-sub">Spring, Summer, Fall and Winter themes</div></div><span class="pmc-count">4 seasons</span></div>
+    <div class="preset-menu-card" onclick="go('s-sports-leagues')"><span class="pmc-icon">🏆</span><div style="flex:1"><div class="pmc-label">Sports Teams</div><div class="pmc-sub">NFL, NBA, MLB, NHL and 100 college programs</div></div><span class="pmc-count">5 leagues</span></div>
+    <div class="preset-menu-card" onclick="go('s-my-groups')"><span class="pmc-icon">🗂️</span><div style="flex:1"><div class="pmc-label">My Groups</div><div class="pmc-sub">Your saved group color combos</div></div><span class="pmc-count" id="my-groups-count">0 saved</span></div>
     <div class="preset-menu-card" onclick="go('s-my-presets')"><span class="pmc-icon">💾</span><div style="flex:1"><div class="pmc-label">My Presets</div><div class="pmc-sub">Your saved all-lights combinations</div></div><span class="pmc-count" id="my-preset-count">4 saved</span></div>
   </div>
 </div>
@@ -931,50 +998,17 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
 <div class="screen" id="s-downlights">
   <div class="top-bar"><button class="back-btn" onclick="go('s-admin')">← Settings</button><span class="screen-title">Downlights Setup</span></div>
 
-  <!-- LIVE PREVIEW -->
-  <div class="card">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px">LIVE PREVIEW</div>
-    <div class="dl-strand" id="dl-strand"></div>
+  <div style="font-size:11px;color:var(--muted);line-height:1.6;background:var(--surface2);border-radius:10px;padding:10px 13px;margin-bottom:14px">
+    Enter LED positions you want treated as downlights. Use ranges or individual numbers (1-indexed).<br>
+    <span style="color:var(--text)">e.g. 1-2, 5, 9-10, 12, 15</span>
   </div>
 
-  <!-- COLOR PRESETS — swatch circles like Create page -->
-  <div class="card">
-    <div class="section-label">Color</div>
-    <div class="swatch-row" id="dl-presets"></div>
-    <!-- active colour indicator -->
-    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
-      <div style="width:28px;height:28px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0" id="dl-swatch"></div>
-      <div><div style="font-size:12px;font-weight:500" id="dl-name-label">Warm White</div><div style="font-size:11px;color:var(--muted)" id="dl-hex-label">#FFF5E0</div></div>
-    </div>
-  </div>
-
-  <!-- CUSTOM COLOR -->
-  <div class="card">
-    <div class="section-label" style="margin-bottom:10px">Custom Color</div>
-    <div class="slider-row"><span>Hue</span><span id="dl-hue-val">36°</span></div>
-    <div class="hue-track" id="dl-hue"><div class="slider-thumb" id="dl-hue-thumb" style="left:10%"></div></div>
-    <div class="slider-row"><span>Saturation</span><span id="dl-sat-val">90%</span></div>
-    <div class="sat-track" id="dl-sat"><div class="slider-thumb" id="dl-sat-thumb" style="left:90%"></div></div>
-    <div class="slider-row"><span>Brightness</span><span id="dl-bri-val">90%</span></div>
-    <div class="bri-track" id="dl-bri"><div class="slider-thumb" id="dl-bri-thumb" style="left:90%"></div></div>
-    <div class="hex-row" style="margin-top:8px">
-      <span style="font-size:11px;color:var(--muted)">Hex</span>
-      <input class="hex-inp" id="dl-hex-inp" value="#fff5e0" maxlength="7" oninput="dlHexTyped()"/>
-      <button class="apply-btn" onclick="dlApplyCustom()">Apply</button>
-    </div>
-  </div>
-
-  <!-- PIXEL POSITIONS — collapsed by default -->
   <div class="card" id="dl-pixel-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleDLPixelPanel()">
-      <div style="font-size:12px;font-weight:500">Pixel Positions</div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span id="dl-pixel-count" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">0 pixels</span>
-        <span id="dl-pixel-toggle-icon" style="font-size:20px;line-height:1;color:var(--muted);width:20px;text-align:center">+</span>
-      </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:600">Pixel Positions</div>
+      <span id="dl-pixel-count" style="font-size:10px;background:var(--surface3);border-radius:20px;padding:2px 10px;color:var(--muted)">0 pixels</span>
     </div>
-    <div id="dl-pixel-body" style="display:none;margin-top:14px">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">Enter the LED positions that are downlights. Use ranges or individual numbers (1-indexed).<br><span style="color:var(--text)">e.g. 1-2,5,9-10,12,15</span></div>
+    <div id="dl-pixel-body">
       <input class="field-input" id="dl-pixel-input" placeholder="e.g. 6,12,17,28,35,52,75" style="margin-bottom:10px" oninput="dlPixelInputChanged()"/>
       <div style="font-size:10px;color:var(--muted);margin-bottom:6px" id="dl-pixel-total-label">Preview</div>
       <div id="dl-pixel-preview" style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:12px"></div>
@@ -983,7 +1017,20 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
   </div>
 
-
+  <!-- Hidden elements kept for JS compatibility -->
+  <div style="display:none">
+    <div id="dl-strand"></div>
+    <div id="dl-presets"></div>
+    <div id="dl-swatch"></div>
+    <div id="dl-name-label"></div>
+    <div id="dl-hex-label"></div>
+    <input id="dl-hex-inp"/>
+    <div id="dl-hue-val"></div><div id="dl-sat-val"></div><div id="dl-bri-val"></div>
+    <div id="dl-hue"><div id="dl-hue-thumb"></div></div>
+    <div id="dl-sat"><div id="dl-sat-thumb"></div></div>
+    <div id="dl-bri"><div id="dl-bri-thumb"></div></div>
+    <span id="dl-pixel-toggle-icon"></span>
+  </div>
 </div>
 
 <!-- ══════════ AUTOPILOT ══════════ -->
@@ -1313,7 +1360,7 @@ let teamDefaultPatterns=JSON.parse(localStorage.getItem('teamDefaultPatterns')||
 const _tfpRaw=JSON.parse(localStorage.getItem('teamFavPatterns')||'{}');
 let teamFavPatterns={};
 Object.entries(_tfpRaw).forEach(([k,v])=>teamFavPatterns[k]=new Set(v));
-let nowPlayingName='Off',nowPlayingColors=[];
+let nowPlayingName='Off',nowPlayingColors=[],_npMode='none';
 let currentHoliday=null,currentSeason=null;
 let favPatterns={},seasonFavPatterns={};
 let defaultPatterns=JSON.parse(localStorage.getItem('defaultPatterns')||'{}');
@@ -1326,13 +1373,36 @@ let filteredSaveTeams=[];
 let createMode='all';
 let alColor='#3b82f6',alH=217,alS=100,alB=100;
 // Downlight color state for Create page
-let crDlColor='#fff5e0',crDlH=36,crDlS=90,crDlB=90;
+let crDlColor='#ffffff',crDlH=36,crDlS=90,crDlB=90,_crDlPickerMode='sliders';
 // My Groups + My DL Presets storage
 let myGroups=JSON.parse(localStorage.getItem('wled_my_groups')||'[]');
 let myGroupsNextId=myGroups.reduce((m,g)=>Math.max(m,g.id||0),0)+1;
 let myDLPresets=JSON.parse(localStorage.getItem('wled_dl_presets')||'[]');
 let myDLPresetsNextId=myDLPresets.reduce((m,p)=>Math.max(m,p.id||0),0)+1;
 let selectedEffect=0,effectSpeed=128,effectIntensity=128;
+// Multi-color slots for effects that use 2 or 3 colors
+let alColor2='#ef4444', alColor3='#22c55e';
+let alActiveColorSlot=1; // which slot the picker edits (1, 2, or 3)
+
+// Map effect id → number of color slots used
+const EFFECT_COLOR_COUNT = (()=>{
+  const m = {};
+  // 2-color effects (col[0] + col[1])
+  // 1=Blink, 11=Dual Scan, 23=Strobe, 25=Multi Strobe, 26=Blink Rainbow
+  // 38=Red&Blue, 46=Gradient, 48=Police, 49=Police All, 50=Two Dots
+  // 51=Two Areas, 57=Lightning, 58=ICU, 60=Scanner Dual, 78=Railway
+  // 82=Halloween Eyes, 83=Solid Pattern, 93=Sine, 98=Police 2
+  [1, 2, 6, 11, 12, 15, 16, 23, 25, 26, 27, 37, 38, 41, 43, 44, 47, 48, 49, 50, 51, 57, 58, 77, 78, 82, 83, 85, 86, 88, 93, 94, 97, 98, 107].forEach(id=>m[id]=2);
+  // 3-color effects (col[0] + col[1] + col[2])
+  // 13=Theater, 14=Theater Rainbow, 28=Chase, 29=Chase Random, 30=Chase Rainbow
+  // 31=Chase Flash, 32=Chase Flash Rnd, 34=Colorful, 52=Circus, 53=Halloween
+  // 54=Tri Chase, 55=Tri Wipe, 56=Tri Fade, 59=Multi Comet, 64=Juggle
+  // 84=Solid Pattern Tri, 99=Polic3, 100=Stop Light, 101=Candy Corn
+  [7, 8, 10, 13, 14, 17, 18, 19, 20, 21, 22, 28, 29, 30, 31, 32, 34, 39, 40, 42, 45, 46, 52, 53, 54, 55, 56, 59, 60, 61, 64, 65, 67, 69, 70, 71, 72, 73, 74, 75, 80, 81, 84, 87, 89, 90, 91, 92, 95, 96, 99, 100, 101, 103, 108, 109, 114, 116].forEach(id=>m[id]=3);
+  return m;
+})();
+function effectColorCount(id){ return EFFECT_COLOR_COUNT[id]||1; }
+
 let editingZoneIdx=null,zpH=0,zpS=100,zpB=100;
 
 const defaultZones=[
@@ -1813,8 +1883,7 @@ const saveSportsLeagues=[
   {id:'college',name:'College',icon:'🎓',teams:sportsTeams.College},
 ];
 
-const quickColors=['#ffffff','#fff5e0','#ef4444','#22c55e','#3b82f6','#a855f7','#ec4899','#f97316','#06b6d4','#fbbf24','#64748b','#000000'];
-const holidaySwatchColors=['#dc2626','#16a34a','#f97316','#7c3aed','#ef4444','#1d4ed8','#ec4899','#15803d','#a78bfa','#d97706','#fbbf24','#2563eb'];
+const quickColors=['#ffffff','#ff0000','#0000ff','#00ff00','#a855f7','#ec4899','#f97316','#06b6d4','#fbbf24','#14b8a6','#64748b','#000000'];
 const dlPresetColors=[{name:'Warm White',c:'#fff5e0'},{name:'Cool White',c:'#e8f4ff'},{name:'Xmas Red',c:'#ef4444'},{name:'Holly Green',c:'#22c55e'},{name:'Royal Blue',c:'#3b82f6'},{name:'Golden',c:'#f59e0b'},{name:'Lavender',c:'#a78bfa'},{name:'Coral',c:'#f97316'}];
 const dlDownLEDs=new Set([6,12,17,28,35,52,75]);
 let dlColor='#fff5e0',dlOn=true,dlH=36,dlS=90,dlB=90;
@@ -1840,8 +1909,14 @@ function go(id){
     const searchEl = document.getElementById('effect-search');
     if(searchEl) searchEl.value = '';
     filterEffects();
-    renderCreatePreview(); // rebuild dots at correct size before anim
+    renderCreatePreview();
+    if(_alPickerMode==='wheel') requestAnimationFrame(()=>{alDrawWheel();alUpdateWheelCursor();alUpdateWheelBri();});
     startCreateAnim();
+    // Default to the mode matching what's currently playing; fall back to last createMode
+    if(!_editingNowPlaying){
+      const _modeFromNP={all:'all',group:'group',downlight:'downlight'}[_npMode];
+      setTimeout(()=>setCreateMode(_modeFromNP||createMode),60);
+    }
   } else {
     stopCreateAnim();
   }
@@ -1850,8 +1925,11 @@ function go(id){
 // ═══════════════════════════════
 // NOW PLAYING
 // ═══════════════════════════════
-function updateNowPlaying(name,colors,playing){
+function updateNowPlaying(name,colors,playing,mode){
   lightsOn=playing;nowPlayingName=name;nowPlayingColors=colors;
+  if(mode) _npMode=mode; else if(!playing) _npMode='none';
+  // Persist so refresh/reopen restores state
+  try{localStorage.setItem('wled_np_state',JSON.stringify({name,colors,playing,mode:_npMode}));}catch(e){}
   document.getElementById('np-name').textContent=playing?name:'Off';
   document.getElementById('np-sub').textContent=playing?'Tap ⏻ to turn off':'Tap Presets or Create Your Own';
   document.getElementById('np-indicator').className=playing?'np-pulse':'np-off-dot';
@@ -1867,6 +1945,69 @@ function togglePower(){
   if(lightsOn){updateNowPlaying('Off',[],false);showToast('Lights off');}
   else if(nowPlayingName&&nowPlayingName!=='Off'){updateNowPlaying(nowPlayingName,nowPlayingColors,true);showToast('Lights on');}
   else showToast('Choose a preset first');
+}
+
+function _syncCreateAllUI(){
+  // Sync all Create All Lights UI elements to current globals
+  try{[alH,alS,alB]=hexToHSV(alColor);}catch(e){}
+  alUpdateTracks();
+  buildAlSwatches();
+  alUpdateColorSlots(selectedEffect);
+  alUpdateSlotDots();
+  document.getElementById('al-hex').value=alColor;
+  const speedEl=document.getElementById('param-speed');
+  const intEl=document.getElementById('param-intensity');
+  if(speedEl){speedEl.value=effectSpeed;document.getElementById('speed-val').textContent=effectSpeed;}
+  if(intEl){intEl.value=effectIntensity;document.getElementById('intensity-val').textContent=effectIntensity;}
+  filterEffects(); // re-render effect list so selected effect is highlighted
+  renderCreatePreview();
+  const anim=getEffectAnim(selectedEffect);
+  if(anim==='solid') stopCreateAnim(); else startCreateAnim();
+}
+
+function editNowPlaying(){
+  if(!lightsOn) return;
+
+  // Snapshot NP state — setCreateMode must not wipe it
+  const snapName=nowPlayingName,snapColors=[...nowPlayingColors],snapMode=_npMode;
+  _editingNowPlaying=true;
+
+  const restoreNP=()=>{
+    _editingNowPlaying=false;
+    // Re-stamp NP with snapshot so it stays visible
+    updateNowPlaying(snapName,snapColors,true,snapMode);
+  };
+
+  if(_npMode==='all'){
+    go('s-create');
+    setTimeout(()=>{ setCreateMode('all'); restoreNP(); _syncCreateAllUI(); },80);
+    return;
+  }
+
+  if(_npMode==='group'){
+    go('s-create');
+    setTimeout(()=>{ setCreateMode('group'); restoreNP(); },80);
+    return;
+  }
+
+  // Other — decode wled.lastPayload into All Lights globals first
+  const seg=wled?.lastPayload?.seg?.[0];
+  if(seg){
+    if(seg.fx!==undefined) selectedEffect=seg.fx;
+    if(seg.sx!==undefined) effectSpeed=seg.sx;
+    if(seg.ix!==undefined) effectIntensity=seg.ix;
+    const toHex=rgb=>'#'+rgb.slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join('');
+    if(seg.col?.[0]?.length>=3) alColor=toHex(seg.col[0]);
+    if(seg.col?.[1]?.length>=3) alColor2=toHex(seg.col[1]);
+    if(seg.col?.[2]?.length>=3) alColor3=toHex(seg.col[2]);
+  } else if(nowPlayingColors.length>0){
+    alColor=nowPlayingColors[0]||alColor;
+    if(nowPlayingColors[1]) alColor2=nowPlayingColors[1];
+    if(nowPlayingColors[2]) alColor3=nowPlayingColors[2];
+  }
+  _npMode='all';
+  go('s-create');
+  setTimeout(()=>{ setCreateMode('all'); restoreNP(); _syncCreateAllUI(); },80);
 }
 
 function setLightMode(m){
@@ -1889,24 +2030,56 @@ function toggleAP(){
 // ═══════════════════════════════
 function setCreateMode(m){
   createMode=m;
-
-  // Always start fresh — clear now-playing state
   updateNowPlaying('Off',[],false);
 
+  const _dlCount = (typeof dlSegmentCount !== 'undefined') ? dlSegmentCount : 0;
+
   if(m==='all'){
-    resetToSingleSegment();
+    // Ensure Quick Colors swatches render (parity with downlight mode)
+    buildAlSwatches();
+    alUpdateSlotDots();
+    // Clear every group/DL segment, turn on full strip with current al settings
+    if(wled.active){
+      const n=getLEDCount(), col=alBuildColArray();
+      const segs=[{id:0,start:0,stop:n,col,fx:selectedEffect,sx:effectSpeed,ix:effectIntensity,on:true}];
+      const maxSeg=Math.max(15,_dlCount);
+      for(let i=1;i<=maxSeg;i++) segs.push({id:i,stop:0});
+      if(typeof dlSegmentCount!=='undefined') dlSegmentCount=0;
+      wledSend({on:true,bri:200,seg:segs});
+    }
   }
 
   if(m==='group'){
-    zones.forEach(z=>{ z.on=false; });
+    // Always reset to Solid effect
+    selectedEffect=0; effectSpeed=128; effectIntensity=128;
+    // All zones on by default
+    zones.forEach(z=>{z.on=true;});
     saveZoneColors();
-    pushZonesToWLED();
     renderGroupZones();
+    if(wled.active){
+      // Clear seg 0 + DL segs first, then push all zones
+      const segs=[{id:0,on:false}];
+      const maxSeg=Math.max(15,_dlCount);
+      for(let i=1;i<=maxSeg;i++) segs.push({id:i,stop:0});
+      if(typeof dlSegmentCount!=='undefined') dlSegmentCount=0;
+      wledPost(wled.active.ip,{on:false,seg:segs}).then(()=>{ if(createMode==='group') pushZonesToWLED(); });
+    }
   }
 
   if(m==='downlight'){
-    resetToSingleSegment();
+    // Always reset to Solid effect
+    selectedEffect=0; effectSpeed=128; effectIntensity=128;
     crDlInitPicker();
+    // Clear seg 0 + group segs, then light only DL segments
+    if(wled.active){
+      const segs=[{id:0,on:false}];
+      const maxSeg=Math.max(15,_dlCount);
+      for(let i=1;i<=maxSeg;i++) segs.push({id:i,stop:0});
+      if(typeof dlSegmentCount!=='undefined') dlSegmentCount=0;
+      wledPost(wled.active.ip,{on:false,seg:segs}).then(()=>{
+        if(createMode==='downlight'&&dlPixelString) wledSendDL(buildDownlightPayload(isWhiteChannel(crDlColor)?null:crDlColor));
+      });
+    }
   }
 
   document.getElementById('cr-mode-all').classList.toggle('active',m==='all');
@@ -2074,15 +2247,26 @@ function tickCreateAnim() {
   const period = Math.max(1, Math.round(lerp(60, 4, spd))); // ticks per cycle
   const t = _animTick % period / period; // 0..1 phase
 
-  const color = alColor;
+  const cc = effectColorCount(selectedEffect);
+  const color  = alColor;
+  const color2 = cc >= 2 ? alColor2 : alColor;
+  const color3 = cc >= 3 ? alColor3 : alColor;
   const dark = '#1c2333';
+
+  // pick from palette of active colors
+  const palette = cc === 3 ? [color,color2,color3] : cc === 2 ? [color,color2] : [color];
+  const pickPal = idx => palette[((idx % palette.length) + palette.length) % palette.length];
 
   let getColor;
 
   switch(anim){
     case 'blink':
-      { const on = (_animTick % Math.max(2, Math.round(lerp(30,4,spd)))) < Math.max(1, Math.round(lerp(15,2,spd)));
-        getColor = () => on ? color : dark; }
+      { const step = Math.max(2, Math.round(lerp(30,4,spd)));
+        const half = Math.max(1, Math.round(lerp(15,2,spd)));
+        const tick2 = _animTick % (step * palette.length);
+        const slot = Math.floor(tick2 / step);
+        const on = (tick2 % step) < half;
+        getColor = () => on ? pickPal(slot) : (cc > 1 ? pickPal(slot + 1) : dark); }
       break;
 
     case 'strobe':
@@ -2098,7 +2282,9 @@ function tickCreateAnim() {
 
     case 'wipe':
       { const lit = Math.floor(t * total);
-        getColor = i => i < lit ? color : dark; }
+        // for 2+ colors: fill completed passes with alternating colors
+        const pass = Math.floor(_animTick / period) % palette.length;
+        getColor = i => i < lit ? pickPal(pass) : (pass > 0 ? pickPal(pass - 1) : dark); }
       break;
 
     case 'scan':
@@ -2109,11 +2295,12 @@ function tickCreateAnim() {
       break;
 
     case 'chase':
-      { const segLen = Math.max(3, Math.floor(total * 0.15));
+      { const segLen = Math.max(3, Math.floor(total * (cc >= 3 ? 0.1 : 0.15)));
         const head = Math.floor(t * total);
         getColor = i => {
           const dist = (i - head + total) % total;
-          if (dist < segLen) return dimHex(color, 1 - dist / segLen * 0.8);
+          const segIdx = Math.floor(dist / segLen);
+          if (dist < segLen * palette.length) return dimHex(pickPal(segIdx), 1 - (dist % segLen) / segLen * 0.7);
           return dark;
         }; }
       break;
@@ -2125,7 +2312,6 @@ function tickCreateAnim() {
 
     case 'running':
       { const offset = Math.floor(t * total);
-        const [r,g,b] = hexRGB(color);
         getColor = i => {
           const x = (i + offset) % total;
           const wave = (Math.sin(x / total * Math.PI * 6) + 1) / 2;
@@ -2134,12 +2320,16 @@ function tickCreateAnim() {
       break;
 
     case 'twinkle':
-      { // Deterministic pseudo-random per dot per time window
-        const win = Math.floor(_animTick / Math.max(2, Math.round(lerp(8,2,spd))));
+      { const win = Math.floor(_animTick / Math.max(2, Math.round(lerp(8,2,spd))));
         getColor = i => {
           const rnd = Math.sin(i * 127.1 + win * 311.7) * 43758.5453;
           const v = (rnd - Math.floor(rnd));
-          return v > 0.7 ? dimHex(color, v) : dark;
+          if (v > 0.7) {
+            const rnd2 = Math.sin(i * 53.3 + win * 71.9) * 9301.5;
+            const slot = Math.floor((rnd2 - Math.floor(rnd2)) * palette.length);
+            return dimHex(pickPal(slot), v);
+          }
+          return dark;
         }; }
       break;
 
@@ -2156,17 +2346,21 @@ function tickCreateAnim() {
     case 'meteor':
       { const tailLen = Math.max(4, Math.floor(total * 0.2));
         const head2 = Math.floor(t * total);
+        const mPass = Math.floor(_animTick / period) % palette.length;
         getColor = i => {
           const dist = (head2 - i + total) % total;
-          if (dist < tailLen) return dimHex(color, 1 - dist / tailLen * 0.9);
+          if (dist < tailLen) return dimHex(pickPal(mPass), 1 - dist / tailLen * 0.9);
           return dark;
         }; }
       break;
 
     case 'police':
       { const half = total >> 1;
-        const blueOn = (_animTick % Math.max(3, Math.round(lerp(20,4,spd)))) < Math.max(2, Math.round(lerp(10,2,spd)));
-        getColor = i => i < half ? (blueOn ? '#3b82f6' : dark) : (!blueOn ? '#ef4444' : dark); }
+        const step2 = Math.max(3, Math.round(lerp(20,4,spd)));
+        const halfStep = Math.max(2, Math.round(lerp(10,2,spd)));
+        const c1on = (_animTick % step2) < halfStep;
+        const c2on = ((_animTick + Math.floor(step2/2)) % step2) < halfStep;
+        getColor = i => i < half ? (c1on ? color : dark) : (c2on ? color2 : dark); }
       break;
 
     case 'noise':
@@ -2191,27 +2385,24 @@ function crDlInitPicker(){
   document.getElementById('cr-dl-no-config').style.display = hasDL ? 'none' : 'block';
   document.getElementById('cr-dl-picker').style.display = hasDL ? 'block' : 'none';
   if(!hasDL) return;
-  // Quick color buttons from DL_PRESETS
-  const btns = document.getElementById('cr-dl-preset-btns');
-  if(btns) btns.innerHTML = DL_PRESETS.slice(0,8).map(p => {
-    const c = p.swatch;
-    const active = crDlColor.toLowerCase() === c.toLowerCase();
-    return `<div style="height:36px;border-radius:9px;background:${c};cursor:pointer;border:2px solid ${active?'white':'transparent'};box-shadow:${active?`0 0 0 2px var(--accent)`:''}" title="${p.name}" onclick="crDlSetColor('${p.color||c}')"></div>`;
-  }).join('');
+  // Quick color swatches from quickColors
+  const sw = document.getElementById('cr-dl-swatches');
+  if(sw) sw.innerHTML = quickColors.map(c=>`<div class="sw ${c.toLowerCase()===crDlColor.toLowerCase()?'sel':''}" style="background:${c}" onclick="crDlSetColor('${c}')"></div>`).join('');
   // Sync hex input
   const hexInp = document.getElementById('cr-dl-hex');
   if(hexInp) hexInp.value = crDlColor;
-  crDlUpdateTracks();
+  if(_crDlPickerMode==='wheel'){crDlUpdateWheelCursor();crDlUpdateWheelBri();}else{crDlUpdateTracks();}
   renderCreatePreview();
 }
 
 function crDlSetColor(hex){
-  if(!hex) hex='#fff5e0';
+  if(!hex) hex='#ffffff';
   crDlColor=hex;
   try{[crDlH,crDlS,crDlB]=hexToHSV(hex);}catch(e){}
   const hexInp=document.getElementById('cr-dl-hex');
   if(hexInp) hexInp.value=hex;
-  crDlUpdateTracks();
+  if(_crDlPickerMode==='wheel'){crDlUpdateWheelCursor();crDlUpdateWheelBri();}else{crDlUpdateTracks();}
+  crDlInitPicker();
   renderCreatePreview();
   if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(isWhiteChannel(hex)?null:hex));
 }
@@ -2238,9 +2429,88 @@ function crDlUpdateTracks(){
 function crDlApply(){crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlInitPicker();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));}
 function crDlHexTyped(){const h=document.getElementById('cr-dl-hex').value;if(/^#[0-9a-fA-F]{6}$/.test(h))crDlSetColor(h);}
 
-setupSlider('cr-dl-hue',v=>{crDlH=Math.round(v*360);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
-setupSlider('cr-dl-sat',v=>{crDlS=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
-setupSlider('cr-dl-bri',v=>{crDlB=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+setupSlider('cr-dl-hue',v=>{crDlH=Math.round(v*360);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();crDlInitPicker();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+setupSlider('cr-dl-sat',v=>{crDlS=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();crDlInitPicker();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+setupSlider('cr-dl-bri',v=>{crDlB=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateTracks();crDlInitPicker();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+setupSlider('crdl-wheel-bri',v=>{crDlB=Math.round(v*100);crDlColor=hsvToHex(crDlH,crDlS,crDlB);crDlUpdateWheelBri();crDlInitPicker();renderCreatePreview();if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(crDlColor));});
+
+function crDlSetPickerMode(mode){
+  _crDlPickerMode=mode;
+  document.getElementById('cr-dl-picker-sliders').style.display=mode==='sliders'?'block':'none';
+  document.getElementById('cr-dl-picker-wheel').style.display=mode==='wheel'?'flex':'none';
+  const bs=document.getElementById('crdl-toggle-sliders');
+  const bw=document.getElementById('crdl-toggle-wheel');
+  bs.style.background=mode==='sliders'?'var(--accent)':'transparent';
+  bs.style.color=mode==='sliders'?'#fff':'var(--muted)';
+  bw.style.background=mode==='wheel'?'var(--accent)':'transparent';
+  bw.style.color=mode==='wheel'?'#fff':'var(--muted)';
+  if(mode==='wheel'){crDlDrawWheel();crDlUpdateWheelCursor();crDlUpdateWheelBri();}
+  else{crDlUpdateTracks();}
+}
+function crDlDrawWheel(){
+  const canvas=document.getElementById('crdl-wheel-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx;
+  const img=ctx.createImageData(canvas.width,canvas.height);
+  for(let y=0;y<canvas.height;y++){
+    for(let x=0;x<canvas.width;x++){
+      const dx=x-cx,dy=y-cy,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist>r){img.data.set([0,0,0,0],(y*canvas.width+x)*4);continue;}
+      const h=((Math.atan2(dy,dx)*180/Math.PI)+360)%360;
+      const s=dist/r*100;
+      const[rr,gg,bb]=hsvToRgb(h,s,100);
+      const idx=(y*canvas.width+x)*4;
+      img.data[idx]=rr;img.data[idx+1]=gg;img.data[idx+2]=bb;img.data[idx+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+function crDlUpdateWheelCursor(){
+  const canvas=document.getElementById('crdl-wheel-canvas');
+  const cursor=document.getElementById('crdl-wheel-cursor');
+  if(!canvas||!cursor) return;
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx;
+  const rad=crDlH*Math.PI/180;
+  const dist=crDlS/100*r;
+  cursor.style.left=((cx+Math.cos(rad)*dist)/canvas.width*100)+'%';
+  cursor.style.top=((cy+Math.sin(rad)*dist)/canvas.height*100)+'%';
+}
+function crDlUpdateWheelBri(){
+  const thumb=document.getElementById('crdl-wheel-bri-thumb');
+  const val=document.getElementById('crdl-wheel-bri-val');
+  const track=document.getElementById('crdl-wheel-bri');
+  if(thumb) thumb.style.left=crDlB+'%';
+  if(val)   val.textContent=Math.round(crDlB)+'%';
+  if(track) track.style.background=`linear-gradient(to right,#000,${hsvToHex(crDlH,crDlS,100)})`;
+}
+function crDlWheelPick(e,canvas){
+  const rect=canvas.getBoundingClientRect();
+  const clientX=e.touches?e.touches[0].clientX:e.clientX;
+  const clientY=e.touches?e.touches[0].clientY:e.clientY;
+  const x=(clientX-rect.left)*(canvas.width/rect.width);
+  const y=(clientY-rect.top)*(canvas.height/rect.height);
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx;
+  const dx=x-cx,dy=y-cy;
+  const dist=Math.min(Math.sqrt(dx*dx+dy*dy),r);
+  crDlH=((Math.atan2(dy,dx)*180/Math.PI)+360)%360;
+  crDlS=dist/r*100;
+  crDlColor=hsvToHex(crDlH,crDlS,crDlB);
+  crDlUpdateWheelCursor();crDlUpdateWheelBri();
+  crDlInitPicker();renderCreatePreview();
+  if(typeof wledSendDL==='function') wledSendDL(buildDownlightPayload(isWhiteChannel(crDlColor)?null:crDlColor));
+}
+(function wireCrDlWheel(){
+  const canvas=document.getElementById('crdl-wheel-canvas');
+  if(!canvas) return;
+  let down=false;
+  canvas.addEventListener('mousedown',e=>{down=true;crDlWheelPick(e,canvas);});
+  canvas.addEventListener('mousemove',e=>{if(down) crDlWheelPick(e,canvas);});
+  canvas.addEventListener('touchstart',e=>{down=true;crDlWheelPick(e,canvas);e.preventDefault();},{passive:false});
+  canvas.addEventListener('touchmove',e=>{if(down) crDlWheelPick(e,canvas);e.preventDefault();},{passive:false});
+  window.addEventListener('mouseup',()=>down=false);
+  window.addEventListener('touchend',()=>down=false);
+})();
 
 // ── MY GROUPS ──
 function saveMyGroups(){
@@ -2279,7 +2549,7 @@ function activateMyGroup(id){
   g.zones.forEach((gz,i)=>{ if(zones[i]){ zones[i].color=gz.color; zones[i].on=gz.on!==false; } });
   saveZoneColors();
   if(typeof pushZonesToWLED==='function') pushZonesToWLED();
-  updateNowPlaying(g.name, g.zones.map(z=>z.color), true);
+  updateNowPlaying(g.name, g.zones.map(z=>z.color), true, 'group');
   showToast('🗂️ '+g.name);
 }
 
@@ -2301,7 +2571,7 @@ function activateMyDLPreset(id){
     const payload = buildDownlightPayload(isWhiteChannel(p.color)?null:p.color);
     if(typeof wledSendDL==='function') wledSendDL(payload);
   }
-  updateNowPlaying(p.name, [p.color], true);
+  updateNowPlaying(p.name, [p.color], true, 'downlight');
   showToast('💡 '+p.name);
   renderDLPresets();
 }
@@ -2314,10 +2584,60 @@ function deleteMyDLPreset(id){
 
 // ALL LIGHTS COLOR
 function alSetColor(hex){
-  alColor=hex;
+  // Write to active slot
+  if(alActiveColorSlot===2) alColor2=hex;
+  else if(alActiveColorSlot===3) alColor3=hex;
+  else alColor=hex;
   document.getElementById('al-hex').value=hex;
   try{[alH,alS,alB]=hexToHSV(hex);}catch(e){}
   alUpdateTracks();buildAlSwatches();renderCreatePreview();
+  if(_alPickerMode==='wheel'){alUpdateWheelCursor();alUpdateWheelBri();}
+  alUpdateSlotDots();
+}
+
+function alSetSlot(slot){
+  alActiveColorSlot=slot;
+  // Load slot color into picker
+  const hex = slot===2 ? alColor2 : slot===3 ? alColor3 : alColor;
+  try{[alH,alS,alB]=hexToHSV(hex);}catch(e){}
+  document.getElementById('al-hex').value=hex;
+  alUpdateTracks();buildAlSwatches();
+  if(_alPickerMode==='wheel'){alDrawWheel();alUpdateWheelCursor();alUpdateWheelBri();}
+  alUpdateSlotDots();
+}
+
+function alUpdateSlotDots(){
+  const d1=document.getElementById('al-slot-1-dot');
+  const d2=document.getElementById('al-slot-2-dot');
+  const d3=document.getElementById('al-slot-3-dot');
+  if(d1) d1.style.background=alColor;
+  if(d2) d2.style.background=alColor2;
+  if(d3) d3.style.background=alColor3;
+  // Active slot highlight
+  [1,2,3].forEach(s=>{
+    const btn=document.getElementById('al-slot-'+s);
+    if(!btn) return;
+    const active=alActiveColorSlot===s;
+    btn.style.borderColor=active?'var(--accent)':'var(--border2)';
+    btn.style.background=active?'rgba(59,130,246,0.12)':'transparent';
+    btn.style.color=active?'var(--accent)':'var(--muted)';
+  });
+}
+
+function alUpdateColorSlots(effectId){
+  const count=effectColorCount(effectId);
+  const wrap=document.getElementById('al-color-slots');
+  const s3=document.getElementById('al-slot-3');
+  if(count===1){
+    if(wrap) wrap.style.display='none';
+    alActiveColorSlot=1;
+  } else {
+    if(wrap) wrap.style.display='flex';
+    if(s3) s3.style.display=count===3?'flex':'none';
+    // Reset to slot 1 when switching effect
+    alSetSlot(1);
+  }
+  alUpdateSlotDots();
 }
 
 function buildAlSwatches(){
@@ -2341,14 +2661,126 @@ function alHexTyped(){const h=document.getElementById('al-hex').value;if(/^#[0-9
 setupSlider('al-hue',v=>{alH=Math.round(v*360);alUpdateTracks();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
 setupSlider('al-sat',v=>{alS=Math.round(v*100);alUpdateTracks();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
 setupSlider('al-bri',v=>{alB=Math.round(v*100);alUpdateTracks();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
+setupSlider('al-wheel-bri',v=>{alB=Math.round(v*100);alUpdateWheelBri();const c=hsvToHex(alH,alS,alB);alColor=c;document.getElementById('al-hex').value=c;buildAlSwatches();renderCreatePreview();});
+
+// ── COLOR WHEEL ──
+let _alPickerMode = localStorage.getItem('al_picker_mode') || 'sliders';
+
+function alSetPickerMode(mode) {
+  _alPickerMode = mode;
+  localStorage.setItem('al_picker_mode', mode);
+  document.getElementById('al-picker-sliders').style.display = mode === 'sliders' ? 'block' : 'none';
+  document.getElementById('al-picker-wheel').style.display   = mode === 'wheel'   ? 'flex'  : 'none';
+  const bs = document.getElementById('al-toggle-sliders');
+  const bw = document.getElementById('al-toggle-wheel');
+  bs.style.background = mode === 'sliders' ? 'var(--accent)' : 'transparent';
+  bs.style.color      = mode === 'sliders' ? '#fff' : 'var(--muted)';
+  bw.style.background = mode === 'wheel'   ? 'var(--accent)' : 'transparent';
+  bw.style.color      = mode === 'wheel'   ? '#fff' : 'var(--muted)';
+  if (mode === 'wheel') { alDrawWheel(); alUpdateWheelCursor(); alUpdateWheelBri(); }
+  else { alUpdateTracks(); }
+}
+
+function alDrawWheel() {
+  const canvas = document.getElementById('al-wheel-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2, cy = canvas.height / 2, r = cx;
+  // Hue+Sat wheel: each pixel = angle → hue, radius → saturation
+  const img = ctx.createImageData(canvas.width, canvas.height);
+  for (let y = 0; y < canvas.height; y++) {
+    for (let x = 0; x < canvas.width; x++) {
+      const dx = x - cx, dy = y - cy, dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist > r) { img.data.set([0,0,0,0], (y*canvas.width+x)*4); continue; }
+      const h = ((Math.atan2(dy, dx) * 180 / Math.PI) + 360) % 360;
+      const s = dist / r * 100;
+      const [rr,gg,bb] = hsvToRgb(h, s, 100);
+      const idx = (y * canvas.width + x) * 4;
+      img.data[idx]=rr; img.data[idx+1]=gg; img.data[idx+2]=bb; img.data[idx+3]=255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+function hsvToRgb(h, s, v) {
+  s /= 100; v /= 100;
+  const i = Math.floor(h/60) % 6, f = h/60 - Math.floor(h/60);
+  const p = v*(1-s), q = v*(1-f*s), t = v*(1-(1-f)*s);
+  const vals = [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i]||[v,v,v];
+  return vals.map(x => Math.round(x*255));
+}
+
+function alUpdateWheelCursor() {
+  const canvas = document.getElementById('al-wheel-canvas');
+  const cursor = document.getElementById('al-wheel-cursor');
+  if (!canvas || !cursor) return;
+  const cx = canvas.width / 2, cy = canvas.height / 2, r = cx;
+  const angleRad = alH * Math.PI / 180;
+  const dist = alS / 100 * r;
+  const px = cx + Math.cos(angleRad) * dist;
+  const py = cy + Math.sin(angleRad) * dist;
+  // Convert canvas coords to percent within container
+  cursor.style.left = (px / canvas.width * 100) + '%';
+  cursor.style.top  = (py / canvas.height * 100) + '%';
+}
+
+function alUpdateWheelBri() {
+  const thumb = document.getElementById('al-wheel-bri-thumb');
+  const val   = document.getElementById('al-wheel-bri-val');
+  const track = document.getElementById('al-wheel-bri');
+  if (thumb) thumb.style.left = alB + '%';
+  if (val)   val.textContent   = Math.round(alB) + '%';
+  if (track) track.style.background = `linear-gradient(to right,#000,${hsvToHex(alH,alS,100)})`;
+}
+
+function alWheelPick(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = (clientX - rect.left) * (canvas.width / rect.width);
+  const y = (clientY - rect.top)  * (canvas.height / rect.height);
+  const cx = canvas.width / 2, cy = canvas.height / 2, r = cx;
+  const dx = x - cx, dy = y - cy;
+  const dist = Math.min(Math.sqrt(dx*dx + dy*dy), r);
+  alH = ((Math.atan2(dy, dx) * 180 / Math.PI) + 360) % 360;
+  alS = dist / r * 100;
+  alUpdateWheelCursor();
+  alUpdateWheelBri();
+  const c = hsvToHex(alH, alS, alB);
+  alColor = c;
+  document.getElementById('al-hex').value = c;
+  buildAlSwatches();
+  renderCreatePreview();
+}
+
+// Wire wheel pointer events once DOM ready
+(function wireWheel() {
+  const canvas = document.getElementById('al-wheel-canvas');
+  if (!canvas) return;
+  let down = false;
+  canvas.addEventListener('mousedown',  e => { down = true; alWheelPick(e, canvas); });
+  canvas.addEventListener('mousemove',  e => { if (down) alWheelPick(e, canvas); });
+  canvas.addEventListener('touchstart', e => { down = true; alWheelPick(e, canvas); e.preventDefault(); }, {passive:false});
+  canvas.addEventListener('touchmove',  e => { if (down) alWheelPick(e, canvas); e.preventDefault(); }, {passive:false});
+  window.addEventListener('mouseup',  () => down = false);
+  window.addEventListener('touchend', () => down = false);
+})();
+
+// Init picker mode on load
+(function initAlPicker() {
+  alSetPickerMode(_alPickerMode);
+})();
 
 // EFFECTS
 function buildEffectList(list){
-  document.getElementById('effect-list').innerHTML=list.map(e=>`
-    <div class="effect-row ${selectedEffect===e.id?'sel':''}" onclick="selectEffect(${e.id})">
-      <div style="flex:1"><div class="effect-name">${e.name}</div><div class="effect-desc">${e.desc}</div></div>
+  document.getElementById('effect-list').innerHTML=list.map(e=>{
+    const cc=effectColorCount(e.id);
+    const dots=cc===3?'<span style="display:inline-flex;gap:2px;align-items:center;margin-left:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.9"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.9"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.9"></span></span>':cc===2?'<span style="display:inline-flex;gap:2px;align-items:center;margin-left:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.9"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.9"></span></span>':'';
+    return `<div class="effect-row ${selectedEffect===e.id?'sel':''}" onclick="selectEffect(${e.id})">
+      <div style="flex:1"><div class="effect-name" style="display:flex;align-items:center">${e.name}${dots}</div><div class="effect-desc">${e.desc}</div></div>
       <span class="effect-cat">${e.cat}</span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function filterEffects(){
@@ -2358,6 +2790,7 @@ function filterEffects(){
 
 function selectEffect(id){
   selectedEffect=id;
+  alUpdateColorSlots(id);
   filterEffects();
   renderCreatePreview(); // rebuild with correct base colors
   _animTick=0; // reset phase so new effect starts clean
@@ -2419,14 +2852,13 @@ function zpUpdateColor(hex){
   document.getElementById('zp-hex-label').textContent=hex.toUpperCase();
   document.getElementById('zp-hex-inp').value=hex;
   try{[zpH,zpS,zpB]=hexToHSV(hex);}catch(e){}
-  zpUpdateTracks();
+  if(_zpPickerMode==='wheel'){zpUpdateWheelCursor();zpUpdateWheelBri();}else{zpUpdateTracks();}
   if(editingZoneIdx!==null){zones[editingZoneIdx].color=hex;saveZoneColors();renderGroupZones();renderCreatePreview();}
 }
 
 function buildZPSwatches(){
   const cur=editingZoneIdx!==null?zones[editingZoneIdx].color:'#fff';
   document.getElementById('zp-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===cur?'sel':''}" style="background:${c}" onclick="zpPickSwatch('${c}')"></div>`).join('');
-  document.getElementById('zp-holiday-swatches').innerHTML=holidaySwatchColors.map(c=>`<div class="sw ${c===cur?'sel':''}" style="background:${c}" onclick="zpPickSwatch('${c}')"></div>`).join('');
 }
 
 function zpPickSwatch(c){zones[editingZoneIdx].color=c;zpUpdateColor(c);buildZPSwatches();}
@@ -2447,6 +2879,85 @@ function zpUpdateTracks(){
 setupSlider('zp-hue',v=>{zpH=Math.round(v*360);zpUpdateTracks();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
 setupSlider('zp-sat',v=>{zpS=Math.round(v*100);zpUpdateTracks();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
 setupSlider('zp-bri',v=>{zpB=Math.round(v*100);zpUpdateTracks();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
+setupSlider('zp-wheel-bri',v=>{zpB=Math.round(v*100);zpUpdateWheelBri();const c=hsvToHex(zpH,zpS,zpB);zpUpdateColor(c);buildZPSwatches();});
+
+let _zpPickerMode='sliders';
+function zpSetPickerMode(mode){
+  _zpPickerMode=mode;
+  document.getElementById('zp-picker-sliders').style.display=mode==='sliders'?'block':'none';
+  document.getElementById('zp-picker-wheel').style.display=mode==='wheel'?'flex':'none';
+  const bs=document.getElementById('zp-toggle-sliders');
+  const bw=document.getElementById('zp-toggle-wheel');
+  bs.style.background=mode==='sliders'?'var(--accent)':'transparent';
+  bs.style.color=mode==='sliders'?'#fff':'var(--muted)';
+  bw.style.background=mode==='wheel'?'var(--accent)':'transparent';
+  bw.style.color=mode==='wheel'?'#fff':'var(--muted)';
+  if(mode==='wheel'){zpDrawWheel();zpUpdateWheelCursor();zpUpdateWheelBri();}
+  else{zpUpdateTracks();}
+}
+function zpDrawWheel(){
+  const canvas=document.getElementById('zp-wheel-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx;
+  const img=ctx.createImageData(canvas.width,canvas.height);
+  for(let y=0;y<canvas.height;y++){
+    for(let x=0;x<canvas.width;x++){
+      const dx=x-cx,dy=y-cy,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist>r){img.data.set([0,0,0,0],(y*canvas.width+x)*4);continue;}
+      const h=((Math.atan2(dy,dx)*180/Math.PI)+360)%360;
+      const s=dist/r*100;
+      const[rr,gg,bb]=hsvToRgb(h,s,100);
+      const idx=(y*canvas.width+x)*4;
+      img.data[idx]=rr;img.data[idx+1]=gg;img.data[idx+2]=bb;img.data[idx+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+function zpUpdateWheelCursor(){
+  const canvas=document.getElementById('zp-wheel-canvas');
+  const cursor=document.getElementById('zp-wheel-cursor');
+  if(!canvas||!cursor) return;
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx;
+  const rad=zpH*Math.PI/180;
+  const dist=zpS/100*r;
+  cursor.style.left=((cx+Math.cos(rad)*dist)/canvas.width*100)+'%';
+  cursor.style.top=((cy+Math.sin(rad)*dist)/canvas.height*100)+'%';
+}
+function zpUpdateWheelBri(){
+  const thumb=document.getElementById('zp-wheel-bri-thumb');
+  const val=document.getElementById('zp-wheel-bri-val');
+  const track=document.getElementById('zp-wheel-bri');
+  if(thumb) thumb.style.left=zpB+'%';
+  if(val)   val.textContent=Math.round(zpB)+'%';
+  if(track) track.style.background=`linear-gradient(to right,#000,${hsvToHex(zpH,zpS,100)})`;
+}
+function zpWheelPick(e,canvas){
+  const rect=canvas.getBoundingClientRect();
+  const clientX=e.touches?e.touches[0].clientX:e.clientX;
+  const clientY=e.touches?e.touches[0].clientY:e.clientY;
+  const x=(clientX-rect.left)*(canvas.width/rect.width);
+  const y=(clientY-rect.top)*(canvas.height/rect.height);
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx;
+  const dx=x-cx,dy=y-cy;
+  const dist=Math.min(Math.sqrt(dx*dx+dy*dy),r);
+  zpH=((Math.atan2(dy,dx)*180/Math.PI)+360)%360;
+  zpS=dist/r*100;
+  zpUpdateWheelCursor();zpUpdateWheelBri();
+  const c=hsvToHex(zpH,zpS,zpB);
+  zpUpdateColor(c);buildZPSwatches();
+}
+(function wireZPWheel(){
+  const canvas=document.getElementById('zp-wheel-canvas');
+  if(!canvas) return;
+  let down=false;
+  canvas.addEventListener('mousedown',e=>{down=true;zpWheelPick(e,canvas);});
+  canvas.addEventListener('mousemove',e=>{if(down) zpWheelPick(e,canvas);});
+  canvas.addEventListener('touchstart',e=>{down=true;zpWheelPick(e,canvas);e.preventDefault();},{passive:false});
+  canvas.addEventListener('touchmove',e=>{if(down) zpWheelPick(e,canvas);e.preventDefault();},{passive:false});
+  window.addEventListener('mouseup',()=>down=false);
+  window.addEventListener('touchend',()=>down=false);
+})();
 
 // ═══════════════════════════════
 // SAVE FLOW
@@ -2615,7 +3126,7 @@ function doSave(){
   else if(selectedSaveCat==='seasons'&&selectedSaveSubCat){dest=`Seasons › ${selectedSaveSubCat.name}`;tag='seasons';}
   else if(selectedSaveCat==='sports'&&selectedSaveSubSubCat){dest=`Sports › ${selectedSaveSubCat.name} › ${selectedSaveSubSubCat.city} ${selectedSaveSubSubCat.name}`;tag='sports';}
   presets.unshift({id:presetNextId++,name,tag,groups:zones.map(z=>({name:z.name,color:z.color})),notes:document.getElementById('save-notes').value.trim(),date:dateStr});
-  updateNowPlaying(name,zones.map(z=>z.color),true);
+  updateNowPlaying(name,zones.map(z=>z.color),true,'group');
   const myPresetCount=document.getElementById('my-preset-count');
   if(myPresetCount) myPresetCount.textContent=presets.length+' saved';
   renderPresetFilterBar();renderPresetList();
@@ -2769,129 +3280,129 @@ function toggleFavPat(i,type){
 // Each entry: n => WLED /json/state payload, where n = total LED count.
 // These take priority over the generic patternToEffect() fallback below.
 const CHRISTMAS_PAYLOADS = {
-  'Candy Cane Chase':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,0,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
-  'Red Green White Chase': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[255,255,255,0]],fx:28,sx:150,ix:128,pal:0,on:true}]}),
-  'Green Red Chase':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,160,0,0],[255,0,0,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
-  'Sleigh Bells Chase':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[212,175,55,0],[255,255,255,0]],fx:28,sx:220,ix:160,pal:0,on:true}]}),
-  'Christmas Comet':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:76,sx:90,ix:180,pal:0,on:true}]}),
-  'Christmas Twinkle':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,150,0,0],[255,255,255,0]],fx:80,sx:80,ix:220,pal:0,on:true}]}),
-  'Snow Flurry Twinkle':   n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[180,220,255,0],[0,0,0,0]],fx:80,sx:60,ix:200,pal:0,on:true}]}),
-  'Gold Sparkle':          n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,223,0,0],[255,255,240,0]],fx:20,sx:100,ix:180,pal:0,on:true}]}),
-  'Christmas Glitter':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[212,175,55,0]],fx:87,sx:150,ix:200,pal:0,on:true}]}),
-  'Frosty Shimmer':        n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[150,200,255,0],[0,0,0,0]],fx:17,sx:80,ix:180,pal:0,on:true}]}),
-  'Candy Cane Static':     n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,0,0]],fx:73,sx:128,ix:0,pal:0,on:true}]}),
-  'Red White Green Static':n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,160,0,0]],fx:74,sx:128,ix:0,pal:0,on:true}]}),
-  'Red Green Static':      n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[0,0,0,0]],fx:73,sx:128,ix:0,pal:0,on:true}]}),
-  'Warm White Glow':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:0,sx:0,ix:0,pal:0,on:true}]}),
-  'Christmas Red Solid':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:0,sx:0,ix:0,pal:0,on:true}]}),
-  'Holly Glow':            n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,160,0,0],[180,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
-  'Winter Pulse':          n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:2,sx:22,ix:255,pal:0,on:true}]}),
-  'Poinsettia Pulse':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
-  'Warm Candlelight':      n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,147,41,0],[0,0,0,255],[0,0,0,0]],fx:88,sx:100,ix:180,pal:0,on:true}]}),
-  'Fireplace Flicker':     n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,70,0,0],[255,180,0,0],[180,30,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
-  'Snow Drift':            n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:77,sx:90,ix:200,pal:0,on:true}]}),
-  'Icicle Drip':           n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[180,220,255,0],[0,0,0,0]],fx:77,sx:70,ix:220,pal:0,on:true}]}),
-  'Blizzard Drift':        n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[150,200,255,0],[0,0,0,0]],fx:15,sx:80,ix:200,pal:0,on:true}]}),
-  'Northern Lights':       n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,100,0],[100,0,200,0],[0,100,200,0]],fx:67,sx:40,ix:200,pal:0,on:true}]}),
-  'Christmas Rainbow':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:9,sx:60,ix:200,pal:0,on:true}]}),
+  'Candy Cane Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,255],[0,0,0,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
+  'Red Green White Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[0,0,0,255]],fx:28,sx:150,ix:128,pal:0,on:true}]}),
+  'Green Red Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,160,0,0],[255,0,0,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Sleigh Bells Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[212,175,55,0],[0,0,0,255]],fx:28,sx:220,ix:160,pal:0,on:true}]}),
+  'Christmas Comet': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[0,0,0,255]],fx:76,sx:90,ix:180,pal:5,on:true}]}),
+  'Christmas Twinkle': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,150,0,0],[0,0,0,255]],fx:80,sx:200,ix:220,pal:5,on:true}]}),
+  'Snow Flurry Twinkle': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[180,220,255,0],[180,255,253,0]],fx:80,sx:200,ix:200,pal:5,on:true}]}),
+  'Gold Sparkle': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,223,0,0],[255,255,240,0]],fx:20,sx:100,ix:180,pal:17,on:true}]}),
+  'Christmas Glitter': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[212,175,55,0]],fx:87,sx:150,ix:200,pal:5,on:true}]}),
+  'Frosty Shimmer': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[150,200,255,0],[0,0,0,0]],fx:17,sx:80,ix:180,pal:4,on:true}]}),
+  'Candy Cane Static': n=>({on:true,bri:150,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,255],[0,0,0,0]],fx:73,sx:128,ix:0,pal:3,on:true}]}),
+  'Red White Green Static': n=>({on:true,bri:150,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,255],[0,160,0,0]],fx:74,sx:128,ix:0,pal:5,on:true}]}),
+  'Red Green Static': n=>({on:true,bri:150,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,160,0,0],[0,0,0,0]],fx:73,sx:128,ix:0,pal:3,on:true}]}),
+  'Warm White Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:0,sx:0,ix:0,pal:0,on:true}]}),
+  'Christmas Red Solid': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:0,sx:0,ix:0,pal:0,on:true}]}),
+  'Holly Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,160,0,0],[180,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Winter Pulse': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:2,sx:22,ix:255,pal:0,on:true}]}),
+  'Poinsettia Pulse': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Warm Candlelight': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,147,41,0],[0,0,0,255],[0,0,0,0]],fx:88,sx:100,ix:180,pal:4,on:true}]}),
+  'Fireplace Flicker': n=>({on:true,bri:150,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,70,0,0],[255,180,0,0],[180,30,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
+  'Snow Drift': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:77,sx:90,ix:200,pal:36,on:true}]}),
+  'Icicle Drip': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[180,220,255,0],[0,0,0,0]],fx:77,sx:70,ix:220,pal:9,on:true}]}),
+  'Blizzard Drift': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[150,200,255,0],[0,0,0,0]],fx:15,sx:200,ix:40,pal:4,on:true}]}),
+  'Northern Lights': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,100,0],[100,0,200,0],[0,100,200,0]],fx:67,sx:40,ix:200,pal:5,on:true}]}),
+  'Christmas Rainbow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:9,sx:60,ix:200,pal:52,on:true}]}),
 };
 
 // ── Halloween ─────────────────────────────────────────────────────────────────
 const HALLOWEEN_PAYLOADS = {
-  'Haunted Flicker': n=>({on:true,bri:180,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[100,0,150,0],[0,0,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
-  'Spider Web':      n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[60,0,80,0],[0,0,0,0]],fx:17,sx:40,ix:200,pal:0,on:true}]}),
-  'Lightning Storm': n=>({on:true,bri:220,transition:0,seg:[{id:0,start:0,stop:n,col:[[150,0,200,0],[50,0,80,0],[200,200,200,0]],fx:57,sx:200,ix:220,pal:0,on:true}]}),
-  'Pumpkin Pulse':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
-  'Ghost Drift':     n=>({on:true,bri:160,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[120,0,180,0],[0,0,0,0]],fx:77,sx:60,ix:200,pal:0,on:true}]}),
-  'Blood Moon':      n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:20,ix:255,pal:0,on:true}]}),
+  'Haunted Flicker': n=>({on:true,bri:135,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[100,0,150,0],[255,80,0,0]],fx:45,sx:180,ix:210,pal:5,on:true}]}),
+  'Spider Web': n=>({on:true,bri:112,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[60,0,80,0],[0,0,0,0]],fx:17,sx:40,ix:200,pal:4,on:true}]}),
+  'Lightning Storm': n=>({on:true,bri:165,transition:0,seg:[{id:0,start:0,stop:n,col:[[150,0,200,0],[50,0,80,0],[200,200,200,0]],fx:57,sx:200,ix:220,pal:5,on:true}]}),
+  'Pumpkin Pulse': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,80,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Ghost Drift': n=>({on:true,bri:120,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[120,0,180,0],[0,0,0,0]],fx:77,sx:60,ix:200,pal:56,on:true}]}),
+  'Blood Moon': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,0,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:20,ix:255,pal:0,on:true}]}),
 };
 // ── USA Holidays (July 4th · Memorial Day · Labor Day) ───────────────────────
 const JULY4_PAYLOADS = {
-  'Fireworks Burst': n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:89,sx:180,ix:220,pal:0,on:true}]}),
-  'Patriot Chase':   n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
-  'Stars & Stripes': n=>({on:true,bri:220,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,200,0],[255,255,255,0]],fx:74,sx:128,ix:0,pal:0,on:true}]}),
-  'Liberty Sparkle': n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[255,255,255,0],[0,0,200,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
+  'Fireworks Burst': n=>({on:true,bri:191,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,255],[0,0,200,0]],fx:89,sx:180,ix:220,pal:5,on:true}]}),
+  'Patriot Chase': n=>({on:true,bri:165,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,255],[0,0,200,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
+  'Stars & Stripes': n=>({on:true,bri:94,transition:0,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,200,0],[0,0,0,255]],fx:74,sx:128,ix:192,pal:5,on:true}]}),
+  'Liberty Sparkle': n=>({on:true,bri:165,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,255],[0,0,200,0]],fx:20,sx:120,ix:180,pal:4,on:true}]}),
 };
 // ── Valentine's Day ───────────────────────────────────────────────────────────
 const VALENTINES_PAYLOADS = {
-  'Pink Blush':   n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,20,100,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
-  'Rose Glow':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,0,50,0],[255,50,150,0],[0,0,0,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
-  'Heart Pulse':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,0,30,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
-  'Love Twinkle': n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,20,100,0],[200,0,50,0],[255,180,200,0]],fx:80,sx:80,ix:220,pal:0,on:true}]}),
+  'Pink Blush': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,20,100,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Rose Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,0,50,0],[255,50,150,0],[0,0,0,0]],fx:17,sx:60,ix:200,pal:4,on:true}]}),
+  'Heart Pulse': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,0,30,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
+  'Love Twinkle': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,20,100,0],[200,0,50,0],[255,180,200,0]],fx:80,sx:200,ix:220,pal:5,on:true}]}),
 };
 // ── St. Patrick's Day ─────────────────────────────────────────────────────────
 const STPATS_PAYLOADS = {
-  'Shamrock Shimmer': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,180,0,0],[212,175,55,0],[0,0,0,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
-  'Luck Chase':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,180,0,0],[212,175,55,0],[0,0,0,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
-  'Irish Glow':       n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Shamrock Shimmer': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,180,0,0],[212,175,55,0],[0,0,0,0]],fx:17,sx:70,ix:200,pal:4,on:true}]}),
+  'Luck Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,180,0,0],[212,175,55,0],[0,0,0,0]],fx:28,sx:160,ix:128,pal:0,on:true}]}),
+  'Irish Glow': n=>({on:true,bri:165,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
 };
 // ── Easter ────────────────────────────────────────────────────────────────────
 const EASTER_PAYLOADS = {
-  'Pastel Drift':   n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,150,200,0],[150,220,150,0]],fx:15,sx:60,ix:200,pal:0,on:true}]}),
-  'Spring Sparkle': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,180,220,0],[150,220,150,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
-  'Bunny Hop':      n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
-  'Easter Glow':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,220,150,0],[150,220,180,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
+  'Pastel Drift': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,150,200,0],[150,220,150,0]],fx:15,sx:200,ix:40,pal:4,on:true}]}),
+  'Spring Sparkle': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,180,220,0],[150,220,150,0]],fx:20,sx:120,ix:180,pal:4,on:true}]}),
+  'Bunny Hop': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[0,0,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Easter Glow': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,100,220,0],[255,220,150,0],[150,220,180,0]],fx:17,sx:60,ix:200,pal:4,on:true}]}),
 };
 // ── Mother's Day ──────────────────────────────────────────────────────────────
 const MOTHERSDAY_PAYLOADS = {
-  'Rose Drift':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
-  'Petal Shimmer': n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[249,168,212,0],[255,255,255,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
-  'Garden Chase':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[219,39,119,0],[249,168,212,0],[255,255,255,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
-  'Love Bloom':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[249,168,212,0],[196,181,253,0]],fx:20,sx:120,ix:180,pal:0,on:true}]}),
+  'Rose Drift': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Petal Shimmer': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[249,168,212,0],[0,0,0,255]],fx:17,sx:70,ix:200,pal:4,on:true}]}),
+  'Garden Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[219,39,119,0],[249,168,212,0],[0,0,0,255]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Love Bloom': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[236,72,153,0],[249,168,212,0],[196,181,253,0]],fx:20,sx:120,ix:180,pal:4,on:true}]}),
 };
 // ── Thanksgiving ──────────────────────────────────────────────────────────────
 const THANKSGIVING_PAYLOADS = {
-  'Harvest Glow':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,80,0,0],[180,120,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
-  'Amber Pulse':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,140,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
-  'Thankful Twinkle': n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[200,140,0,0],[150,60,0,0]],fx:17,sx:60,ix:200,pal:0,on:true}]}),
+  'Harvest Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,80,0,0],[180,120,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Amber Pulse': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,140,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
+  'Thankful Twinkle': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[200,140,0,0],[150,60,0,0]],fx:17,sx:60,ix:200,pal:4,on:true}]}),
 };
 // ── New Year's ────────────────────────────────────────────────────────────────
 const NEWYEAR_PAYLOADS = {
-  'Golden Burst':      n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,255,255,0],[255,220,100,0]],fx:89,sx:200,ix:240,pal:0,on:true}]}),
-  'Countdown Flash':   n=>({on:true,bri:255,transition:0,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,255,255,0],[0,0,0,0]],fx:1,sx:220,ix:200,pal:0,on:true}]}),
-  'Champagne Sparkle': n=>({on:true,bri:230,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[255,255,255,0],[200,100,220,0]],fx:20,sx:130,ix:200,pal:0,on:true}]}),
+  'Golden Burst': n=>({on:true,bri:191,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[0,0,0,255],[255,220,100,0]],fx:89,sx:200,ix:240,pal:5,on:true}]}),
+  'Countdown Flash': n=>({on:true,bri:191,transition:0,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[0,0,0,255],[0,0,0,0]],fx:1,sx:220,ix:200,pal:0,on:true}]}),
+  'Champagne Sparkle': n=>({on:true,bri:172,transition:7,seg:[{id:0,start:0,stop:n,col:[[212,175,55,0],[0,0,0,255],[200,100,220,0]],fx:20,sx:130,ix:200,pal:4,on:true}]}),
 };
 // ── Hanukkah ──────────────────────────────────────────────────────────────────
 const HANUKKAH_PAYLOADS = {
-  'Menorah Glow':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,80,200,0],[255,255,255,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
-  'Blue Shimmer':   n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,80,200,0],[255,255,255,0],[100,180,255,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
-  'Festival Pulse': n=>({on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,60,180,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Menorah Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,80,200,0],[0,0,0,255],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Blue Shimmer': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,80,200,0],[0,0,0,255],[100,180,255,0]],fx:17,sx:70,ix:200,pal:4,on:true}]}),
+  'Festival Pulse': n=>({on:true,bri:165,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,60,180,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
 };
 // ── Spring ────────────────────────────────────────────────────────────────────
 const SPRING_PAYLOADS = {
-  'Petal Drift':     n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,220,0],[255,180,200,0],[150,220,150,0]],fx:15,sx:60,ix:200,pal:0,on:true}]}),
-  'Garden Bloom':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,200,100,0],[255,150,180,0],[230,200,100,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
-  'Morning Dew':     n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,220,180,0],[220,255,240,0],[0,0,0,0]],fx:17,sx:50,ix:200,pal:0,on:true}]}),
-  'Soft Breeze':     n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,120,220,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:25,ix:255,pal:0,on:true}]}),
-  'Pastel Chase':    n=>({on:true,bri:190,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[150,230,200,0]],fx:28,sx:120,ix:128,pal:0,on:true}]}),
-  'Rainbow Shimmer': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:9,sx:80,ix:200,pal:0,on:true}]}),
+  'Petal Drift': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,220,0],[255,180,200,0],[150,220,150,0]],fx:15,sx:200,ix:40,pal:4,on:true}]}),
+  'Garden Bloom': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,200,100,0],[255,150,180,0],[230,200,100,0]],fx:17,sx:70,ix:200,pal:4,on:true}]}),
+  'Morning Dew': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,220,180,0],[220,255,240,0],[0,0,0,0]],fx:17,sx:50,ix:200,pal:4,on:true}]}),
+  'Soft Breeze': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,120,220,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:25,ix:255,pal:0,on:true}]}),
+  'Pastel Chase': n=>({on:true,bri:142,transition:7,seg:[{id:0,start:0,stop:n,col:[[200,150,255,0],[255,180,220,0],[150,230,200,0]],fx:28,sx:120,ix:128,pal:0,on:true}]}),
+  'Rainbow Shimmer': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,0,0,0],[0,0,0,0],[0,0,0,0]],fx:9,sx:80,ix:200,pal:0,on:true}]}),
 };
 // ── Summer ────────────────────────────────────────────────────────────────────
 const SUMMER_PAYLOADS = {
-  'Sunshine Burst': n=>({on:true,bri:255,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,220,0,0],[255,140,0,0],[255,255,100,0]],fx:89,sx:180,ix:220,pal:0,on:true}]}),
-  'Ocean Wave':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,150,220,0],[0,220,200,0],[0,80,180,0]],fx:79,sx:80,ix:200,pal:0,on:true}]}),
-  'Tropical Fade':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,100,0,0],[0,200,100,0],[0,180,255,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
-  'Heat Wave':      n=>({on:true,bri:210,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,100,0,0],[255,200,0,0],[220,30,0,0]],fx:15,sx:100,ix:200,pal:0,on:true}]}),
-  'Beach Glow':     n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,200,100,0],[0,180,220,0],[255,255,200,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
-  'Summer Nights':  n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,0,200,0],[0,100,220,0],[0,0,0,0]],fx:67,sx:40,ix:200,pal:0,on:true}]}),
+  'Sunshine Burst': n=>({on:true,bri:191,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,220,0,0],[255,140,0,0],[255,255,100,0]],fx:89,sx:180,ix:220,pal:5,on:true}]}),
+  'Ocean Wave': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,150,220,0],[0,220,200,0],[0,80,180,0]],fx:79,sx:80,ix:200,pal:0,on:true}]}),
+  'Tropical Fade': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,100,0,0],[0,200,100,0],[0,180,255,0]],fx:2,sx:40,ix:255,pal:0,on:true}]}),
+  'Heat Wave': n=>({on:true,bri:158,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,100,0,0],[255,200,0,0],[220,30,0,0]],fx:15,sx:200,ix:40,pal:4,on:true}]}),
+  'Beach Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,200,100,0],[0,180,220,0],[255,255,200,0]],fx:17,sx:70,ix:200,pal:4,on:true}]}),
+  'Summer Nights': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[100,0,200,0],[0,100,220,0],[0,0,0,0]],fx:67,sx:40,ix:200,pal:5,on:true}]}),
 };
 // ── Fall ──────────────────────────────────────────────────────────────────────
 const FALL_PAYLOADS = {
-  'Harvest Drift': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[200,120,0,0],[160,40,0,0]],fx:15,sx:70,ix:200,pal:0,on:true}]}),
-  'Maple Fade':    n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
-  'Ember Glow':    n=>({on:true,bri:200,transition:0,seg:[{id:0,start:0,stop:n,col:[[200,60,0,0],[100,30,0,0],[0,0,0,0]],fx:88,sx:100,ix:180,pal:0,on:true}]}),
-  'Autumn Chase':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[180,100,0,0],[160,40,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
-  'Pumpkin Spice': n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[230,100,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
-  'Cozy Flicker':  n=>({on:true,bri:180,transition:0,seg:[{id:0,start:0,stop:n,col:[[200,60,0,0],[180,100,0,0],[100,30,0,0]],fx:45,sx:180,ix:210,pal:0,on:true}]}),
+  'Harvest Drift': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[200,120,0,0],[160,40,0,0]],fx:15,sx:200,ix:40,pal:4,on:true}]}),
+  'Maple Fade': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Ember Glow': n=>({on:true,bri:150,transition:0,seg:[{id:0,start:0,stop:n,col:[[200,60,0,0],[100,30,0,0],[0,0,0,0]],fx:88,sx:100,ix:180,pal:4,on:true}]}),
+  'Autumn Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[220,80,0,0],[180,100,0,0],[160,40,0,0]],fx:28,sx:140,ix:128,pal:0,on:true}]}),
+  'Pumpkin Spice': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[230,100,0,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:45,ix:255,pal:0,on:true}]}),
+  'Cozy Flicker': n=>({on:true,bri:135,transition:0,seg:[{id:0,start:0,stop:n,col:[[200,60,0,0],[180,100,0,0],[100,30,0,0]],fx:45,sx:180,ix:210,pal:5,on:true}]}),
 };
 // ── Winter ────────────────────────────────────────────────────────────────────
 const WINTER_PAYLOADS = {
-  'Snow Drift':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:77,sx:90,ix:200,pal:0,on:true}]}),
-  'Frost Shimmer':   n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,220,255,0],[255,255,255,0],[100,180,255,0]],fx:17,sx:70,ix:200,pal:0,on:true}]}),
-  'Icy Pulse':       n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[150,200,255,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
-  'Blizzard Chase':  n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[255,255,255,0],[150,200,255,0],[0,0,0,0]],fx:15,sx:100,ix:200,pal:0,on:true}]}),
-  'Polar Glow':      n=>({on:true,bri:200,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
-  'Winter Solstice': n=>({on:true,bri:180,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,180,0],[0,100,200,0],[0,200,120,0]],fx:67,sx:40,ix:200,pal:0,on:true}]}),
+  'Snow Drift': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:77,sx:90,ix:200,pal:36,on:true}]}),
+  'Frost Shimmer': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[180,220,255,0],[0,0,0,255],[100,180,255,0]],fx:17,sx:70,ix:200,pal:4,on:true}]}),
+  'Icy Pulse': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[150,200,255,0],[0,0,0,0],[0,0,0,0]],fx:2,sx:35,ix:255,pal:0,on:true}]}),
+  'Blizzard Chase': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[150,200,255,0],[0,0,0,0]],fx:15,sx:200,ix:40,pal:4,on:true}]}),
+  'Polar Glow': n=>({on:true,bri:150,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,0,0,255],[0,0,0,0],[0,0,0,0]],fx:2,sx:30,ix:255,pal:0,on:true}]}),
+  'Winter Solstice': n=>({on:true,bri:135,transition:7,seg:[{id:0,start:0,stop:n,col:[[0,200,180,0],[0,100,200,0],[0,200,120,0]],fx:67,sx:40,ix:200,pal:5,on:true}]}),
 };
 // ── Master lookup — covers all holidays + all seasons ─────────────────────────
 // activatePattern() and payloadColors() use this single object.
@@ -2938,8 +3449,15 @@ function patternToEffect(name){
   return 0; // Solid fallback
 }
 
+// Append seg-delete entries for ids 1-15 to any payload — clears group/DL segments
+function _withSegCleanup(payload){
+  const cleanup=[];
+  for(let i=1;i<=15;i++) cleanup.push({id:i,stop:0});
+  return {...payload, seg:[...(payload.seg||[]),...cleanup]};
+}
+
 function activatePattern(name,colors){
-  updateNowPlaying(name,colors,true);
+  updateNowPlaying(name,colors,true,'all');
   showToast(name+' activated!');
   // Update whichever preview is currently visible
   renderHolidayPreview(colors);
@@ -2953,7 +3471,7 @@ function activatePattern(name,colors){
     // Use pre-tuned payload if available (covers all holidays + seasons)
     const storedFn=ALL_PAYLOADS[name];
     if(storedFn){
-      wledSend(storedFn(total));
+      wledSend(_withSegCleanup(storedFn(total)));
     } else if(colors && colors.length){
       // Fallback: derive effect from pattern name keywords + colors from holiday data
       const fx=patternToEffect(name);
@@ -2963,7 +3481,7 @@ function activatePattern(name,colors){
         return[rgb[0],rgb[1],rgb[2],0];
       });
       while(col.length<3) col.push([0,0,0,0]);
-      wledSend({on:true,bri:200,seg:[{id:0,start:0,stop:total,col,fx,on:true}]});
+      wledSend(_withSegCleanup({on:true,bri:200,seg:[{id:0,start:0,stop:total,col,fx,on:true}]}));
     }
   }
 }
@@ -3108,13 +3626,13 @@ function teamKey(league,idx){return league+'_'+idx;}
 function teamPatternPayload(t,patternName,total){
   const toC=h=>{const r=hexToRgb(h);return r?[r[0],r[1],r[2],0]:[0,0,0,0];};
   const c1=toC(t.c[0]),c2=toC(t.c[1]||t.c[0]),c3=t.c[2]?toC(t.c[2]):[0,0,0,0];
-  const base={on:true,bri:220,transition:7};
-  const seg=(fx,sx,ix)=>[{id:0,start:0,stop:total,col:[c1,c2,c3],fx,sx,ix,pal:0,on:true}];
+  const base={on:true,bri:165,transition:7};
+  const seg=(fx,sx,ix,pal)=>[{id:0,start:0,stop:total,col:[c1,c2,c3],fx,sx,ix,pal:pal||0,on:true}];
   switch(patternName){
-    case 'Game Day Pulse': return{...base,seg:seg(2,40,255)};
-    case 'Victory Fade':   return{...base,seg:seg(12,30,255)};
-    case 'Rally Twinkle':  return{...base,seg:seg(17,100,220)};
-    default:               return{...base,seg:seg(28,160,128)}; // Team Chase
+    case 'Game Day Pulse': return{...base,seg:seg(2,40,255,0)};
+    case 'Victory Fade':   return{...base,seg:seg(12,185,255,3)};
+    case 'Rally Twinkle':  return{...base,seg:seg(17,100,220,4)};
+    default:               return{...base,seg:seg(28,160,128,0)}; // Team Chase
   }
 }
 
@@ -3206,10 +3724,10 @@ function selectTDPattern(patternName){
   renderTeamStrandPreview(t.c);
   const nameEl=document.getElementById('td-active-name');
   if(nameEl) nameEl.textContent=patternName;
-  updateNowPlaying(t.city+' '+t.name+' — '+patternName,t.c,true);
+  updateNowPlaying(t.city+' '+t.name+' — '+patternName,t.c,true,'all');
   showToast(patternName+' activated!');
   if(wled.active){
-    wledSend(teamPatternPayload(t,patternName,getLEDCount()));
+    wledSend(_withSegCleanup(teamPatternPayload(t,patternName,getLEDCount())));
   }
 }
 
@@ -3449,7 +3967,7 @@ function activateRandomLook(look){
   while(cols.length<3) cols.push([0,0,0,0]);
   const payload={on:true,bri:220,transition:7,seg:[{id:0,start:0,stop:total,col:cols,fx:look.effect.id,sx:look.sx,ix:look.ix,pal:0,on:true}]};
   if(typeof wledSend==='function') wledSend(payload);
-  updateNowPlaying(`🎲 ${look.name}`, look.colors, true);
+  updateNowPlaying(`🎲 ${look.name}`, look.colors, true, 'all');
 }
 
 function saveRandomAsPreset(){
@@ -3753,7 +4271,7 @@ function renderPresetList(){
   el.innerHTML=list.map(p=>{const tag=pHolidays.find(x=>x.id===p.tag)||pHolidays.find(x=>x.id==='other');return`<div class="preset-card"><div class="preset-thumb">${p.groups.map(g=>`<div class="thumb-seg" style="background:${g.color}"></div>`).join('')}</div><div style="font-size:13px;font-weight:600;margin-bottom:3px">${p.name}</div>${p.notes?`<div style="font-size:11px;color:var(--muted)">${p.notes}</div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><span style="font-size:10px;border-radius:20px;padding:3px 10px;font-weight:500;background:${tag.bg};border:0.5px solid ${tag.border};color:${tag.text}">${tag.icon} ${tag.name}</span><span style="font-size:11px;color:var(--muted)">${p.date}</span></div><div style="display:flex;gap:6px;margin-top:9px"><button style="flex:1;background:var(--accent);border:none;color:white;border-radius:8px;padding:8px;font-size:13px;font-weight:500;cursor:pointer;-webkit-appearance:none;" onclick="activatePreset(${p.id})">⚡ Activate</button><button style="background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;-webkit-appearance:none;" onclick="deletePreset(${p.id})">🗑</button></div></div>`;}).join('');
 }
 
-function activatePreset(id){const p=presets.find(x=>x.id===id);if(!p)return;p.groups.forEach((g,i)=>{if(zones[i]){zones[i].color=g.color;zones[i].on=true;}});renderGroupZones();renderCreatePreview();updateNowPlaying(p.name,p.groups.map(g=>g.color),true);if(wled.active) pushZonesToWLED();showToast(p.name+' activated!');}
+function activatePreset(id){const p=presets.find(x=>x.id===id);if(!p)return;p.groups.forEach((g,i)=>{if(zones[i]){zones[i].color=g.color;zones[i].on=true;}});renderGroupZones();renderCreatePreview();updateNowPlaying(p.name,p.groups.map(g=>g.color),true,'group');if(wled.active) pushZonesToWLED();showToast(p.name+' activated!');}
 function deletePreset(id){presets=presets.filter(x=>x.id!==id);renderPresetFilterBar();renderPresetList();const mpc=document.getElementById('my-preset-count');if(mpc)mpc.textContent=presets.length+' saved';showToast('Preset deleted');}
 
 // ═══════════════════════════════
@@ -4025,6 +4543,7 @@ async function wledSend(data) {
   if (data.on !== false) {
     wled.lastPayload = data;
     wled.lastConfig = { name: nowPlayingName, colors: nowPlayingColors };
+    try{localStorage.setItem('wled_last_payload',JSON.stringify(data));}catch(e){}
   }
   const ok = await wledPost(wled.active.ip, data);
   if (!ok) { showToast('⚠️ Controller not responding'); updateConnectionBadge(false); }
@@ -4697,15 +5216,10 @@ let dlPixelString = localStorage.getItem('dl_pixel_string') || '';
 
 function dlInitPixelUI() {
   const input = document.getElementById('dl-pixel-input');
-  if (input && dlPixelString) {
-    input.value = dlPixelString;
+  if (input) {
+    input.value = dlPixelString || '';
     dlPixelInputChanged();
   }
-  // Always show pixel panel — this is a config screen now
-  const body = document.getElementById('dl-pixel-body');
-  const icon = document.getElementById('dl-pixel-toggle-icon');
-  if (body) body.style.display = 'block';
-  if (icon) icon.textContent = '−';
 }
 
 function dlPixelInputChanged() {
@@ -4811,8 +5325,8 @@ function randomizeLights() {
     '#' + rgb.map(v => v.toString(16).padStart(2,'0')).join('')
   );
 
-  wledSend({ on: true, bri: 200, seg: [{ id: 0, start: 0, stop: n, col: cols, fx: fx.id, sx, ix, on: true }] });
-  updateNowPlaying('✨ ' + fx.name, hexColors, true);
+  wledSend(_withSegCleanup({ on: true, bri: 200, seg: [{ id: 0, start: 0, stop: n, col: cols, fx: fx.id, sx, ix, on: true }] }));
+  updateNowPlaying('✨ ' + fx.name, hexColors, true, 'all');
 
   // Animate logo with a quick spin
   const logo = document.querySelector('.logo-ring');
@@ -4839,13 +5353,40 @@ window.activatePreset = function(id) {
   }
 };
 
+// Helper: build col array for current effect using alColor/alColor2/alColor3
+// Convert hex to WLED 4-channel col entry — #ffffff → white channel [0,0,0,255]
+function hexToWledCol(hex){
+  if(!hex) return [255,255,255,0];
+  if((hex||'').toLowerCase()==='#ffffff'||(typeof isWhiteChannel==='function'&&isWhiteChannel(hex))) return [0,0,0,255];
+  const rgb=hexToRgb(hex);
+  return rgb?[rgb[0],rgb[1],rgb[2],0]:[255,255,255,0];
+}
+
+function alBuildColArray(){
+  const cc=effectColorCount(selectedEffect);
+  const c1=hexToWledCol(alColor);
+  const c2=hexToWledCol(alColor2);
+  const c3=hexToWledCol(alColor3);
+  if(cc===3) return [c1,c2,c3];
+  if(cc===2) return [c1,c2];
+  return [c1];
+}
+
+
+// Helper: update now playing for All Lights mode
+function _npTagAllLights(){
+  const name=wledEffects.find(e=>e.id===selectedEffect)?.name||'Custom';
+  const cols=alBuildColArray().map(c=>c[3]>0?'#ffffff':'#'+c.slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join(''));
+  updateNowPlaying('✏ '+name,cols,true,'all');
+}
+
 // Override alApplyCustom + alSetColor — live color preview
 const _origAlSetColor = alSetColor;
 window.alSetColor = function(hex) {
   _origAlSetColor(hex);
   if (wled.active && createMode === 'all') {
-    const rgb = hexToRgb(hex);
-    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: selectedEffect, sx: effectSpeed, ix: effectIntensity }] });
+    wledSend(_withSegCleanup({ on: true, seg: [{ col: alBuildColArray(), fx: selectedEffect, sx: effectSpeed, ix: effectIntensity }] }));
+    _npTagAllLights();
   }
 };
 
@@ -4854,18 +5395,18 @@ const _origSelectEffect = selectEffect;
 window.selectEffect = function(id) {
   _origSelectEffect(id);
   if (wled.active && createMode === 'all') {
-    const rgb = hexToRgb(alColor);
-    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: id, sx: effectSpeed, ix: effectIntensity }] });
+    wledSend(_withSegCleanup({ on: true, seg: [{ col: alBuildColArray(), fx: id, sx: effectSpeed, ix: effectIntensity }] }));
+    _npTagAllLights();
   }
 };
 
-// Override updateParams — live speed/intensity
+// Override updateParams — live speed/intensity/palette
 const _origUpdateParams = updateParams;
 window.updateParams = function() {
   _origUpdateParams();
   if (wled.active && createMode === 'all') {
-    const rgb = hexToRgb(alColor);
-    if (rgb) wledSend({ on: true, seg: [{ col: [rgb], fx: selectedEffect, sx: effectSpeed, ix: effectIntensity }] });
+    wledSend(_withSegCleanup({ on: true, seg: [{ col: alBuildColArray(), fx: selectedEffect, sx: effectSpeed, ix: effectIntensity }] }));
+    _npTagAllLights();
   }
 };
 
@@ -4896,16 +5437,16 @@ function pixelsToRanges(pixels, totalLEDs) {
 }
 
 // Colours that should use the dedicated W channel instead of RGB mixing
-const W_CHANNEL_COLORS = new Set(['#ffffff','#fff5e0']);
+const W_CHANNEL_COLORS = new Set(['#ffffff']);
 function isWhiteChannel(hex) { return W_CHANNEL_COLORS.has((hex||'').toLowerCase()); }
 
 // ── Downlighting presets ──
 const DL_PRESETS = [
   { name: 'Warm White',  color: null,      swatch: '#fff5e0', desc: 'Dedicated white channel — warmest, most natural' },
   { name: 'Cool White',  color: '#dff0ff', swatch: '#dff0ff', desc: 'Crisp daylight white' },
-  { name: 'Red',         color: '#ff1a1a', swatch: '#ff1a1a', desc: 'Bold solid red' },
-  { name: 'Blue',        color: '#1a6fff', swatch: '#1a6fff', desc: 'Deep sky blue' },
-  { name: 'Green',       color: '#00cc44', swatch: '#00cc44', desc: 'Fresh emerald green' },
+  { name: 'Red',         color: '#ff0000', swatch: '#ff0000', desc: 'Bold solid red' },
+  { name: 'Blue',        color: '#0000ff', swatch: '#0000ff', desc: 'Deep sky blue' },
+  { name: 'Green',       color: '#00ff00', swatch: '#00ff00', desc: 'Fresh emerald green' },
   { name: 'Pink',        color: '#ff3d8f', swatch: '#ff3d8f', desc: 'Vivid hot pink' },
   { name: 'Purple',      color: '#8800ee', swatch: '#8800ee', desc: 'Rich deep purple' },
   { name: 'Orange',      color: '#ff6600', swatch: '#ff6600', desc: 'Warm amber orange' },
@@ -4972,7 +5513,7 @@ function activateDLPreset(name) {
   activeDLPreset = name;
   const payload = buildDownlightPayload(p.color);
   wledSendDL(payload);
-  updateNowPlaying(name, [p.swatch], true);
+  updateNowPlaying(name, [p.swatch], true, 'downlight');
   renderDLPresets();
   showToast('💡 ' + name);
 }
@@ -5121,11 +5662,12 @@ function pushZonesToWLED(colorOverride) {
   const useGroups = groups && groups.length > 0;
   let cursor = 0;
   zones.forEach((z, i) => {
-    const rgb = hexToRgb(colorOverride ? colorOverride[i] : z.color);
+    const hex = colorOverride ? colorOverride[i] : z.color;
+    const col = hexToWledCol(hex);
     const start = useGroups && groups[i] ? (groups[i].startLed || 0) : cursor;
     const stop  = useGroups && groups[i] ? start + (groups[i].ledCount || z.leds) : cursor + z.leds;
-    if (rgb && z.on) {
-      segments.push({ id: i, start, stop, col: [rgb], fx: selectedEffect, sx: effectSpeed, on: true });
+    if (col && z.on) {
+      segments.push({ id: i, start, stop, col: [col], fx: selectedEffect, sx: effectSpeed, on: true });
     }
     cursor += z.leds;
   });
@@ -5209,10 +5751,10 @@ async function pollConnection() {
       showToast('Controller online — syncing updated default…');
       syncBootDefaultToController(wled.active.ip).then(ok => {
         if (ok) showToast('⚡ Default synced to controller');
-        // After sync, let autopilot apply the pattern visually (if on)
-        if (ok && apOn) applyAutopilotNow();
+        // After sync, let autopilot apply the pattern visually (if on and nothing playing)
+        if (ok && apOn && !lightsOn) applyAutopilotNow();
       });
-    } else if (apOn) {
+    } else if (apOn && !lightsOn) {
       // Default is already synced — Autopilot applies today's holiday pattern via app
       setTimeout(applyAutopilotNow, 600); // slight delay so WLED finishes its boot
     }
@@ -5249,9 +5791,11 @@ function initWLED() {
           if (isBootDefaultDirty()) {
             syncBootDefaultToController(merged.ip).then(ok => {
               if (ok) showToast('⚡ Synced default to ' + merged.name);
-              if (apOn) setTimeout(applyAutopilotNow, 400);
+              // Skip autopilot if user had something playing before refresh
+              if (apOn && !lightsOn) setTimeout(applyAutopilotNow, 400);
             });
-          } else if (apOn) {
+          } else if (apOn && !lightsOn) {
+            // Skip autopilot if user had something playing before refresh
             setTimeout(applyAutopilotNow, 800);
           }
         }
@@ -5315,7 +5859,38 @@ async function backgroundReconnectOffline() {
   }
 }
 
+// ── Restore NowPlaying state from previous session ──
+function _restoreNPState(){
+  try{
+    const np=JSON.parse(localStorage.getItem('wled_np_state')||'null');
+    if(!np||!np.playing) return;
+    nowPlayingName=np.name||'';
+    nowPlayingColors=np.colors||[];
+    lightsOn=true;
+    _npMode=np.mode||'none';
+    const lp=JSON.parse(localStorage.getItem('wled_last_payload')||'null');
+    if(lp) wled.lastPayload=lp;
+    wled.lastConfig={name:np.name,colors:np.colors||[]};
+    // Update NP bar DOM
+    const nm=document.getElementById('np-name');
+    const ns=document.getElementById('np-sub');
+    const ni=document.getElementById('np-indicator');
+    const pb=document.getElementById('power-btn');
+    const nb=document.getElementById('np-bg');
+    const nc=document.getElementById('np-colors');
+    if(nm) nm.textContent=np.name;
+    if(ns) ns.textContent='Tap \u23FB to turn off';
+    if(ni) ni.className='np-pulse';
+    if(pb) pb.className='power-btn on';
+    if(nb) nb.style.background=np.colors&&np.colors.length
+      ?`linear-gradient(135deg,${np.colors.join(',')})`:'transparent';
+    if(nc) nc.innerHTML=np.colors
+      ?np.colors.map(c=>`<div class="np-dot" style="background:${c}"></div>`).join(''):'';
+  }catch(e){}
+}
+
 // Run after DOM is ready
+_restoreNPState();
 initWLED();
 
 // ═══════════════════════════════════════════════════
