@@ -1142,6 +1142,17 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="saveGPIOConfig()">💾 Save & Push</button>
   </div>
 
+  <!-- CONTROLLER SCOPE -->
+  <div id="gpio-controller-header" style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:20px">💡</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Configuring</div>
+      <div id="gpio-controller-name" style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">No controller selected</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="pullGpioFromController(true)" title="Reload settings from controller">🔄 Refresh</button>
+    <button class="btn btn-ghost btn-sm" onclick="go('s-wled')">Change</button>
+  </div>
+
   <!-- SUMMARY -->
   <div class="gpio-summary-bar" id="gpio-summary-bar">
     <div class="gpio-stat"><div class="gpio-stat-val" id="gpio-stat-outputs">0</div><div class="gpio-stat-label">Outputs</div></div>
@@ -1191,41 +1202,25 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Luma Lights Admin</div><div style="font-size:11px;color:var(--muted)">Configure your lights</div></div>
   </div>
 
-  <!-- VIEW SETTINGS -->
-  <div class="card" style="margin-bottom:16px">
-    <div style="font-size:13px;font-weight:600;margin-bottom:14px">🎨 View Settings</div>
-
-    <div style="margin-bottom:16px">
-      <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Theme</div>
-      <div style="display:flex;gap:8px">
-        <button class="vs-theme-btn" data-theme="dark"  onclick="applyTheme('dark')" style="flex:1">🌙 Dark</button>
-        <button class="vs-theme-btn" data-theme="light" onclick="applyTheme('light')" style="flex:1">☀️ Light</button>
-      </div>
-    </div>
-
-    <div>
-      <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Font Size</div>
-      <div style="display:flex;gap:6px">
-        <button class="vs-font-btn" data-fs="fs-lg"  onclick="applyFontSize('fs-lg')"  title="Regular" style="font-size:15px">A</button>
-        <button class="vs-font-btn" data-fs="fs-xl"  onclick="applyFontSize('fs-xl')"  title="Large"   style="font-size:18px">A</button>
-      </div>
-    </div>
-  </div>
-
   <div style="display:flex;flex-direction:column;gap:8px">
-    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-admin-gpio')">
-      <span style="font-size:24px">🔌</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">LED Setup</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Configure LED strips &amp; push to WLED</div></div>
-      <span style="color:var(--muted)">›</span>
-    </div>
-    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-groups')">
-      <span style="font-size:24px">🗂️</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">Groups</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Define named zones that map to WLED segments</div></div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-view-settings')">
+      <span style="font-size:24px">🎨</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">View Setting</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Theme &amp; font size</div></div>
       <span style="color:var(--muted)">›</span>
     </div>
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-downlights')">
       <span style="font-size:24px">💡</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">Downlights</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Set which LED pixels are downlights</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Downlight Selection</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Set which LED pixels are downlights</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-groups')">
+      <span style="font-size:24px">🗂️</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Group Selection</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Define named zones that map to WLED segments</div></div>
+      <span style="color:var(--muted)">›</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-admin-gpio')">
+      <span style="font-size:24px">🔌</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">LED Setup</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Configure LED strips &amp; push to WLED</div></div>
       <span style="color:var(--muted)">›</span>
     </div>
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="go('s-wled')">
@@ -1235,7 +1230,7 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
     </div>
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="showAdminPasswordChange()">
       <span style="font-size:24px">🔑</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">App Password</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Change the customer unlock password</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Access</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Change the customer unlock password</div></div>
       <span style="color:var(--muted)">›</span>
     </div>
     <div style="background:var(--surface2);border-radius:13px;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="adminLockApp()">
@@ -1261,6 +1256,34 @@ textarea.field-input{resize:none;line-height:1.5;font-family:inherit;}
   </div>
 
   <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--surface3)">Luma Lights Admin · v1.0</div>
+</div>
+
+<!-- ══════════ VIEW SETTINGS ══════════ -->
+<div class="screen" id="s-view-settings">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('s-admin')">← Settings</button>
+    <span class="screen-title">View Setting</span>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:14px">🎨 View Settings</div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Theme</div>
+      <div style="display:flex;gap:8px">
+        <button class="vs-theme-btn" data-theme="dark"  onclick="applyTheme('dark')" style="flex:1">🌙 Dark</button>
+        <button class="vs-theme-btn" data-theme="light" onclick="applyTheme('light')" style="flex:1">☀️ Light</button>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Font Size</div>
+      <div style="display:flex;gap:6px">
+        <button class="vs-font-btn" data-fs="fs-lg"  onclick="applyFontSize('fs-lg')"  title="Regular" style="font-size:15px">A</button>
+        <button class="vs-font-btn" data-fs="fs-xl"  onclick="applyFontSize('fs-xl')"  title="Large"   style="font-size:18px">A</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ GROUPS ══════════ -->
@@ -1883,7 +1906,30 @@ const saveSportsLeagues=[
   {id:'college',name:'College',icon:'🎓',teams:sportsTeams.College},
 ];
 
-const quickColors=['#ffffff','#ff0000','#0000ff','#00ff00','#a855f7','#ec4899','#f97316','#06b6d4','#fbbf24','#14b8a6','#64748b','#000000'];
+const quickColors=['#ffffff','#ff0000','#0000ff','#00ff00','#a855f7','#ec4899','#ff4203','#06b6d4','#fbbf24','#14b8a6','#000000'];
+
+// Random-color swatch styling — conic rainbow so it reads as "any color" at a
+// glance. Same .sw class keeps sizing/shape identical to the color swatches.
+const RANDOM_SWATCH_STYLE = 'background:conic-gradient(from 0deg,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;text-shadow:0 0 3px rgba(0,0,0,0.9),0 0 1px rgba(0,0,0,0.9)';
+
+// Pick a random hex color that isn't black/near-black. Sum threshold keeps
+// the result visibly lit on LED strips.
+function randomNonBlackColor() {
+  let r = 0, g = 0, b = 0;
+  do {
+    r = Math.floor(Math.random() * 256);
+    g = Math.floor(Math.random() * 256);
+    b = Math.floor(Math.random() * 256);
+  } while (r + g + b < 120);
+  return '#' + [r, g, b].map(n => n.toString(16).padStart(2, '0')).join('');
+}
+
+// Render-site setters for the random swatch. One per picker so we can call
+// that picker's existing setColor path (each has its own side-effects like
+// updating wheels, zones, preview, etc.).
+function alPickRandom()   { if (typeof alSetColor   === 'function') alSetColor(randomNonBlackColor()); }
+function crDlPickRandom() { if (typeof crDlSetColor === 'function') crDlSetColor(randomNonBlackColor()); }
+function zpPickRandom()   { if (typeof zpPickSwatch === 'function') zpPickSwatch(randomNonBlackColor()); }
 const dlPresetColors=[{name:'Warm White',c:'#fff5e0'},{name:'Cool White',c:'#e8f4ff'},{name:'Xmas Red',c:'#ef4444'},{name:'Holly Green',c:'#22c55e'},{name:'Royal Blue',c:'#3b82f6'},{name:'Golden',c:'#f59e0b'},{name:'Lavender',c:'#a78bfa'},{name:'Coral',c:'#f97316'}];
 const dlDownLEDs=new Set([6,12,17,28,35,52,75]);
 let dlColor='#fff5e0',dlOn=true,dlH=36,dlS=90,dlB=90;
@@ -1903,8 +1949,17 @@ function go(id){
   if(id==='s-downlights') dlInitPixelUI();
   if(id==='s-my-groups') renderMyGroups();
   if(id==='s-autopilot') renderAPToday();
-  if(id==='s-admin') renderViewSettingsState();
+  if(id==='s-view-settings') renderViewSettingsState();
   if(id==='s-groups') renderGroupsList();
+  if(id==='s-admin-gpio') {
+    if (typeof reloadGpioForActive === 'function') reloadGpioForActive();
+    if (typeof renderGPIOList === 'function') renderGPIOList();
+    if (typeof renderGpioControllerHeader === 'function') renderGpioControllerHeader();
+    // Silently pull live config from the controller so the screen reflects
+    // what the device is actually running. Local edits get overwritten on
+    // open, which is intentional — the controller is ground truth here.
+    if (typeof pullGpioFromController === 'function') pullGpioFromController(false);
+  }
   if(id==='s-create') {
     const searchEl = document.getElementById('effect-search');
     if(searchEl) searchEl.value = '';
@@ -2387,7 +2442,7 @@ function crDlInitPicker(){
   if(!hasDL) return;
   // Quick color swatches from quickColors
   const sw = document.getElementById('cr-dl-swatches');
-  if(sw) sw.innerHTML = quickColors.map(c=>`<div class="sw ${c.toLowerCase()===crDlColor.toLowerCase()?'sel':''}" style="background:${c}" onclick="crDlSetColor('${c}')"></div>`).join('');
+  if(sw) sw.innerHTML = quickColors.map(c=>`<div class="sw ${c.toLowerCase()===crDlColor.toLowerCase()?'sel':''}" style="background:${c}" onclick="crDlSetColor('${c}')"></div>`).join('') + `<div class="sw" style="${RANDOM_SWATCH_STYLE}" onclick="crDlPickRandom()" title="Random color">R</div>`;
   // Sync hex input
   const hexInp = document.getElementById('cr-dl-hex');
   if(hexInp) hexInp.value = crDlColor;
@@ -2641,7 +2696,7 @@ function alUpdateColorSlots(effectId){
 }
 
 function buildAlSwatches(){
-  document.getElementById('al-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===alColor?'sel':''}" style="background:${c}" onclick="alSetColor('${c}')"></div>`).join('');
+  document.getElementById('al-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===alColor?'sel':''}" style="background:${c}" onclick="alSetColor('${c}')"></div>`).join('') + `<div class="sw" style="${RANDOM_SWATCH_STYLE}" onclick="alPickRandom()" title="Random color">R</div>`;
 }
 
 function alUpdateTracks(){
@@ -2858,7 +2913,7 @@ function zpUpdateColor(hex){
 
 function buildZPSwatches(){
   const cur=editingZoneIdx!==null?zones[editingZoneIdx].color:'#fff';
-  document.getElementById('zp-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===cur?'sel':''}" style="background:${c}" onclick="zpPickSwatch('${c}')"></div>`).join('');
+  document.getElementById('zp-swatches').innerHTML=quickColors.map(c=>`<div class="sw ${c===cur?'sel':''}" style="background:${c}" onclick="zpPickSwatch('${c}')"></div>`).join('') + `<div class="sw" style="${RANDOM_SWATCH_STYLE}" onclick="zpPickRandom()" title="Random color">R</div>`;
 }
 
 function zpPickSwatch(c){zones[editingZoneIdx].color=c;zpUpdateColor(c);buildZPSwatches();}
@@ -3220,7 +3275,7 @@ function setDefaultPattern(i){
     clearAllDefaults();
     defaultPatterns[h.id]=name;
     // Record as the controller boot default, stamped with change time
-    bootDefault={holidayId:h.id, patternName:name, changedAt:Date.now(), syncedAt:null};
+    bootDefault={holidayId:h.id, patternName:name, changedAt:Date.now(), syncedAt:null, by:phoneId};
     localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
     renderSyncBadge();
     if(wled.active){
@@ -3594,7 +3649,7 @@ function setSeasonDefault(patternName){
   } else {
     clearAllDefaults();
     defaultPatterns[s.id]=patternName;
-    bootDefault={holidayId:s.id, patternName, changedAt:Date.now(), syncedAt:null};
+    bootDefault={holidayId:s.id, patternName, changedAt:Date.now(), syncedAt:null, by:phoneId};
     localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
     renderSyncBadge();
     if(wled.active){
@@ -3743,7 +3798,7 @@ function setTeamDefault(patternName){
   } else {
     clearAllDefaults();
     teamDefaultPatterns[key]=patternName;
-    bootDefault={teamKey:key,patternName,teamData:{c:t.c,city:t.city,name:t.name},changedAt:Date.now(),syncedAt:null};
+    bootDefault={teamKey:key,patternName,teamData:{c:t.c,city:t.city,name:t.name},changedAt:Date.now(),syncedAt:null,by:phoneId};
     localStorage.setItem('wled_boot_default',JSON.stringify(bootDefault));
     renderSyncBadge();
     if(wled.active){
@@ -4302,7 +4357,9 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').cat
 initHolidays();
 initSeasons();
 renderHomeDefaults();
-renderSyncBadge();
+// renderSyncBadge() is defined in the next <script> block — guard so this
+// block's init can complete even though hoisting doesn't cross script tags.
+if (typeof renderSyncBadge === 'function') renderSyncBadge();
 // Sync ap-home-toggle visual and subtitle to persisted state
 document.getElementById('ap-home-toggle').classList.toggle('on',apOn);
 updateAPHomeSub();
@@ -4363,6 +4420,15 @@ function setActiveController(ip) {
     // Persist LED count so previews stay accurate when controller is offline
     if (c.ledCount) localStorage.setItem('lc_led_count', String(c.ledCount));
     updateConnectionBadge();
+    // Swap GPIO config to this controller (function lives in the GPIO script
+    // block — guard with typeof because init order isn't guaranteed).
+    if (typeof reloadGpioForActive === 'function') {
+      reloadGpioForActive();
+      if (typeof renderGPIOList === 'function') renderGPIOList();
+    }
+    // Multi-phone reconcile: absorb controller's default if another phone wrote a newer one.
+    // Non-blocking — runs in background so UI doesn't stall on slow LAN.
+    reconcileBootDefault(ip).catch(() => {});
   }
 }
 
@@ -4436,11 +4502,92 @@ async function wledPost(ip, data, timeout = 2000) {
 }
 
 // ── Boot-default persistence ───────────────────────────────────────────────
-// bootDefault shape: { holidayId, patternName, changedAt, syncedAt } | null
+// bootDefault shape: { holidayId, teamKey, teamData, patternName, changedAt, syncedAt, by } | null
 //   changedAt  = ms timestamp when the user last changed the default
 //   syncedAt   = ms timestamp when the controller last confirmed receipt
+//   by         = phoneId of the device that last wrote (for multi-phone last-write-wins)
 //   dirty      = changedAt > syncedAt  (controller is stale)
 let bootDefault = JSON.parse(localStorage.getItem('wled_boot_default') || 'null');
+
+// ── Phone identity for multi-phone coordination ───────────────────────────
+// Each install gets a stable 6-char id. Used to tag preset 1 so phones can
+// tell who last wrote and avoid stomping a newer default from another phone.
+let phoneId = localStorage.getItem('wled_phone_id');
+if (!phoneId) {
+  const src = (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID().replace(/-/g, '')
+    : Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+  phoneId = src.slice(0, 6);
+  localStorage.setItem('wled_phone_id', phoneId);
+}
+
+// Encode bootDefault metadata into the preset name WLED stores for preset 1.
+// Format: "App Default|ts=<base36>|by=<id>[|t=<teamKey>]|k=<patternName>"
+// Kept under ~64 chars — WLED preset name field is roomy but not unlimited.
+function encodeBootDefaultName(bd, ts) {
+  const parts = ['App Default', 'ts=' + ts.toString(36), 'by=' + phoneId];
+  if (bd.teamKey) parts.push('t=' + String(bd.teamKey).slice(0, 16));
+  parts.push('k=' + String(bd.patternName || '').slice(0, 28));
+  return parts.join('|');
+}
+
+function parseBootDefaultName(name) {
+  if (!name || typeof name !== 'string' || !name.startsWith('App Default')) return null;
+  const meta = { ts: 0, by: '', teamKey: null, patternName: null };
+  name.split('|').slice(1).forEach(seg => {
+    const idx = seg.indexOf('=');
+    if (idx < 0) return;
+    const k = seg.slice(0, idx), v = seg.slice(idx + 1);
+    if (k === 'ts') meta.ts = parseInt(v, 36) || 0;
+    else if (k === 'by') meta.by = v;
+    else if (k === 't') meta.teamKey = v;
+    else if (k === 'k') meta.patternName = v;
+  });
+  return meta.ts ? meta : null;
+}
+
+// Fetch controller's current preset 1 metadata (if App-managed).
+async function fetchControllerBootMeta(ip) {
+  try {
+    const presets = await wledGet(ip, '/presets.json', 3000);
+    const n = presets && presets['1'] && presets['1'].n;
+    return n ? parseBootDefaultName(n) : null;
+  } catch { return null; }
+}
+
+// Reconcile local bootDefault with controller on (re)connect.
+// Rule: last-write-wins by timestamp. If controller's preset 1 was written
+// by another phone with a newer ts than our local changedAt, we absorb it
+// (so we don't stomp a fresher default). If ours is newer and dirty, normal
+// sync flow will push it. If preset 1 isn't App-managed, no-op.
+async function reconcileBootDefault(ip) {
+  const meta = await fetchControllerBootMeta(ip);
+  if (!meta) return; // no App default on controller — leave local state alone
+  const localTs = bootDefault ? (bootDefault.changedAt || 0) : 0;
+  if (meta.ts > localTs && meta.by !== phoneId) {
+    // Controller has a newer default from another phone — absorb it.
+    // teamData can't be reconstructed from the name alone; leave null.
+    // Next time this phone sets a default it'll overwrite cleanly.
+    bootDefault = {
+      holidayId: null,
+      teamKey: meta.teamKey || null,
+      teamData: null,
+      patternName: meta.patternName || null,
+      changedAt: meta.ts,
+      syncedAt: meta.ts,
+      by: meta.by,
+    };
+    localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
+    renderSyncBadge();
+  } else if (bootDefault && meta.by === phoneId && meta.ts === (bootDefault.changedAt || 0)) {
+    // Controller reflects our latest write — stamp synced so badge goes green.
+    if (!bootDefault.syncedAt || bootDefault.syncedAt < meta.ts) {
+      bootDefault.syncedAt = meta.ts;
+      localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
+      renderSyncBadge();
+    }
+  }
+}
 
 function isBootDefaultDirty() {
   if (!bootDefault) return false;
@@ -4501,6 +4648,124 @@ async function wledCfgPost(ip, data, timeout = 3000) {
   } catch { return false; }
 }
 
+// Convert a WLED [r,g,b] triple to #rrggbb. Skips pure black which WLED pads
+// unused color slots with — we don't want [0,0,0] cluttering the NP swatches.
+function rgbArrayToHex(arr) {
+  if (!Array.isArray(arr) || arr.length < 3) return null;
+  const [r, g, b] = arr.map(n => Math.max(0, Math.min(255, parseInt(n) || 0)));
+  if (r === 0 && g === 0 && b === 0) return null;
+  return '#' + [r, g, b].map(n => n.toString(16).padStart(2, '0')).join('');
+}
+
+// Pull what's currently playing from the controller and mirror it into the
+// Now Playing bar. Runs after (re)connect so the UI doesn't lie about state
+// when the controller was driven from another phone / the WLED web UI.
+// Name resolution order: preset 1 = App bootDefault label; preset > 1 = name
+// from /presets.json; no preset = WLED effect name.
+async function pullNowPlayingFromController(ip) {
+  try {
+    const state = await wledGet(ip, '/json/state', 3000);
+    if (!state) return false;
+
+    if (!state.on) {
+      updateNowPlaying('Off', [], false);
+      return true;
+    }
+
+    const seg = Array.isArray(state.seg) ? state.seg.find(s => s && s.on !== false) : null;
+    const colors = seg && Array.isArray(seg.col)
+      ? seg.col.map(rgbArrayToHex).filter(Boolean).slice(0, 3)
+      : [];
+
+    let name = null;
+    const ps = parseInt(state.ps);
+    if (ps === 1) {
+      // Preset 1 is the App-managed boot default — decode its stamped name.
+      const meta = await fetchControllerBootMeta(ip);
+      if (meta && meta.patternName) name = meta.patternName;
+    } else if (ps > 1) {
+      try {
+        const presets = await wledGet(ip, '/presets.json', 2500);
+        if (presets && presets[ps] && presets[ps].n) {
+          const meta = parseBootDefaultName(presets[ps].n);
+          name = meta && meta.patternName ? meta.patternName : presets[ps].n;
+        }
+      } catch {}
+      if (!name) name = 'Preset ' + ps;
+    }
+
+    // Fallback: no preset match, use the effect name.
+    if (!name && seg && typeof seg.fx === 'number') {
+      name = (wledEffects && wledEffects[seg.fx]) || 'Effect ' + seg.fx;
+    }
+    if (!name) name = 'Playing';
+
+    updateNowPlaying(name, colors, true);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Pin a WLED controller to its current IP by switching its network config from
+// DHCP to a static reservation. WLED's nw.ins[0] fields are documented in the
+// official config schema: ip=address, gw=gateway, sn=subnet, dns arrays, and
+// static:true toggles DHCP off. We read current values from /json/cfg so we
+// don't trash any custom gw/sn the user already set.
+// Returns {ok, reason, ip}. Caller handles UI feedback.
+async function lockControllerIP(ip) {
+  let cfg;
+  try {
+    const r = await fetchWithTimeout(`http://${ip}/json/cfg`, {}, 3500);
+    if (!r || !r.ok) return { ok: false, reason: 'Controller not responding' };
+    cfg = await r.json();
+  } catch (e) {
+    return { ok: false, reason: 'Could not read controller config' };
+  }
+
+  const nwIns = cfg?.nw?.ins?.[0];
+  if (!nwIns) return { ok: false, reason: 'Controller config missing nw.ins' };
+
+  // Derive gateway/subnet if controller didn't return them (fresh DHCP boot).
+  // Most home LANs are /24 with .1 gateway — safe defaults when missing.
+  const parts = ip.split('.').map(Number);
+  const fallbackGw = [parts[0], parts[1], parts[2], 1].join('.');
+  const payload = {
+    nw: {
+      ins: [{
+        ...nwIns,
+        ip,
+        gw: nwIns.gw || fallbackGw,
+        sn: nwIns.sn || '255.255.255.0',
+        dns: nwIns.dns || [0,0,0,0],
+        dns2: nwIns.dns2 || [0,0,0,0],
+        // WLED field: false = static, true = DHCP.  Set dhcp:false for static.
+        // (Some WLED builds use a different key; include both to be safe.)
+        dhcp: false,
+        static: true,
+      }],
+    },
+  };
+
+  const ok = await wledCfgPost(ip, payload, 4000);
+  if (!ok) return { ok: false, reason: 'Controller rejected config write' };
+  return { ok: true, ip };
+}
+
+// Mark a controller locked in our local state after a successful lockControllerIP.
+function markControllerLocked(mac, ip) {
+  const idx = wled.controllers.findIndex(c =>
+    (mac && c.mac === mac) || c.ip === ip
+  );
+  if (idx < 0) return;
+  wled.controllers[idx].ipLocked = true;
+  wled.controllers[idx].ipLockedAt = ip;
+  if (wled.active && wled.active.ip === wled.controllers[idx].ip) {
+    wled.active = wled.controllers[idx];
+  }
+  saveControllers();
+}
+
 // Push the current bootDefault to a controller:
 //   1. Activate the effect so the controller is showing it
 //   2. Save that state as WLED preset 1
@@ -4513,10 +4778,30 @@ async function syncBootDefaultToController(ip) {
   if (!bootDefault) return false;
   _syncInProgress = true;
   try {
+    // Pre-flight: if controller's preset 1 was written by another phone with a
+    // newer timestamp than our local change, absorb theirs and don't stomp it.
+    // Enforces last-write-wins by changedAt timestamp across phones.
+    const remote = await fetchControllerBootMeta(ip);
+    if (remote && remote.by && remote.by !== phoneId && remote.ts > (bootDefault.changedAt || 0)) {
+      bootDefault = {
+        holidayId: null,
+        teamKey: remote.teamKey || null,
+        teamData: null,
+        patternName: remote.patternName || null,
+        changedAt: remote.ts,
+        syncedAt: remote.ts,
+        by: remote.by,
+      };
+      localStorage.setItem('wled_boot_default', JSON.stringify(bootDefault));
+      renderSyncBadge();
+      return true; // treat as synced — controller holds a fresher default
+    }
+
     const total = getLEDCount();
     // Build payload — team defaults use teamPatternPayload(), holiday/season use ALL_PAYLOADS
     let payload;
     if (bootDefault.teamKey) {
+      if (!bootDefault.teamData) return false;           // can't rebuild a team payload without teamData
       payload = teamPatternPayload(bootDefault.teamData, bootDefault.patternName, total);
     } else {
       const fn = ALL_PAYLOADS[bootDefault.patternName];
@@ -4526,9 +4811,13 @@ async function syncBootDefaultToController(ip) {
     const ok = await wledPost(ip, payload);              // 1. activate effect
     if (!ok) return false;
     await new Promise(r => setTimeout(r, 350));
-    await wledPost(ip, { psave: 1, n: 'App Default' });  // 2. save as preset 1
+    // Tag preset 1 name with ts + phoneId so other phones can detect who wrote last.
+    const ts = bootDefault.changedAt || Date.now();
+    const presetName = encodeBootDefaultName(bootDefault, ts);
+    await wledPost(ip, { psave: 1, n: presetName });     // 2. save as preset 1
     await new Promise(r => setTimeout(r, 250));
     await wledCfgPost(ip, { def: { ps: 1, on: true } }); // 3. boot = preset 1
+    bootDefault.by = phoneId;                             // record our authorship locally
     markBootDefaultSynced();                              // 4. stamp synced time
     return true;
   } finally {
@@ -4551,12 +4840,40 @@ async function wledSend(data) {
 }
 
 // ── Discovery ──
+// Slugify a WLED device name for mDNS lookup. WLED's mDNS advertisement uses
+// the same convention: lowercase, alphanumeric-dashed, stripped edge dashes.
+function slugifyWledName(name) {
+  return (name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 async function probeIP(ip) {
   const info = await wledGet(ip, '/json/info', 2500);
   if (info && info.ver) {
-    return { ip, mac: info.mac || null, name: info.name || `WLED @ ${ip}`, ledCount: info.leds?.count || 0, info };
+    const slug = slugifyWledName(info.name);
+    const mdnsHost = slug ? slug + '.local' : null;
+    return {
+      ip,
+      mac: info.mac || null,
+      name: info.name || `WLED @ ${ip}`,
+      ledCount: info.leds?.count || 0,
+      mdnsHost,   // cached so reconnect can try <name>.local first
+      info,
+    };
   }
   return null;
+}
+
+// Append an IP to a controller's history (most-recent first, deduped, capped).
+// Used by reconnect logic to retry recent IPs before falling back to scanning.
+const IP_HISTORY_CAP = 5;
+function pushIpHistory(controller, ip) {
+  if (!ip) return;
+  const hist = Array.isArray(controller.ipHistory) ? controller.ipHistory : [];
+  const next = [ip, ...hist.filter(x => x !== ip)].slice(0, IP_HISTORY_CAP);
+  controller.ipHistory = next;
 }
 
 // Reconcile a freshly-probed device against saved controllers.
@@ -4571,7 +4888,13 @@ function mergeFoundController(found) {
   if (idx >= 0) {
     const old = wled.controllers[idx];
     const ipChanged = old.ip !== found.ip;
-    wled.controllers[idx] = { ...old, ...found }; // refresh IP, ledCount, info
+    // Merge preserves historical fields (ipHistory, ipLocked, mdnsHost if probe missed it)
+    const merged = { ...old, ...found };
+    if (!merged.mdnsHost && old.mdnsHost) merged.mdnsHost = old.mdnsHost;
+    merged.ipHistory = Array.isArray(old.ipHistory) ? [...old.ipHistory] : [];
+    pushIpHistory(merged, found.ip);
+    merged.ipLocked = old.ipLocked === true;      // survive refresh; only lockControllerIP sets true
+    wled.controllers[idx] = merged;
     saveControllers();
     if (ipChanged) {
       console.log(`[WLED] ${found.name} moved: ${old.ip} → ${found.ip}`);
@@ -4585,33 +4908,58 @@ function mergeFoundController(found) {
     }
     return wled.controllers[idx];
   } else {
-    wled.controllers.push(found);
+    const fresh = { ...found, ipHistory: [found.ip], ipLocked: false };
+    wled.controllers.push(fresh);
     saveControllers();
-    return found;
+    // Fire-and-forget: first-time auto-lock so the controller keeps this IP across reboots.
+    // Silent on failure (some WLED builds reject config writes on first boot); user can
+    // retry via the "Lock IP" button. Guarded so it only runs once per controller.
+    lockControllerIP(fresh.ip).then(res => {
+      if (res.ok) {
+        markControllerLocked(fresh.mac, fresh.ip);
+        if (typeof renderSavedControllers === 'function') renderSavedControllers();
+      }
+    }).catch(() => {});
+    return fresh;
   }
 }
 
 // Try to find a known controller that isn't responding at its saved IP.
-// Attempts mDNS using the device name, then gives up (caller can trigger full scan).
+// Order: saved mdnsHost → slug(name).local → recent IP history → common wled-*.local.
+// Each hit is matched by MAC/name so we don't grab a stranger's device.
 async function findControllerAtNewIP(savedController) {
-  // Try mDNS: WLED advertises as "<name>.local" by default
-  const mdnsName = (savedController.name || '')
-    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.local';
-  if (mdnsName !== '.local') {
-    const found = await probeIP(mdnsName);
-    if (found && (
-      (found.mac && found.mac === savedController.mac) ||
-      found.name === savedController.name
-    )) return found;
+  const matches = (f) => f && (
+    (f.mac && f.mac === savedController.mac) ||
+    f.name === savedController.name
+  );
+
+  // 1. Cached mDNS host from the last successful probe
+  if (savedController.mdnsHost) {
+    const found = await probeIP(savedController.mdnsHost);
+    if (matches(found)) return found;
   }
-  // Also try common WLED mDNS names
+
+  // 2. Slugified name fallback (covers older saves that predate mdnsHost)
+  const slug = slugifyWledName(savedController.name);
+  const derivedHost = slug ? slug + '.local' : null;
+  if (derivedHost && derivedHost !== savedController.mdnsHost) {
+    const found = await probeIP(derivedHost);
+    if (matches(found)) return found;
+  }
+
+  // 3. Recent IP history — DHCP often hands back the same address
+  const history = Array.isArray(savedController.ipHistory) ? savedController.ipHistory : [];
+  for (const ip of history) {
+    if (ip === savedController.ip) continue; // already tried by caller
+    const found = await probeIP(ip);
+    if (matches(found)) return found;
+  }
+
+  // 4. Common WLED mDNS names (user might not have renamed)
   const fallbackNames = ['wled.local','wled-1.local','wled-2.local','wled-3.local'];
   for (const host of fallbackNames) {
     const found = await probeIP(host);
-    if (found && (
-      (found.mac && found.mac === savedController.mac) ||
-      found.name === savedController.name
-    )) return found;
+    if (matches(found)) return found;
   }
   return null;
 }
@@ -4986,13 +5334,19 @@ function renderSavedControllers() {
            <button class="btn btn-ghost btn-sm" onclick="cancelRenameController()">✕</button>
          </div>`
       : `<div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>`;
+    const lockStatus = c.ipLocked
+      ? `<span style="font-size:10px;color:var(--success);margin-left:6px" title="IP reserved on controller">🔒 locked</span>`
+      : `<span style="font-size:10px;color:var(--muted);margin-left:6px" title="DHCP — IP may change">DHCP</span>`;
+    const lockBtn = c.ipLocked
+      ? `<button class="btn btn-ghost btn-sm" style="flex:1" onclick="unlockControllerIpUI('${c.ip}')">🔓 Unlock</button>`
+      : `<button class="btn btn-ghost btn-sm" style="flex:1" onclick="lockControllerIpUI('${c.ip}')">🔒 Lock IP</button>`;
     return `
       <div style="background:var(--surface);border:1.5px solid ${isActive ? 'var(--success)' : 'var(--border)'};border-radius:14px;padding:14px 16px;margin-bottom:10px">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:40px;height:40px;border-radius:12px;background:${isActive ? 'rgba(34,197,94,0.15)' : 'var(--surface2)'};border:1px solid ${isActive ? 'rgba(34,197,94,0.3)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💡</div>
           <div style="flex:1;min-width:0">
             ${nameRow}
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.ledCount ? c.ledCount + ' LEDs' : 'Unknown LED count'}<span style="opacity:0.45"> · ${c.ip}</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.ledCount ? c.ledCount + ' LEDs' : 'Unknown LED count'}<span style="opacity:0.45"> · ${c.ip}</span>${lockStatus}</div>
           </div>
           ${!isEditing ? (isActive
             ? `<span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--success);border:0.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:4px 12px;flex-shrink:0;font-weight:500">● Active</span>`
@@ -5000,14 +5354,47 @@ function renderSavedControllers() {
           ) : ''}
         </div>
         ${!isEditing ? `
-        <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border)">
-          <a href="http://${c.ip}" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;text-align:center;text-decoration:none">🌐 Open WLED</a>
-          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="pingController('${c.ip}')">🔄 Ping</button>
-          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="startRenameController('${c.ip}')">✏️ Rename</button>
-          ${!isActive ? `<button class="btn btn-ghost btn-sm" style="flex:1;color:var(--danger)" onclick="removeController('${c.ip}')">🗑 Remove</button>` : ''}
+        <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border);flex-wrap:wrap">
+          <a href="http://${c.ip}" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;text-align:center;text-decoration:none;min-width:90px">🌐 Open WLED</a>
+          <button class="btn btn-ghost btn-sm" style="flex:1;min-width:70px" onclick="pingController('${c.ip}')">🔄 Ping</button>
+          ${lockBtn}
+          <button class="btn btn-ghost btn-sm" style="flex:1;min-width:80px" onclick="startRenameController('${c.ip}')">✏️ Rename</button>
+          ${!isActive ? `<button class="btn btn-ghost btn-sm" style="flex:1;min-width:80px;color:var(--danger)" onclick="removeController('${c.ip}')">🗑 Remove</button>` : ''}
         </div>` : ''}
       </div>`;
   }).join('');
+}
+
+// UI wrapper for manual "Lock IP" button. Handles toast + re-render.
+async function lockControllerIpUI(ip) {
+  const c = wled.controllers.find(x => x.ip === ip);
+  if (!c) return;
+  showToast('🔒 Locking IP on ' + (c.name || ip) + '…');
+  const res = await lockControllerIP(ip);
+  if (res.ok) {
+    markControllerLocked(c.mac, ip);
+    renderSavedControllers();
+    showToast('✓ IP locked at ' + ip);
+  } else {
+    showToast('⚠️ ' + (res.reason || 'Lock failed'));
+  }
+}
+
+// Undo: switch the controller back to DHCP. Useful if the user moved to a new router.
+async function unlockControllerIpUI(ip) {
+  const c = wled.controllers.find(x => x.ip === ip);
+  if (!c) return;
+  showToast('🔓 Unlocking ' + (c.name || ip) + '…');
+  const payload = { nw: { ins: [{ ip, dhcp: true, static: false }] } };
+  const ok = await wledCfgPost(ip, payload, 4000);
+  if (ok) {
+    c.ipLocked = false;
+    saveControllers();
+    renderSavedControllers();
+    showToast('✓ Back to DHCP');
+  } else {
+    showToast('⚠️ Controller rejected unlock');
+  }
 }
 
 function switchToController(ip) {
@@ -5015,6 +5402,8 @@ function switchToController(ip) {
   renderSavedControllers();
   updateConnectionBadge();
   showToast('✅ Switched to ' + (wled.active?.name || ip));
+  // Refresh NP to whatever the new controller is running right now.
+  pullNowPlayingFromController(ip);
   // Only sync if the default has changed since this controller last received it
   if(wled.active && isBootDefaultDirty()){
     syncBootDefaultToController(ip).then(ok=>{
@@ -5772,10 +6161,13 @@ function initWLED() {
   // one was "last used". Uses MAC matching so a changed IP is handled transparently.
   if (wled.controllers.length > 0) {
     const lastIp = wled.lastSeen;
-    // Collect all IPs to try: last-seen first (de-duped), then the rest
+    // Collect all IPs to try: last-seen first, each controller's current IP, plus every
+    // IP in its history (DHCP often recycles recent addresses), plus saved mDNS hosts.
     const ipsToTry = [...new Set([
       lastIp,
-      ...wled.controllers.map(c => c.ip)
+      ...wled.controllers.map(c => c.ip),
+      ...wled.controllers.flatMap(c => Array.isArray(c.ipHistory) ? c.ipHistory : []),
+      ...wled.controllers.map(c => c.mdnsHost).filter(Boolean),
     ].filter(Boolean))];
 
     Promise.all(ipsToTry.map(ip => probeIP(ip))).then(results => {
@@ -5803,6 +6195,10 @@ function initWLED() {
 
       if (connected) {
         updateConnectionBadge(true);
+        // Mirror controller's live playback state into the NP bar so we don't
+        // show stale "Off" or the last-session pattern when something else is
+        // actually running (e.g. user hit a preset from the WLED web UI).
+        if (wled.active && wled.active.ip) pullNowPlayingFromController(wled.active.ip);
         // Background: look for any saved controllers that didn't respond
         backgroundReconnectOffline();
       } else {
@@ -6026,7 +6422,9 @@ const LED_TYPES = [
 ];
 
 const COLOR_ORDERS = ['RGB','RBG','GRB','GBR','BRG','BGR'];
-const COLOR_ORDER_CODES = {RGB:0,RBG:1,GRB:2,GBR:3,BRG:4,BGR:5};
+// WLED /json/cfg color order codes — order matters, do not reorder.
+// 0=GRB (WS281x default), 1=RGB, 2=BRG, 3=RBG, 4=BGR, 5=GBR.
+const COLOR_ORDER_CODES = {GRB:0,RGB:1,BRG:2,RBG:3,BGR:4,GBR:5};
 
 const MA_OPTIONS = [
   { label: '35 mA/LED  (5V)', val: 35 },
@@ -6037,19 +6435,69 @@ const MA_OPTIONS = [
 
 const GPIO_PINS = [2,4,5,12,13,14,16,17,18,19,21,22,23,25,26,27,32,33];
 
-let gpioOutputs = JSON.parse(localStorage.getItem('lc_gpio') || '[]');
-
-// Default to 1 output if none saved — full schema
-if (gpioOutputs.length === 0) {
-  gpioOutputs = [{ id:1, name:'Roofline', pin:16, ledCount:20, ledType:'SK6812 RGBW',
-                   colorOrder:'RGB', reversed:false, skipFirst:0, offRefresh:false,
-                   maPerLed:55, status:'unsaved' }];
+// GPIO config is per-controller. Each controller has its own outputs list so
+// swapping to a different controller swaps the visible LED setup. Legacy
+// `lc_gpio` key (pre per-controller build) is migrated to the active controller
+// on first read so existing installs don't lose their config.
+const GPIO_LEGACY_KEY = 'lc_gpio';
+function gpioDefaultOutput() {
+  return { id:1, name:'Roofline', pin:16, ledCount:20, ledType:'SK6812 RGBW',
+           colorOrder:'RGB', reversed:false, skipFirst:0, offRefresh:false,
+           maPerLed:55, status:'unsaved' };
 }
+function gpioKeyFor(controller) {
+  if (!controller) return null;
+  const handle = controller.mac || controller.ip;
+  return handle ? ('lc_gpio:' + handle) : null;
+}
+const GPIO_MIGRATION_FLAG = 'lc_gpio_migrated';
+function gpioLoadForController(controller) {
+  const key = gpioKeyFor(controller);
+  if (key) {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      try { return JSON.parse(raw); } catch { /* fallthrough to default */ }
+    }
+    // One-shot migration: copy legacy global config into whichever controller
+    // is active when this app version first runs. Without the flag we'd
+    // clone the legacy config into every new controller slot, which is wrong.
+    if (!localStorage.getItem(GPIO_MIGRATION_FLAG)) {
+      const legacy = localStorage.getItem(GPIO_LEGACY_KEY);
+      if (legacy) {
+        try {
+          const parsed = JSON.parse(legacy);
+          if (Array.isArray(parsed) && parsed.length) {
+            localStorage.setItem(key, JSON.stringify(parsed));
+            localStorage.setItem(GPIO_MIGRATION_FLAG, key);
+            return parsed;
+          }
+        } catch {}
+      }
+      // Mark migration done even if nothing to migrate, so we never retry.
+      localStorage.setItem(GPIO_MIGRATION_FLAG, 'none');
+    }
+  }
+  return [gpioDefaultOutput()];
+}
+
+let gpioOutputs = gpioLoadForController(typeof wled !== 'undefined' ? wled.active : null);
+if (gpioOutputs.length === 0) gpioOutputs = [gpioDefaultOutput()];
 
 let gpioNextId = Math.max(...gpioOutputs.map(o => o.id), 0) + 1;
 
 function saveGPIOLocal() {
-  localStorage.setItem('lc_gpio', JSON.stringify(gpioOutputs));
+  const key = gpioKeyFor(wled.active);
+  // Scoped save: per-controller key when active, legacy key as fallback so
+  // settings still persist before a controller is selected.
+  localStorage.setItem(key || GPIO_LEGACY_KEY, JSON.stringify(gpioOutputs));
+}
+
+// Swap the in-memory gpioOutputs to the active controller's saved list.
+// Called when the user switches controllers or opens the LED Setup screen.
+function reloadGpioForActive() {
+  gpioOutputs = gpioLoadForController(wled.active);
+  if (gpioOutputs.length === 0) gpioOutputs = [gpioDefaultOutput()];
+  gpioNextId = Math.max(...gpioOutputs.map(o => o.id), 0) + 1;
 }
 
 function addGPIOOutput() {
@@ -6074,9 +6522,90 @@ function updateGPIOField(id, field, value) {
   updateGPIOSummary();
 }
 
+// Reverse map WLED's order code → our label. Built from COLOR_ORDER_CODES so
+// the two stay in sync even if codes are later reordered.
+const COLOR_ORDER_LABELS = Object.fromEntries(
+  Object.entries(COLOR_ORDER_CODES).map(([label, code]) => [code, label])
+);
+
+// WLED ins[].type is a numeric code; multiple labels can share a code
+// (e.g. WS2812B / WS2813 / WS2815 all report 22). We disambiguate by the
+// rgbw flag where possible, otherwise fall back to the first match.
+function ledTypeLabelFromCode(code, rgbw) {
+  const rgbwMatch = LED_TYPES.filter(t => t.code === code && t.rgbw === !!rgbw);
+  if (rgbwMatch.length) return rgbwMatch[0].label;
+  const codeMatch = LED_TYPES.find(t => t.code === code);
+  return codeMatch ? codeMatch.label : 'WS2812B';
+}
+
+// Map WLED's /json/cfg hw.led.ins[] into our gpioOutputs shape. Missing
+// fields fall back to sane defaults so partial configs still render.
+function gpioOutputsFromWledCfg(cfg) {
+  const ins = cfg?.hw?.led?.ins;
+  if (!Array.isArray(ins) || ins.length === 0) return null;
+  return ins.map((entry, i) => ({
+    id: i + 1,
+    name: entry.n || ('Output ' + (i + 1)),
+    pin: Array.isArray(entry.pin) ? (parseInt(entry.pin[0]) || 16) : (parseInt(entry.pin) || 16),
+    ledCount: parseInt(entry.len) || 1,
+    ledType: ledTypeLabelFromCode(entry.type, entry.rgbw),
+    colorOrder: COLOR_ORDER_LABELS[entry.order] || 'RGB',
+    reversed: !!entry.rev,
+    skipFirst: parseInt(entry.skip) || 0,
+    offRefresh: !!entry.ref,
+    maPerLed: 55,        // WLED doesn't store this — keep app default
+    status: 'ok',        // came from the controller, so already in sync
+  }));
+}
+
+// Pull current LED config from the active controller and replace local state.
+// Called on screen open and via the Refresh button. Silent on controller-down
+// so user still sees their last saved config; toast only on explicit refresh.
+async function pullGpioFromController(explicit) {
+  if (!wled.active) {
+    if (explicit) showToast('No controller connected');
+    return false;
+  }
+  const ip = wled.active.ip;
+  try {
+    const r = await fetchWithTimeout(`http://${ip}/json/cfg`, {}, 4000);
+    if (!r || !r.ok) throw new Error('HTTP ' + (r && r.status));
+    const cfg = await r.json();
+    const pulled = gpioOutputsFromWledCfg(cfg);
+    if (!pulled) {
+      if (explicit) showToast('Controller returned no LED outputs');
+      return false;
+    }
+    gpioOutputs = pulled;
+    gpioNextId = Math.max(...gpioOutputs.map(o => o.id), 0) + 1;
+    saveGPIOLocal();
+    renderGPIOList();
+    if (explicit) showToast('✓ Loaded settings from ' + wled.active.name);
+    return true;
+  } catch (e) {
+    if (explicit) showToast('⚠️ Could not reach controller');
+    return false;
+  }
+}
+
+// Show which controller this LED setup is scoped to. Called on screen open
+// and after the active controller changes.
+function renderGpioControllerHeader() {
+  const nameEl = document.getElementById('gpio-controller-name');
+  if (!nameEl) return;
+  if (wled.active) {
+    nameEl.textContent = wled.active.name + ' · ' + wled.active.ip;
+    nameEl.style.color = 'var(--text)';
+  } else {
+    nameEl.textContent = 'No controller selected — connect one first';
+    nameEl.style.color = 'var(--warning)';
+  }
+}
+
 function renderGPIOList() {
   const list = document.getElementById('gpio-output-list');
   if (!list) return;
+  renderGpioControllerHeader();
 
   list.innerHTML = gpioOutputs.map((o, idx) => `
     <div class="gpio-card" id="gpio-card-${o.id}">
@@ -6188,23 +6717,27 @@ async function saveGPIOConfig() {
   document.getElementById('gpio-push-bar').style.width = '0%';
   document.getElementById('gpio-push-msg').textContent = 'Sending configuration…';
 
-  // Build WLED /json/cfg LED payload with all fields
+  // Build WLED /json/cfg LED payload with all fields.
+  // NOTE: WLED uses `len` for LED count, not `count`. Sending `count` silently
+  // gets ignored and the controller falls back to 1 LED. Also `order` codes are
+  // GRB=0/RGB=1/BRG=2/RBG=3/BGR=4/GBR=5 — see COLOR_ORDER_CODES.
   let start = 0;
-  const ins = gpioOutputs.map(o => {
+  const ins = gpioOutputs.map((o, idx) => {
     const ledType = LED_TYPES.find(t => t.label === o.ledType) || LED_TYPES[0];
+    const len = parseInt(o.ledCount) || 1;
     const entry = {
       n:     o.name || ('Output ' + (idx + 1)),
       pin:   [parseInt(o.pin)],
       type:  ledType.code,
-      count: parseInt(o.ledCount) || 1,
+      len,
       rgbw:  ledType.rgbw,
-      order: COLOR_ORDER_CODES[o.colorOrder] ?? 0,
+      order: COLOR_ORDER_CODES[o.colorOrder] ?? 1, // default to RGB, not GRB
       start,
       rev:   !!o.reversed,
       skip:  parseInt(o.skipFirst) || 0,
       ref:   !!o.offRefresh,
     };
-    start += entry.count;
+    start += len;
     return entry;
   });
 
@@ -6492,6 +7025,7 @@ initGPIO();
     'parsePixelString','uploadLedmap','switchLedmap',
     'startScan','addManualIP','renderSavedControllers','switchToController',
     'removeController','pingController','discoverWLED','probeIP',
+    'lockControllerIP','lockControllerIpUI','unlockControllerIpUI',
     'wledSend','wledGet','wledPost','fetchWithTimeout','diagProbe',
     'updateNowPlaying','updateConnectionBadge','showToast',
     'hexToRgb','injectWledScreens','dlInitPixelUI','dlPixelInputChanged',
